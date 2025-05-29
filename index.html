@@ -86,7 +86,11 @@
                 </div>
                 <div style="margin-bottom: 12px;">
                     <label for="editTags" style="font-size: 12px; display: block; text-align: left;">Étiquettes :</label>
-                    <input type="text" id="editTags" placeholder="Étiquettes (virgule)" style="width:90%;" />
+                    <input type="text" id="editTagsInput" placeholder="Ajouter des étiquettes..." list="tagSuggestions" style="width:90%;" onkeydown="handleTagInput(event)">
+<datalist id="tagSuggestions"></datalist>
+<div id="editTagsContainer" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
+<input type="hidden" id="editTags" />
+
                 </div>
                 <div style="margin-bottom: 12px;">
                     <label for="editTooltip" style="font-size: 12px; display: block; text-align: left;">Tooltip :</label>

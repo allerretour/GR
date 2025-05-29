@@ -43,6 +43,15 @@
   font-size: 16px;
 }
 
+.tag {
+  background-color: #eee;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+
 
 #copyToast {
   position: fixed;

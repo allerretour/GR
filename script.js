@@ -46,6 +46,68 @@ function toggleSearchBar() {
 }
 
 
+let selectedTags = [];
+
+function getAllExistingTags() {
+  const tagSet = new Set();
+  shortcuts.forEach(sc => (sc.tags || []).forEach(t => tagSet.add(t)));
+  return Array.from(tagSet).sort();
+}
+
+function populateTagSuggestions() {
+  const datalist = document.getElementById("tagSuggestions");
+  datalist.innerHTML = "";
+  getAllExistingTags().forEach(tag => {
+    const option = document.createElement("option");
+    option.value = tag;
+    datalist.appendChild(option);
+  });
+}
+
+function handleTagInput(event) {
+  if (event.key === "Enter" || event.key === "," || event.key === "Tab") {
+    event.preventDefault();
+    const input = event.target;
+    let tag = input.value.trim().replace(/,$/, "");
+
+    if (tag && !selectedTags.includes(tag)) {
+      selectedTags.push(tag);
+      renderSelectedTags();
+    }
+
+    input.value = "";
+  }
+}
+
+function renderSelectedTags() {
+  const container = document.getElementById("editTagsContainer");
+  container.innerHTML = "";
+
+  selectedTags.forEach((tag, index) => {
+    const span = document.createElement("span");
+    span.textContent = tag;
+    span.className = "tag";
+    span.style = `
+      background: #ddd;
+      padding: 3px 8px;
+      border-radius: 12px;
+      margin: 2px;
+      cursor: pointer;
+    `;
+    span.title = "Cliquer pour retirer";
+    span.onclick = () => {
+      selectedTags.splice(index, 1);
+      renderSelectedTags();
+    };
+    container.appendChild(span);
+  });
+
+  // Keep hidden input in sync
+  document.getElementById("editTags").value = selectedTags.join(",");
+}
+
+
+
 
 
 
@@ -478,6 +540,11 @@ function openAddModal() {
   document.getElementById("editTooltip").value = "";
   document.getElementById("editInfo").value = "";
 
+selectedTags = []; // reset
+populateTagSuggestions(); // get latest list
+renderSelectedTags();     // show nothing initially
+
+
   // Reset index to indicate "new" shortcut
   editIndex = null;
 
@@ -528,23 +595,30 @@ let editIndex = null;
 function editShortcut(index) {
   const shortcut = shortcuts[index];
 
+  // Fill form fields
   document.getElementById("editName").value = shortcut.name;
   document.getElementById("editUrl").value = shortcut.url;
-  document.getElementById("editTags").value = (shortcut.tags || []).join(", ");
   document.getElementById("editTooltip").value = shortcut.tooltip || "";
   document.getElementById("editInfo").value = shortcut.info || "";
 
+  // Prepare tags
+  selectedTags = [...(shortcut.tags || [])];
+  populateTagSuggestions();  // Get updated list of all tags
+  renderSelectedTags();      // Display current tags in chip format
+
+  // Set index
   editIndex = index;
 
   // Set up modal title and confirm button
   document.querySelector("#editModal h3").textContent = "Modifier le raccourci";
-
   const confirmBtn = document.getElementById("confirmBtn");
   confirmBtn.textContent = "✅ Sauvegarder";
   confirmBtn.onclick = confirmEdit;
 
+  // Show modal
   document.getElementById("editModal").style.display = "flex";
 }
+
 
 
 function confirmEdit() {
@@ -708,6 +782,56 @@ function importShortcuts(event) {
         document.querySelectorAll(".shortcut").forEach((el) => {
           el.addEventListener("dragend", dragEnd);
         });
+
+
+
+
+document.addEventListener("keydown", function(event) {
+  // Avoid shortcuts while typing in input/textarea or contentEditable
+  if (
+    event.target.tagName === "INPUT" ||
+    event.target.tagName === "TEXTAREA" ||
+    event.target.isContentEditable
+  ) {
+    return;
+  }
+
+  // Ctrl + Space → Toggle Search Bar
+if (event.ctrlKey && event.code === "Space") {
+  event.preventDefault(); // prevent default scroll behavior
+  toggleSearchBar();
+  return;
+}
+
+  // E → Toggle edit mode
+  if (event.key.toLowerCase() === "e") {
+    const editToggle = document.getElementById("editToggle");
+    if (editToggle) {
+      editToggle.checked = !editToggle.checked;
+      toggleEditMode();
+    }
+    return;
+  }
+
+
+// L → Trigger import file dialog
+if (event.key.toLowerCase() === "l") {
+  document.getElementById('importFile').click();
+  return;
+}
+
+
+
+  // O → Toggle options panel
+  if (event.key.toLowerCase() === "o") {
+    toggleButtonGroup();
+    return;
+  }
+});
+
+
+
+
         
         window.onload = function() {
           document.getElementById("buttonGroupWrapper").classList.add("hidden");  
