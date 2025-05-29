@@ -33,14 +33,14 @@ function toggleSearchBar() {
   if (isHidden) {
     searchContainer.style.display = "flex";
     icon.classList.remove("fa-solid", "fa-magnifying-glass");
-    icon.classList.add("fa-regular", "fa-circle-xmark");
+    icon.classList.add("fa-solid", "fa-chevron-up");
     searchInput.focus();  // <-- focus here
   } else {
     searchInput.value = "";
     clearBtn.style.display = "none";
     handleSearchInput();
     searchContainer.style.display = "none";
-    icon.classList.remove("fa-regular", "fa-circle-xmark");
+    icon.classList.remove("fa-solid", "fa-chevron-up");
     icon.classList.add("fa-solid", "fa-magnifying-glass");
   }
 }
@@ -59,7 +59,7 @@ function toggleSearchBar() {
           if (group.classList.contains("hidden")) {
             toggleBtn.innerHTML = '<i class="fas fa-cog"></i>';
           } else {
-            toggleBtn.innerHTML = '<i class="fa-solid fa-square-xmark"></i>';
+            toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
           }
         }
         
@@ -205,7 +205,8 @@ function displayShortcuts() {
       shortcutElement.setAttribute("ondragstart", "drag(event)");
     }
 
-    // Hold-to-copy with right click
+   
+// Hold-to-copy with right click
     let holdTimer;
     let copied = false;
 
@@ -231,6 +232,7 @@ showCopyToast();
 
     shortcutElement.addEventListener("mouseup", () => clearTimeout(holdTimer));
     shortcutElement.addEventListener("mouseleave", () => clearTimeout(holdTimer));
+
 
     if (!editMode) {
       shortcutElement.addEventListener("click", () => {

@@ -97,16 +97,19 @@
           flex-wrap: wrap;
         }
     
-    .labels h2 {
-      margin: 0 auto;
-      font-size: 40px;
-      font-weight: 600;
-      text-align: center;
-      color: #222;
-      background: linear-gradient(to right, #007bff, #00c6ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  .labels h2 {
+  margin: 0 auto;
+  font-size: 40px;
+  font-weight: 600;
+  text-align: center;
+  color: #025BA8;
+  
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  position: relative;
+  width: fit-content;
+}
+
     
         .button-group {
       display: flex;
