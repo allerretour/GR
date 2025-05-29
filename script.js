@@ -152,6 +152,13 @@ function showCopyToast() {
   }, 1500);
 }
 
+function getTooltipText(text) {
+  return text && text.trim() !== "" 
+    ? text.trim() 
+    : "Aucune info disponible.";
+}
+
+
       
 
 function displayShortcuts() {
@@ -196,7 +203,8 @@ function displayShortcuts() {
 
     const shortcutElement = document.createElement("div");
     shortcutElement.className = "shortcut";
-    shortcutElement.setAttribute("title", escapeHTML(shortcut.tooltip || ''));
+    shortcutElement.setAttribute("title", escapeHTML(getTooltipText(shortcut.tooltip)));
+
     shortcutElement.setAttribute("data-index", trueIndex);
     shortcutElement.style.cursor = editMode ? 'default' : 'pointer';
 
@@ -205,33 +213,74 @@ function displayShortcuts() {
       shortcutElement.setAttribute("ondragstart", "drag(event)");
     }
 
-   
-// Hold-to-copy with right click
-    let holdTimer;
-    let copied = false;
+let holdTimer;
+let heldTriggered = false;
 
-    shortcutElement.addEventListener("contextmenu", (e) => {
-      e.preventDefault(); // Prevent browser context menu
-    });
+// Prevent system context menu (desktop)
+shortcutElement.addEventListener("contextmenu", (e) => {
+  e.preventDefault(); // Stops right-click menu
+});
 
-    shortcutElement.addEventListener("mousedown", (e) => {
-      if (e.button === 2 && !editMode) { // Right mouse button
-        copied = false;
-        holdTimer = setTimeout(() => {
-          navigator.clipboard.writeText(shortcut.url).then(() => {
-            shortcutElement.style.backgroundColor = "#d4edda";
-            setTimeout(() => {
-              shortcutElement.style.backgroundColor = "";
-            }, 800);
-            copied = true;
-showCopyToast();
-          });
-        }, 0); // Hold duration
-      }
-    });
+// --- MOUSE SUPPORT ---
+shortcutElement.addEventListener("mousedown", (e) => {
+  if (!editMode) {
+    if (e.button === 0) {
+      heldTriggered = false;
+      holdTimer = setTimeout(() => {
+        heldTriggered = true;
+        showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+      }, 1000);
+    } else if (e.button === 2) {
+      navigator.clipboard.writeText(shortcut.url).then(() => {
+        shortcutElement.style.backgroundColor = "#d4edda";
+        setTimeout(() => {
+          shortcutElement.style.backgroundColor = "";
+        }, 800);
+        showCopyToast();
+      });
+    }
+  }
+});
 
-    shortcutElement.addEventListener("mouseup", () => clearTimeout(holdTimer));
-    shortcutElement.addEventListener("mouseleave", () => clearTimeout(holdTimer));
+shortcutElement.addEventListener("mouseup", (e) => {
+  clearTimeout(holdTimer);
+  if (e.button === 0 && !heldTriggered && !editMode) {
+    window.open(shortcut.url, "_blank");
+  }
+});
+
+shortcutElement.addEventListener("mouseleave", () => {
+  clearTimeout(holdTimer);
+});
+
+// --- TOUCH SUPPORT ---
+shortcutElement.addEventListener("touchstart", (e) => {
+  if (!editMode) {
+    heldTriggered = false;
+    holdTimer = setTimeout(() => {
+      heldTriggered = true;
+      showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+    }, 1000);
+  }
+});
+
+shortcutElement.addEventListener("touchend", (e) => {
+  clearTimeout(holdTimer);
+  if (!heldTriggered && !editMode) {
+    // Prevent default tap behavior from triggering click right after
+    e.preventDefault();
+
+    // Tap = open link
+    window.open(shortcut.url, "_blank");
+  }
+});
+
+shortcutElement.addEventListener("touchmove", () => {
+  clearTimeout(holdTimer); // cancel if finger moves
+});
+
+
+  
 
 
     if (!editMode) {
@@ -386,13 +435,29 @@ showCopyToast();
     });
   }
   
-      function deleteShortcut(index) {
-            shortcuts.splice(index, 1);
-            saveShortcuts();
-            manualOrder = [...shortcuts];
-            localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
-            displayShortcuts();
-          }
+function deleteShortcut(index) {
+  const shortcut = shortcuts[index];
+  const confirmMsg = `Supprimer le raccourci "${shortcut.name}" ?`;
+
+  if (confirm(confirmMsg)) {
+    shortcuts.splice(index, 1);
+    saveShortcuts();
+    manualOrder = [...shortcuts];
+    localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
+    displayShortcuts();
+  }
+}
+
+function showTooltipModal(text) {
+  document.getElementById("tooltipContent").textContent = text || "Aucune info disponible.";
+  document.getElementById("tooltipModal").style.display = "flex";
+}
+
+function closeTooltipModal() {
+  document.getElementById("tooltipModal").style.display = "none";
+}
+
+
         
        
 function openAddModal() {
@@ -641,9 +706,8 @@ function importShortcuts(event) {
           if (savedTitle) {
             document.getElementById("appTitle").textContent = savedTitle;
           }
-const savedTagOrder = localStorage.getItem("tagOrder");
-tagOrder = savedTagOrder ? JSON.parse(savedTagOrder) : [];
-          document.getElementById("addSection").style.display = "none";
+
+          
 
 
  };
