@@ -259,25 +259,35 @@ shortcutElement.addEventListener("touchstart", (e) => {
     heldTriggered = false;
     holdTimer = setTimeout(() => {
       heldTriggered = true;
+
+      // Show tooltip modal
       showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-    }, 1000);
+
+      // Copy URL to clipboard
+      navigator.clipboard.writeText(shortcut.url).then(() => {
+        showCopyToast();
+        // Optional: give visual feedback
+        shortcutElement.style.backgroundColor = "#d4edda";
+        setTimeout(() => {
+          shortcutElement.style.backgroundColor = "";
+        }, 800);
+      });
+    }, 1000); // long press duration
   }
 });
 
 shortcutElement.addEventListener("touchend", (e) => {
   clearTimeout(holdTimer);
   if (!heldTriggered && !editMode) {
-    // Prevent default tap behavior from triggering click right after
     e.preventDefault();
-
-    // Tap = open link
     window.open(shortcut.url, "_blank");
   }
 });
 
 shortcutElement.addEventListener("touchmove", () => {
-  clearTimeout(holdTimer); // cancel if finger moves
+  clearTimeout(holdTimer); // cancel long press on move
 });
+
 
 
   
