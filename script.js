@@ -759,8 +759,25 @@ setExportNeeded(false);
   };
   reader.readAsText(file);
 }
+
         
-        
+function showInfoModal() {
+  const modal = document.getElementById("infoModal");
+  if (modal) {
+    modal.style.display = "block";
+  }
+}
+ 
+function closeInfoModal() {
+  const modal = document.getElementById("infoModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+
+       
         function clearShortcuts() {
           if (confirm("Voulez vous réinitialiser la liste?")) {
             shortcuts = [];

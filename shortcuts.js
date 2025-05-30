@@ -25,6 +25,13 @@ document.addEventListener("keydown", function(event) {
     return;
   }
 
+// I → Show info modal with fixed text
+if (event.key.toLowerCase() === "i") {
+  showInfoModal();
+  return;
+}
+
+
   // L → Trigger import file dialog
   if (event.key.toLowerCase() === "l") {
     document.getElementById('importFile').click();
