@@ -391,11 +391,6 @@ shortcutElement.addEventListener("touchmove", () => {
   clearTimeout(holdTimer); // cancel long press on move
 });
 
-
-
-  
-
-
     if (!editMode) {
       shortcutElement.addEventListener("click", () => {
         window.open(shortcut.url, "_blank");
