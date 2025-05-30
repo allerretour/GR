@@ -85,26 +85,44 @@ function renderSelectedTags() {
 
   selectedTags.forEach((tag, index) => {
     const span = document.createElement("span");
-    span.textContent = tag;
     span.className = "tag";
     span.style = `
-      background: #ddd;
+      background: #444;
+      color: white;
       padding: 3px 8px;
       border-radius: 12px;
       margin: 2px;
-      cursor: pointer;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     `;
-    span.title = "Cliquer pour retirer";
-    span.onclick = () => {
+
+    const tagText = document.createElement("span");
+    tagText.textContent = tag;
+
+    const closeBtn = document.createElement("span");
+    closeBtn.textContent = "×";
+    closeBtn.style = `
+      margin-left: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    `;
+    closeBtn.title = "Retirer ce tag";
+    closeBtn.onclick = () => {
       selectedTags.splice(index, 1);
       renderSelectedTags();
     };
+
+    span.appendChild(tagText);
+    span.appendChild(closeBtn);
     container.appendChild(span);
   });
 
   // Keep hidden input in sync
   document.getElementById("editTags").value = selectedTags.join(",");
 }
+
 
 
 
@@ -539,6 +557,7 @@ function openAddModal() {
   document.getElementById("editTags").value = "";
   document.getElementById("editTooltip").value = "";
   document.getElementById("editInfo").value = "";
+  document.getElementById('editTagsInput').value = '';
 
 selectedTags = []; // reset
 populateTagSuggestions(); // get latest list
@@ -600,6 +619,7 @@ function editShortcut(index) {
   document.getElementById("editUrl").value = shortcut.url;
   document.getElementById("editTooltip").value = shortcut.tooltip || "";
   document.getElementById("editInfo").value = shortcut.info || "";
+  document.getElementById('editTagsInput').value = '';
 
   // Prepare tags
   selectedTags = [...(shortcut.tags || [])];
