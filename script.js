@@ -840,7 +840,15 @@ setExportNeeded(false);
 
 
 document.addEventListener("keydown", function(event) {
-  // Avoid shortcuts while typing in input/textarea or contentEditable
+
+// F2 → Toggle Search Bar
+  if (event.code === "F2") {
+    event.preventDefault(); // prevent default behavior (like renaming files in some contexts)
+    toggleSearchBar();
+    return;
+  }  
+
+// Avoid shortcuts while typing in input/textarea or contentEditable
   if (
     event.target.tagName === "INPUT" ||
     event.target.tagName === "TEXTAREA" ||
@@ -849,12 +857,6 @@ document.addEventListener("keydown", function(event) {
     return;
   }
 
-  // Ctrl + Space → Toggle Search Bar
-if (event.ctrlKey && event.code === "Space") {
-  event.preventDefault(); // prevent default scroll behavior
-  toggleSearchBar();
-  return;
-}
 
   // E → Toggle edit mode
   if (event.key.toLowerCase() === "e") {
@@ -873,7 +875,28 @@ if (event.key.toLowerCase() === "l") {
   return;
 }
 
+// s → Toggle exporter (sauvegarder)
+  if (event.key.toLowerCase() === "s") {
+    exportShortcuts();
+    return;
+  }
+// n → Toggle nouvelle liste
+  if (event.key.toLowerCase() === "n") {
+    clearShortcuts();
+    return;
+  }
 
+ // a → Toggle ajouter
+  if (event.key.toLowerCase() === "a") {
+    openAddModal();
+    return;
+  }
+
+// t → Toggle trier
+  if (event.key.toLowerCase() === "t") {
+    toggleSorting();
+    return;
+  }
 
   // O → Toggle options panel
   if (event.key.toLowerCase() === "o") {
