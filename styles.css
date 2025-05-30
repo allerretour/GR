@@ -228,27 +228,13 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     
-    .shortcut a {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
     
-    .shortcut a:hover {
-      color: #ff5722; /* Add a hover effect to the links */
-    }
     
     
     .shortcut.drag-over {
       border: 2px dashed #007bff;
     }
-    .shortcuts-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
+    
     
     #sortButton {
       transition: background-color 0.2s ease, color 0.2s ease;
@@ -324,6 +310,4 @@
           color: #666;
         }
     
-     .status {
-          margin: 8px 0;
-        }
+     

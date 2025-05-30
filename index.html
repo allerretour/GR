@@ -65,9 +65,13 @@
             </div>
             <input type="file" id="importFile" style="display:none" onchange="importShortcuts(event)">
         </div>
+
+
         <div class="status-bar">
-            <span id="sortStatus">Tri: Manuel</span> | <span id="editStatus">Mode édition: Non</span> | <span id="shortcutCount">Affichés: 0 / Total: 0</span>
+          <span id="exportStatusDot" style="margin-left: 8px; font-size: 10px;">🔴</span> | <span id="lastExport">Dernier export : aucun</span> |  <span id="sortStatus">Tri: Manuel</span> | <span id="editStatus">Mode édition: Non</span> | <span id="shortcutCount">Affichés: 0 / Total: 0</span>
         </div>
+
+
         <!-- Modal for editing -->
         <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
             <div style="background:white; padding:20px; border-radius:8px; max-width:500px; width:90%;">

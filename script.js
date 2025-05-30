@@ -18,9 +18,30 @@
           const newTitle = document.getElementById("appTitle").textContent.trim();
           if (newTitle) {
             localStorage.setItem("appTitle", newTitle); // Save to localStorage
+setExportNeeded(true);
+
           }
         }
-        
+    
+let isExportNeeded = false;
+
+function setExportNeeded(flag) {
+  isExportNeeded = flag;
+  updateExportStatusDot();
+}
+
+function updateExportStatusDot() {
+  const dot = document.getElementById('exportStatusDot');
+  dot.textContent = isExportNeeded ? 'modifié' : 'non-modifié';
+}
+
+
+function updateLastExportDisplay() {
+  const lastExport = localStorage.getItem("lastExportFilename");
+  const label = document.getElementById("lastExport");
+  label.textContent = lastExport ? `Dernier export : ${lastExport}` : "Dernier export : aucun";
+}
+
 
 function toggleSearchBar() {
   const searchContainer = document.getElementById("searchContainer");
@@ -175,6 +196,8 @@ tagOrder = savedTagOrder ? JSON.parse(savedTagOrder) : [];
           if (!alphabeticalSorting) {
             manualOrder = [...shortcuts];
             localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
+            setExportNeeded(true);
+
           } else {
             const savedOrder = localStorage.getItem("manualOrder");
             if (savedOrder) {
@@ -444,6 +467,8 @@ shortcutElement.addEventListener("touchmove", () => {
 
   function saveTagOrder(order) {
     localStorage.setItem("tagOrder", JSON.stringify(order));
+setExportNeeded(true);
+
   }
 
   function displayTagFilters() {
@@ -534,6 +559,8 @@ function deleteShortcut(index) {
     saveShortcuts();
     manualOrder = [...shortcuts];
     localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
+setExportNeeded(true);
+
     displayShortcuts();
   }
 }
@@ -662,6 +689,8 @@ function confirmEdit() {
 
    function saveShortcuts() {
             localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+setExportNeeded(true);
+
           }
         
         function exportShortcuts() {
@@ -688,6 +717,10 @@ function confirmEdit() {
 
   // ✅ Show and save the last export filename
   localStorage.setItem("lastExportFilename", filename);
+
+setExportNeeded(false);
+
+updateLastExportDisplay(); 
   
 } 
 
@@ -708,11 +741,14 @@ function importShortcuts(event) {
         if (importedData.title) {
           document.getElementById("appTitle").textContent = importedData.title;
           localStorage.setItem("appTitle", importedData.title);
+
+
         }
 
         if (Array.isArray(importedData.tagOrder)) {
           tagOrder = importedData.tagOrder;
           localStorage.setItem("tagOrder", JSON.stringify(tagOrder));
+
         }
       } else {
         alert("Invalid JSON format.");
@@ -721,6 +757,7 @@ function importShortcuts(event) {
 
       saveShortcuts();
       displayShortcuts();
+setExportNeeded(false);
     } catch {
       alert("Error reading file. Please upload a valid JSON.");
     }
@@ -739,7 +776,8 @@ function importShortcuts(event) {
             const defaultTitle = "nouvelle liste";
             document.getElementById("appTitle").textContent = defaultTitle;
             localStorage.setItem("appTitle", defaultTitle);
-        
+        setExportNeeded(true);
+
             displayShortcuts();
           }
         }
@@ -860,8 +898,10 @@ if (event.key.toLowerCase() === "l") {
           if (savedTitle) {
             document.getElementById("appTitle").textContent = savedTitle;
           }
+updateLastExportDisplay(); 
 
-          
-
+  // ✅ Force green dot
+  isExportNeeded = false;
+  updateExportStatusDot();
 
  };
