@@ -307,7 +307,6 @@ function displayShortcuts() {
     const shortcutElement = document.createElement("div");
     shortcutElement.className = "shortcut";
     shortcutElement.setAttribute("title", escapeHTML(getTooltipText(shortcut.tooltip)));
-
     shortcutElement.setAttribute("data-index", trueIndex);
     shortcutElement.style.cursor = editMode ? 'default' : 'pointer';
 
@@ -316,86 +315,74 @@ function displayShortcuts() {
       shortcutElement.setAttribute("ondragstart", "drag(event)");
     }
 
-let holdTimer;
-let heldTriggered = false;
+    let holdTimer;
+    let heldTriggered = false;
 
-// Prevent system context menu (desktop)
-shortcutElement.addEventListener("contextmenu", (e) => {
-  e.preventDefault(); // Stops right-click menu
-});
+    shortcutElement.addEventListener("contextmenu", (e) => {
+      e.preventDefault(); // Prevents default right-click menu
+    });
 
-// --- MOUSE SUPPORT ---
-shortcutElement.addEventListener("mousedown", (e) => {
-  if (!editMode) {
-    if (e.button === 0) {
-      heldTriggered = false;
-      holdTimer = setTimeout(() => {
-        heldTriggered = true;
-        showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-      }, 1000);
-    } else if (e.button === 2) {
-      navigator.clipboard.writeText(shortcut.url).then(() => {
-        shortcutElement.style.backgroundColor = "#d4edda";
-        setTimeout(() => {
-          shortcutElement.style.backgroundColor = "";
-        }, 800);
-        showCopyToast();
-      });
-    }
-  }
-});
+    // --- MOUSE SUPPORT ---
+    shortcutElement.addEventListener("mousedown", (e) => {
+      if (!editMode) {
+        if (e.button === 0) {
+          heldTriggered = false;
+          holdTimer = setTimeout(() => {
+            heldTriggered = true;
+            showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+          }, 1000);
+        } else if (e.button === 2) {
+          navigator.clipboard.writeText(shortcut.url).then(() => {
+            shortcutElement.style.backgroundColor = "#d4edda";
+            setTimeout(() => {
+              shortcutElement.style.backgroundColor = "";
+            }, 800);
+            showCopyToast();
+          });
+        }
+      }
+    });
 
-shortcutElement.addEventListener("mouseup", (e) => {
-  clearTimeout(holdTimer);
-  if (e.button === 0 && !heldTriggered && !editMode) {
-    window.open(shortcut.url, "_blank");
-  }
-});
-
-shortcutElement.addEventListener("mouseleave", () => {
-  clearTimeout(holdTimer);
-});
-
-// --- TOUCH SUPPORT ---
-shortcutElement.addEventListener("touchstart", (e) => {
-  if (!editMode) {
-    heldTriggered = false;
-    holdTimer = setTimeout(() => {
-      heldTriggered = true;
-
-      // Show tooltip modal
-      showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-
-      // Copy URL to clipboard
-      navigator.clipboard.writeText(shortcut.url).then(() => {
-        showCopyToast();
-        // Optional: give visual feedback
-        shortcutElement.style.backgroundColor = "#d4edda";
-        setTimeout(() => {
-          shortcutElement.style.backgroundColor = "";
-        }, 800);
-      });
-    }, 1000); // long press duration
-  }
-});
-
-shortcutElement.addEventListener("touchend", (e) => {
-  clearTimeout(holdTimer);
-  if (!heldTriggered && !editMode) {
-    e.preventDefault();
-    window.open(shortcut.url, "_blank");
-  }
-});
-
-shortcutElement.addEventListener("touchmove", () => {
-  clearTimeout(holdTimer); // cancel long press on move
-});
-
-    if (!editMode) {
-      shortcutElement.addEventListener("click", () => {
+    shortcutElement.addEventListener("mouseup", (e) => {
+      clearTimeout(holdTimer);
+      if (e.button === 0 && !heldTriggered && !editMode) {
         window.open(shortcut.url, "_blank");
-      });
-    }
+      }
+    });
+
+    shortcutElement.addEventListener("mouseleave", () => {
+      clearTimeout(holdTimer);
+    });
+
+    // --- TOUCH SUPPORT ---
+    shortcutElement.addEventListener("touchstart", (e) => {
+      if (!editMode) {
+        heldTriggered = false;
+        holdTimer = setTimeout(() => {
+          heldTriggered = true;
+          showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+          navigator.clipboard.writeText(shortcut.url).then(() => {
+            showCopyToast();
+            shortcutElement.style.backgroundColor = "#d4edda";
+            setTimeout(() => {
+              shortcutElement.style.backgroundColor = "";
+            }, 800);
+          });
+        }, 1000);
+      }
+    });
+
+    shortcutElement.addEventListener("touchend", (e) => {
+      clearTimeout(holdTimer);
+      if (!heldTriggered && !editMode) {
+        e.preventDefault();
+        window.open(shortcut.url, "_blank");
+      }
+    });
+
+    shortcutElement.addEventListener("touchmove", () => {
+      clearTimeout(holdTimer);
+    });
 
     shortcutElement.innerHTML = `
       <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
@@ -431,7 +418,6 @@ shortcutElement.addEventListener("touchmove", () => {
   document.getElementById("shortcutCount").textContent =
     `Affichés: ${list.length} / Total: ${shortcuts.length}`;
 }
-
 
 
 
