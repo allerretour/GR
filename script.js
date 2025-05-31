@@ -261,9 +261,6 @@ function getTooltipText(text) {
     : "Aucune info disponible.";
 }
 
-
-      
-
 function displayShortcuts() {
   const container = document.getElementById("shortcuts");
   container.innerHTML = "";
@@ -418,6 +415,9 @@ function displayShortcuts() {
   document.getElementById("shortcutCount").textContent =
     `Affichés: ${list.length} / Total: ${shortcuts.length}`;
 }
+      
+
+
 
 
 
