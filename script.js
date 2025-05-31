@@ -314,9 +314,11 @@ function displayShortcuts() {
 
     let holdTimer;
     let heldTriggered = false;
+    let justTouched = false;
 
+    // --- CONTEXT MENU ---
     shortcutElement.addEventListener("contextmenu", (e) => {
-      e.preventDefault(); // Prevents default right-click menu
+      e.preventDefault();
     });
 
     // --- MOUSE SUPPORT ---
@@ -352,7 +354,7 @@ function displayShortcuts() {
     });
 
     // --- TOUCH SUPPORT ---
-    shortcutElement.addEventListener("touchstart", (e) => {
+    shortcutElement.addEventListener("touchstart", () => {
       if (!editMode) {
         heldTriggered = false;
         holdTimer = setTimeout(() => {
@@ -373,6 +375,8 @@ function displayShortcuts() {
       clearTimeout(holdTimer);
       if (!heldTriggered && !editMode) {
         e.preventDefault();
+        justTouched = true;
+        setTimeout(() => justTouched = false, 300);
         window.open(shortcut.url, "_blank");
       }
     });
@@ -381,6 +385,15 @@ function displayShortcuts() {
       clearTimeout(holdTimer);
     });
 
+    // Prevent click firing after touch
+    shortcutElement.addEventListener("click", (e) => {
+      if (justTouched) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+
+    // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
       <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
         <i class="fas fa-arrows-alt"></i>
