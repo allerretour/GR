@@ -415,11 +415,6 @@ function displayShortcuts() {
   document.getElementById("shortcutCount").textContent =
     `Affichés: ${list.length} / Total: ${shortcuts.length}`;
 }
-      
-
-
-
-
 
 
         
