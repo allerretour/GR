@@ -353,45 +353,7 @@ function displayShortcuts() {
       clearTimeout(holdTimer);
     });
 
-    // --- TOUCH SUPPORT ---
-    shortcutElement.addEventListener("touchstart", () => {
-      if (!editMode) {
-        heldTriggered = false;
-        holdTimer = setTimeout(() => {
-          heldTriggered = true;
-          showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-          navigator.clipboard.writeText(shortcut.url).then(() => {
-            showCopyToast();
-            shortcutElement.style.backgroundColor = "#d4edda";
-            setTimeout(() => {
-              shortcutElement.style.backgroundColor = "";
-            }, 800);
-          });
-        }, 1000);
-      }
-    });
-
-    shortcutElement.addEventListener("touchend", (e) => {
-      clearTimeout(holdTimer);
-      if (!heldTriggered && !editMode) {
-        e.preventDefault();
-        justTouched = true;
-        setTimeout(() => justTouched = false, 300);
-        window.open(shortcut.url, "_blank");
-      }
-    });
-
-    shortcutElement.addEventListener("touchmove", () => {
-      clearTimeout(holdTimer);
-    });
-
-    // Prevent click firing after touch
-    shortcutElement.addEventListener("click", (e) => {
-      if (justTouched) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
+    
 
     // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
