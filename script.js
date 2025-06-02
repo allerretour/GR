@@ -313,6 +313,18 @@ tagFilterEls.forEach(el => {
       .join(" ");
 
     const shortcutElement = document.createElement("div");
+
+// couleur des tuiles selon type de contenu
+const isInfoOnly = shortcut.url.trim() === "?";
+const isFileUrl = shortcut.url.trim().toLowerCase().startsWith("file://");
+
+if (isInfoOnly) {
+  shortcutElement.style.backgroundColor = "#e7f1fb"; // light info blue
+} else if (isFileUrl) {
+  shortcutElement.style.backgroundColor = "#fff4e5"; // soft light orange/yellow
+}
+
+
     shortcutElement.className = "shortcut";
     shortcutElement.setAttribute("title", escapeHTML(getTooltipText(shortcut.tooltip)));
     shortcutElement.setAttribute("data-index", trueIndex);
