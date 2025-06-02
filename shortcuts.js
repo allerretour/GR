@@ -25,11 +25,26 @@ document.addEventListener("keydown", function(event) {
     return;
   }
 
-// I → Show info modal with fixed text
 if (event.key.toLowerCase() === "i") {
-  showInfoModal();
+  const modal = document.getElementById("infoModal");
+  if (modal.style.display === "none" || modal.style.display === "") {
+    showInfoModal();
+  } else {
+    closeInfoModal();
+  }
   return;
 }
+
+if (event.key.toLowerCase() === "m") {
+  const toggle = document.getElementById("tagFilterModeToggle");
+  if (toggle) {
+    toggle.checked = !toggle.checked;
+    displayShortcuts(); // re-filter the list
+  }
+  return;
+}
+
+
 
 
   // L → Trigger import file dialog

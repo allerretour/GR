@@ -33,7 +33,9 @@ function setExportNeeded(flag) {
 function updateExportStatusDot() {
   const dot = document.getElementById('exportStatusDot');
   dot.textContent = isExportNeeded ? 'modifié' : 'non-modifié';
+  dot.className = 'status-dot ' + (isExportNeeded ? 'modifie' : 'non-modifie');
 }
+
 
 
 function updateLastExportDisplay() {
@@ -41,6 +43,9 @@ function updateLastExportDisplay() {
   const label = document.getElementById("lastExport");
   label.textContent = lastExport ? `Dernier export : ${lastExport}` : "Dernier export : aucun";
 }
+
+
+
 
 
 function toggleSearchBar() {
@@ -143,8 +148,6 @@ function renderSelectedTags() {
   // Keep hidden input in sync
   document.getElementById("editTags").value = selectedTags.join(",");
 }
-
-
 
 
 
@@ -291,8 +294,16 @@ function displayShortcuts() {
     });
   }
 
-  document.getElementById("filterModeLabel").textContent =
-    document.getElementById("tagFilterModeToggle").checked ? "ET" : "OU";
+  const isAndMode = document.getElementById("tagFilterModeToggle").checked;
+document.getElementById("filterModeLabel").textContent = isAndMode ? "ET" : "OU";
+
+// Update tag colors based on mode
+const tagFilterEls = document.querySelectorAll(".tag-filter");
+tagFilterEls.forEach(el => {
+  el.classList.remove("and-mode", "or-mode");
+  el.classList.add(isAndMode ? "and-mode" : "or-mode");
+});
+
 
   list.forEach((shortcut) => {
     const trueIndex = shortcuts.indexOf(shortcut);
@@ -322,38 +333,48 @@ function displayShortcuts() {
     });
 
     // --- MOUSE SUPPORT ---
-    shortcutElement.addEventListener("mousedown", (e) => {
-      if (!editMode) {
-        if (e.button === 0) {
-          heldTriggered = false;
-          holdTimer = setTimeout(() => {
-            heldTriggered = true;
-            showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-          }, 1000);
-        } else if (e.button === 2) {
-          navigator.clipboard.writeText(shortcut.url).then(() => {
-            shortcutElement.style.backgroundColor = "#d4edda";
-            setTimeout(() => {
-              shortcutElement.style.backgroundColor = "";
-            }, 800);
-            showCopyToast();
-          });
-        }
-      }
-    });
+shortcutElement.addEventListener("mousedown", (e) => {
+  if (!editMode && e.button === 0) {
+    heldTriggered = false;
 
-    shortcutElement.addEventListener("mouseup", (e) => {
-      clearTimeout(holdTimer);
-      if (e.button === 0 && !heldTriggered && !editMode) {
-        window.open(shortcut.url, "_blank");
-      }
-    });
+    // Add pop visual
+    shortcutElement.classList.add("hold-pop");
 
-    shortcutElement.addEventListener("mouseleave", () => {
-      clearTimeout(holdTimer);
+    holdTimer = setTimeout(() => {
+      heldTriggered = true;
+      showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+    }, 1000);
+  } else if (e.button === 2 && !editMode) {
+    navigator.clipboard.writeText(shortcut.url).then(() => {
+      shortcutElement.style.backgroundColor = "#d4edda";
+      setTimeout(() => {
+        shortcutElement.style.backgroundColor = "";
+      }, 800);
+      showCopyToast();
     });
+  }
+});
 
-    
+
+shortcutElement.addEventListener("mouseup", (e) => {
+  clearTimeout(holdTimer);
+  shortcutElement.classList.remove("hold-pop");
+
+  if (e.button === 0 && !heldTriggered && !editMode) {
+  if (shortcut.url.trim() === "?") {
+    showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+  } else {
+    window.open(shortcut.url, "_blank");
+  }
+}
+});
+
+shortcutElement.addEventListener("mouseleave", () => {
+  clearTimeout(holdTimer);
+  shortcutElement.classList.remove("hold-pop");
+});
+
+
 
     // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
@@ -499,6 +520,15 @@ setExportNeeded(true);
 
       tagContainer.appendChild(btn);
     });
+
+// Apply color mode class (AND = blue, OR = green)
+const isAndMode = document.getElementById("tagFilterModeToggle").checked;
+const tagFilterEls = document.querySelectorAll(".tag-filter");
+tagFilterEls.forEach(el => {
+  el.classList.remove("and-mode", "or-mode");
+  el.classList.add(isAndMode ? "and-mode" : "or-mode");
+});
+
   }
   
 function deleteShortcut(index) {
