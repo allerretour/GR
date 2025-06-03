@@ -323,15 +323,31 @@ showTooltipModal(`${baseText}${tooltipContent}`);
     });
 
 shortcutElement.addEventListener("touchstart", (e) => {
-  if (!editMode && e.touches.length === 2) {
-    // Two-finger tap detected
-    showTooltipModal(shortcut.url.trim() === "?" 
-      ? "Appuyez pour les infos" 
-      : `${shortcut.url}\n\n${shortcut.tooltip || ""}`.trim());
+  if (editMode) return;
 
-    e.preventDefault(); // prevent zoom or scroll gesture
+  const touchCount = e.touches.length;
+
+  if (touchCount === 2) {
+    // 2-finger tap → show tooltip modal
+    const text = shortcut.url.trim() === "?" 
+      ? "Appuyez pour les infos" 
+      : `${shortcut.url}\n\n${shortcut.tooltip || ""}`.trim();
+    showTooltipModal(text);
+    e.preventDefault(); // prevent gesture conflicts
+
+  } else if (touchCount === 3) {
+    // 3-finger tap → copy URL
+    navigator.clipboard.writeText(shortcut.url).then(() => {
+      shortcutElement.style.backgroundColor = "#d4edda"; // subtle feedback
+      setTimeout(() => {
+        shortcutElement.style.backgroundColor = "";
+      }, 800);
+      showCopyToast();
+    });
+    e.preventDefault(); // prevent OS gestures
   }
 });
+
 
 
     // --- HTML CONTENT ---
