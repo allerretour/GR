@@ -498,7 +498,13 @@ function deleteShortcut(index) {
 }
 
 function showTooltipModal(text) {
-  document.getElementById("tooltipContent").textContent = text || "Aucune info disponible.";
+  const tooltipContent = document.getElementById("tooltipContent");
+  const parts = (text || "Aucune info disponible.").split("\n\n");
+  tooltipContent.innerHTML = `
+    <div style="color: blue; font-size: 0.9em;">${escapeHTML(parts[0])}</div>
+    <div style="margin-top: 8px;">${escapeHTML(parts.slice(1).join("\n\n\n"))}</div>
+  `;
+
   document.getElementById("tooltipModal").style.display = "flex";
 }
 
