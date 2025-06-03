@@ -501,8 +501,8 @@ function showTooltipModal(text) {
   const tooltipContent = document.getElementById("tooltipContent");
   const parts = (text || "Aucune info disponible.").split("\n\n");
   tooltipContent.innerHTML = `
-    <div style="color: blue; font-size: 0.9em;">${escapeHTML(parts[0])}</div>
-    <div style="margin-top: 8px;">${escapeHTML(parts.slice(1).join("\n\n\n"))}</div>
+    <div style="color: blue; ">${escapeHTML(parts[0])}</div>
+    <div style="margin-top: 2px;">${escapeHTML(parts.slice(1).join("\n\n\n"))}</div>
   `;
 
   document.getElementById("tooltipModal").style.display = "flex";
