@@ -261,7 +261,13 @@ function displayShortcuts() {
       shortcutElement.style.backgroundColor = "#fff4e5"; // soft light orange/yellow
     }
     shortcutElement.className = "shortcut";
-    shortcutElement.setAttribute("title", escapeHTML(getTooltipText(shortcut.tooltip)));
+    const baseText = shortcut.url.trim() === "?" 
+  ? "Appuyez pour les infos" 
+  : shortcut.url;
+const tooltipContent = shortcut.tooltip ? `\n\n${shortcut.tooltip}` : "";
+const fullTooltip = `${baseText}${tooltipContent}`;
+shortcutElement.setAttribute("title", escapeHTML(fullTooltip));
+
     shortcutElement.setAttribute("data-index", trueIndex);
     shortcutElement.style.cursor = editMode ? 'default' : 'pointer';
     if (!alphabeticalSorting && editMode) {
@@ -283,7 +289,12 @@ function displayShortcuts() {
         shortcutElement.classList.add("hold-pop");
         holdTimer = setTimeout(() => {
           heldTriggered = true;
-          showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
+          const baseText = shortcut.url.trim() === "?" 
+  ? "" 
+  : shortcut.url;
+const tooltipContent = shortcut.tooltip ? `\n\n${shortcut.tooltip}` : "";
+showTooltipModal(`${baseText}${tooltipContent}`);
+
         }, 1000);
       } else if (e.button === 2 && !editMode) {
         navigator.clipboard.writeText(shortcut.url).then(() => {
