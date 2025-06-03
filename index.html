@@ -1,185 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Gestionnaire de raccourcis</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="labels" style="position: relative;">
-                <!-- Toggle Button -->
-                <button id="searchToggleBtn" onclick="toggleSearchBar()" title="Afficher/masquer la recherche">
-                    <i id="searchToggleIcon" class="fa-solid fa-magnifying-glass"></i>
-                </button>
-                <h2 id="appTitle" contenteditable="true" onblur="saveTitle()">Gestionnaire de raccourcis</h2>
-                
-            </div>
-            <div style="display: flex; align-items: center; margin-top: 15px; gap: 10px;">
-                
-                <!-- Tag Filters -->
-                <div id="tagFilters" class="tag-filter-container" style="cursor: move; flex-grow: 1;"></div>
 
-            </div>
-            <!-- Search Bar (initially visible) -->
-            <div id="searchContainer" style="display: none; position: relative; margin-top: 10px; justify-content: center;">
-                <div style="position: relative; width: 100%; max-width: 300px;">
-                    <input type="text" id="searchInput" placeholder="🔍 Rechercher un raccourci..." oninput="handleSearchInput()" style="width: 100%; padding: 6px 28px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
-                    <i id="clearSearchBtn" class="fas fa-times-circle" onclick="clearSearch()" title="Effacer la recherche" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2; pointer-events: auto;"></i>
-                </div>
-            </div>
-            <div id="shortcuts" class="shortcut-grid"></div>
-            <div style="text-align: left;">
-                <button onclick="toggleButtonGroup()" id="toggleBtnGroup" class="left-button" title="Options">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestionnaire de raccourcis</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
 
-
-
-            <div id="buttonGroupWrapper" class="button-group" style="margin-top: 15px;">
-                
-
-                <button title="Importer" onclick="document.getElementById('importFile').click()">
-                    <i class="fas fa-download"></i>
-                </button>
-                
-
-                <button title="Ajouter" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <input type="checkbox" id="tagFilterModeToggle" onchange="displayShortcuts()" />Filtre: <strong>
-                    <span id="filterModeLabel">OU</span>
-                </strong>
-                <button title="Exporter" onclick="exportShortcuts()">
-                    <i class="fas fa-floppy-disk"></i>
-                </button>
-                <button title="Tout effacer" onclick="clearShortcuts()">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <button id="sortButton" title="Trier" onclick="toggleSorting()" style="background-color: lightgray; color: gray;">
-                    <i id="sortIcon" class="fas fa-sort-alpha-down" style="color: gray;"></i>
-                </button>
-
-
-
-
-<div style="display: flex; align-items: center; gap: 6px;">
-    <span style="font-size: 12px;">Édition</span>
-    <label class="switch" title="Mode édition">
-        <input type="checkbox" id="editToggle" onchange="toggleEditMode()">
-        <span class="slider"></span>
-    </label>
-</div>
-
-
-            </div>
-            <input type="file" id="importFile" style="display:none" onchange="importShortcuts(event)">
-        </div>
-
-
-        <div class="status-bar">
-          <span id="exportStatusDot" class="status-dot" style="margin-left: 8px; font-size: 10px;">🔴</span> | <span id="lastExport">Dernier export : aucun</span> |  <span id="sortStatus">Tri: Manuel</span> | <span id="editStatus">Mode édition: Non</span> | <span id="shortcutCount">Affichés: 0 / Total: 0</span>
-        </div>
-
-
-        <!-- Modal for editing -->
-        <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-            <div style="background:white; padding:20px; border-radius:8px; max-width:500px; width:90%;">
-                <h3>Modifier le raccourci</h3>
-                <div style="margin-bottom: 12px;">
-                    <label for="editName" style="font-size: 12px; display: block; text-align: left;">Nom :</label>
-                    <input type="text" id="editName" placeholder="Nom" style="width:90%;" />
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label for="editInfo" style="font-size: 12px; display: block; text-align: left;">Info complémentaire :</label>
-                    <input type="text" id="editInfo" placeholder="Info complémentaire (optionnel)" style="width:90%;" />
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label for="editUrl" style="font-size: 12px; display: block; text-align: left;">URL : (Inscrire ? pour faire afficher le contenu de (💡 Info) au lieu d'accéder au URL) </label>
-                    <input type="text" id="editUrl" placeholder="URL" style="width:90%;" />
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label for="editTags" style="font-size: 12px; display: block; text-align: left;">Étiquettes :</label>
-                    <input type="text" id="editTagsInput" placeholder="Ajouter des étiquettes..." list="tagSuggestions" style="width:90%;" onkeydown="handleTagInput(event)">
-<datalist id="tagSuggestions"></datalist>
-<div id="editTagsContainer" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
-<input type="hidden" id="editTags" />
-
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label for="editTooltip" style="font-size: 12px; display: block; text-align: left;">💡 Info :</label>
-                    <textarea id="editTooltip" placeholder="Tooltip" style="width:90%; height:120px; resize: vertical;"></textarea>
-                </div>
-                <div style="text-align: right;">
-                    <button id="confirmBtn" type="button">✅ Ajouter</button>
-                    <button type="button" onclick="closeEditModal()">❌ Annuler</button>
-                </div>
-            </div>
-        </div>
-
-
-
-<div id="tooltipModal" onclick="closeTooltipModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-  <div onclick="event.stopPropagation()" style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%;">
-    <h3>💡 Info</h3>
-    <div id="tooltipContent" style="white-space: pre-wrap; text-align: left;"></div>
-    <div style="text-align:right; margin-top: 20px;">
-      <button onclick="closeTooltipModal()">Fermer</button>
+<body>
+  <div class="container">
+    <div class="labels" style="position: relative;">
+      <!-- Toggle Button -->
+      <button id="searchToggleBtn" onclick="toggleSearchBar()" title="Afficher/masquer la recherche">
+        <i id="searchToggleIcon" class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <h2 id="appTitle" contenteditable="true" onblur="saveTitle()">Gestionnaire de raccourcis</h2>
     </div>
-  </div>
-</div>
-
-
-
-<div id="infoModal" onclick="closeInfoModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-  <div onclick="event.stopPropagation()" style="background:#fff; color:#333; padding:30px; border-radius:12px; max-width:600px; width:90%; box-shadow:0 8px 30px rgba(0,0,0,0.2); position:relative; font-family: 'Segoe UI', sans-serif;">
-    <!-- Header -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h2 style="margin:0; font-size:20px;">Raccourcis clavier et souris</h2>
-      <button onclick="closeInfoModal()" style="background:none; border:none; font-size:20px; cursor:pointer;" title="Fermer">&times;</button>
+    <div style="display: flex; align-items: center; margin-top: 15px; gap: 10px;">
+      <!-- Tag Filters -->
+      <div id="tagFilters" class="tag-filter-container" style="cursor: move; flex-grow: 1;"></div>
     </div>
-
-    <!-- Content -->
-    <div style="display:flex; flex-wrap:wrap; gap:40px;">
-      <!-- Clavier -->
-      <div style="flex:1; min-width:200px;">
-        <h3 style="font-size:16px; margin-bottom:10px;">⌨️ Clavier</h3>
-        <ul style="list-style:none; padding-left:0; margin:0;">
-          <li><strong>i</strong> : Cette fenêtre</li>
-          <li><strong>F2</strong> : Afficher / cacher la barre de recherche</li>
-          <li><strong>t</strong> : Tri alphabétique / manuel</li>
-          <li><strong>e</strong> : Activer / désactiver édition</li>
-          <li><strong>a</strong> : Ajouter une fiche</li>
-          <li><strong>l</strong> : Charger une liste</li>
-          <li><strong>s</strong> : Exporter la liste</li>
-          <li><strong>n</strong> : Nouvelle liste</li>
-          <li><strong>m</strong> : Filtre ET / OU</li>
-          <li><strong>o</strong> : Afficher / cacher les options</li>
-        </ul>
+    <!-- Search Bar (initially visible) -->
+    <div id="searchContainer" style="display: none; position: relative; margin-top: 10px; justify-content: center;">
+      <div style="position: relative; width: 100%; max-width: 300px;">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher un raccourci..." oninput="handleSearchInput()" style="width: 100%; padding: 6px 28px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
+        <i id="clearSearchBtn" class="fas fa-times-circle" onclick="clearSearch()" title="Effacer la recherche" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2; pointer-events: auto;"></i>
       </div>
-
-      <!-- Souris -->
-      <div style="flex:1; min-width:200px;">
-        <h3 style="font-size:16px; margin-bottom:10px;">🖱️ Souris</h3>
-        <ul style="list-style:none; padding-left:0; margin:0;">
-          <li><strong>Clic gauche</strong> : Ouvrir URL</li>
-          <li><strong>Clic gauche long</strong> : 💡 Info</li>
-          <li><strong>Clic droit</strong> : Copier URL</li>
-        </ul>
+    </div>
+    <div id="shortcuts" class="shortcut-grid"></div>
+    <div style="text-align: left;">
+      <button onclick="toggleButtonGroup()" id="toggleBtnGroup" class="left-button" title="Options">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+    <div id="buttonGroupWrapper" class="button-group" style="margin-top: 15px;">
+      <button title="Importer" onclick="document.getElementById('importFile').click()">
+        <i class="fas fa-download"></i>
+      </button>
+      <button title="Ajouter" onclick="openAddModal()">
+        <i class="fas fa-plus"></i>
+      </button>
+      <input type="checkbox" id="tagFilterModeToggle" onchange="displayShortcuts()" />Filtre: <strong>
+        <span id="filterModeLabel">OU</span>
+      </strong>
+      <button title="Exporter" onclick="exportShortcuts()">
+        <i class="fas fa-floppy-disk"></i>
+      </button>
+      <button title="Tout effacer" onclick="clearShortcuts()">
+        <i class="fas fa-trash"></i>
+      </button>
+      <button id="sortButton" title="Trier" onclick="toggleSorting()" style="background-color: lightgray; color: gray;">
+        <i id="sortIcon" class="fas fa-sort-alpha-down" style="color: gray;"></i>
+      </button>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 12px;">Édition</span>
+        <label class="switch" title="Mode édition">
+          <input type="checkbox" id="editToggle" onchange="toggleEditMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <input type="file" id="importFile" style="display:none" onchange="importShortcuts(event)">
+  </div>
+  <div class="status-bar">
+    <span id="exportStatusDot" class="status-dot" style="margin-left: 8px; font-size: 10px;">🔴</span> | <span id="lastExport">Dernier export : aucun</span> | <span id="sortStatus">Tri: Manuel</span> | <span id="editStatus">Mode édition: Non</span> | <span id="shortcutCount">Affichés: 0 / Total: 0</span>
+  </div>
+  <!-- Modal for editing -->
+  <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:20px; border-radius:8px; max-width:500px; width:90%;">
+      <h3>Modifier le raccourci</h3>
+      <div style="margin-bottom: 12px;">
+        <label for="editName" style="font-size: 12px; display: block; text-align: left;">Nom :</label>
+        <input type="text" id="editName" placeholder="Nom" style="width:90%;" />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label for="editInfo" style="font-size: 12px; display: block; text-align: left;">Info complémentaire :</label>
+        <input type="text" id="editInfo" placeholder="Info complémentaire (optionnel)" style="width:90%;" />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label for="editUrl" style="font-size: 12px; display: block; text-align: left;">URL : (Inscrire ? pour faire afficher le contenu de (💡 Info) au lieu d'accéder au URL) </label>
+        <input type="text" id="editUrl" placeholder="URL" style="width:90%;" />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label for="editTags" style="font-size: 12px; display: block; text-align: left;">Étiquettes :</label>
+        <input type="text" id="editTagsInput" placeholder="Ajouter des étiquettes..." list="tagSuggestions" style="width:90%;" onkeydown="handleTagInput(event)">
+        <datalist id="tagSuggestions"></datalist>
+        <div id="editTagsContainer" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
+        <input type="hidden" id="editTags" />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label for="editTooltip" style="font-size: 12px; display: block; text-align: left;">💡 Info :</label>
+        <textarea id="editTooltip" placeholder="Tooltip" style="width:90%; height:120px; resize: vertical;"></textarea>
+      </div>
+      <div style="text-align: right;">
+        <button id="confirmBtn" type="button">✅ Ajouter</button>
+        <button type="button" onclick="closeEditModal()">❌ Annuler</button>
       </div>
     </div>
   </div>
-</div>
+  <div id="tooltipModal" onclick="closeTooltipModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div onclick="event.stopPropagation()" style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%;">
+      <h3>💡 Info</h3>
+      <div id="tooltipContent" style="white-space: pre-wrap; text-align: left;"></div>
+      <div style="text-align:right; margin-top: 20px;">
+        <button onclick="closeTooltipModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+  <div id="infoModal" onclick="closeInfoModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div onclick="event.stopPropagation()" style="background:#fff; color:#333; padding:30px; border-radius:12px; max-width:600px; width:90%; box-shadow:0 8px 30px rgba(0,0,0,0.2); position:relative; font-family: 'Segoe UI', sans-serif;">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="margin:0; font-size:20px;">Raccourcis clavier et souris</h2>
+        <button onclick="closeInfoModal()" style="background:none; border:none; font-size:20px; cursor:pointer;" title="Fermer">&times;</button>
+      </div>
+      <!-- Content -->
+      <div style="display:flex; flex-wrap:wrap; gap:40px;">
+        <!-- Clavier -->
+        <div style="flex:1; min-width:200px;">
+          <h3 style="font-size:16px; margin-bottom:10px;">⌨️ Clavier</h3>
+          <ul style="list-style:none; padding-left:0; margin:0;">
+            <li><strong>i</strong> : Cette fenêtre</li>
+            <li><strong>F2</strong> : Afficher / cacher la barre de recherche</li>
+            <li><strong>t</strong> : Tri alphabétique / manuel</li>
+            <li><strong>e</strong> : Activer / désactiver édition</li>
+            <li><strong>a</strong> : Ajouter une fiche</li>
+            <li><strong>l</strong> : Charger une liste</li>
+            <li><strong>s</strong> : Exporter la liste</li>
+            <li><strong>n</strong> : Nouvelle liste</li>
+            <li><strong>m</strong> : Filtre ET / OU</li>
+            <li><strong>o</strong> : Afficher / cacher les options</li>
+          </ul>
+        </div>
+        <!-- Souris -->
+        <div style="flex:1; min-width:200px;">
+          <h3 style="font-size:16px; margin-bottom:10px;">🖱️ Souris</h3>
+          <ul style="list-style:none; padding-left:0; margin:0;">
+            <li><strong>Clic gauche</strong> : Ouvrir URL</li>
+            <li><strong>Clic gauche long</strong> : 💡 Info</li>
+            <li><strong>Clic droit</strong> : Copier URL</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js" defer></script>
+  <script src="shortcuts.js" defer></script>
+</body>
+<div id="copyToast">✅ Lien copié!</div>
 
-
-
-
-
-        <script src="script.js" defer></script>
-        <script src="shortcuts.js" defer></script>
-    </body>
-    <div id="copyToast">✅ Lien copié!</div>
 </html>
