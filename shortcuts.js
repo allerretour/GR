@@ -63,6 +63,7 @@ document.addEventListener("keydown", function(event) {
   // O → Options panel
   if (event.key.toLowerCase() === "o") {
     toggleButtonGroup();
+    importBtn.focus();
     return;
   }
 });

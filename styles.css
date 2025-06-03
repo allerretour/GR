@@ -14,6 +14,30 @@ body {
   border-radius: 12px;
 }
 
+#backToTopBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.4); /* subtle dark background */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+#backToTopBtn:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+
 .left-button {
   background: linear-gradient(45deg, #007bff, #00c6ff);
   color: white;

@@ -321,6 +321,19 @@ showTooltipModal(`${baseText}${tooltipContent}`);
       clearTimeout(holdTimer);
       shortcutElement.classList.remove("hold-pop");
     });
+
+shortcutElement.addEventListener("touchstart", (e) => {
+  if (!editMode && e.touches.length === 2) {
+    // Two-finger tap detected
+    showTooltipModal(shortcut.url.trim() === "?" 
+      ? "Appuyez pour les infos" 
+      : `${shortcut.url}\n\n${shortcut.tooltip || ""}`.trim());
+
+    e.preventDefault(); // prevent zoom or scroll gesture
+  }
+});
+
+
     // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
       <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
@@ -721,6 +734,23 @@ function dragEnd() {
 document.querySelectorAll(".shortcut").forEach((el) => {
   el.addEventListener("dragend", dragEnd);
 });
+
+// Show/hide the back-to-top button
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("backToTopBtn");
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    btn.style.display = "block";
+  } else {
+    btn.style.display = "none";
+  }
+});
+
+// Scroll to top on click
+document.getElementById("backToTopBtn").addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+
 window.onload = function() {
   document.getElementById("buttonGroupWrapper").classList.add("hidden");
   loadShortcuts();
