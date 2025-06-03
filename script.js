@@ -298,12 +298,16 @@ showTooltipModal(`${baseText}${tooltipContent}`);
         }, 1000);
       } else if (e.button === 2 && !editMode) {
         navigator.clipboard.writeText(shortcut.url).then(() => {
-          shortcutElement.style.backgroundColor = "#d4edda";
-          setTimeout(() => {
-            shortcutElement.style.backgroundColor = "";
-          }, 800);
-          showCopyToast();
-        });
+        const originalBg = shortcutElement.style.backgroundColor; // Save original color
+        shortcutElement.style.backgroundColor = "#d4edda"; // Highlight green
+
+        setTimeout(() => {
+       shortcutElement.style.backgroundColor = originalBg || ""; // Restore original
+  }, 800);
+
+  showCopyToast();
+});
+
       }
     });
     shortcutElement.addEventListener("mouseup", (e) => {
