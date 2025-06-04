@@ -818,8 +818,8 @@ window.onload = function() {
     modules: {
       toolbar: [
         ['bold', 'italic', 'underline'],
-        [{ 'header': [1, 2, false] }],
         
+        [{ 'size': ['small', false, 'large', 'huge'] }],
         [{ 'color': [] }, { 'background': [] }],
         [{ 'align': [] }],
         ['link'],
