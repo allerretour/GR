@@ -151,8 +151,26 @@ function loadShortcuts() {
   tagOrder = savedTagOrder ? JSON.parse(savedTagOrder) : [];
   shortcuts = savedData ? JSON.parse(savedData) : [];
   manualOrder = savedOrder ? JSON.parse(savedOrder) : [...shortcuts];
+
+  // ✅ MIGRATION: Add tooltipPlain if missing
+  let updated = false;
+  shortcuts.forEach(sc => {
+    if (sc.tooltip && !sc.tooltipPlain) {
+      // Strip HTML tags for plain text
+      const temp = document.createElement("div");
+      temp.innerHTML = sc.tooltip;
+      sc.tooltipPlain = temp.textContent.trim();
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveShortcuts(); // Resave only if we made changes
+  }
+
   displayShortcuts();
 }
+
 
 function toggleAddSection() {
   const section = document.getElementById("addSection");
