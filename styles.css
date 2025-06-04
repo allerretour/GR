@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1400px;
   margin: auto;
   padding: 20px;
   background: white;
@@ -269,7 +269,7 @@ input[type="text"] {
 
 .shortcut-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 5px;
   margin-top: 15px;
 }
@@ -393,7 +393,7 @@ input[type="text"] {
 
 .move-handle {
   padding-right: 10px;
-  font-size: 20px;
+  font-size: 18px;
   color: #666;
 }
 

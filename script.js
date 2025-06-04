@@ -15,6 +15,7 @@ function escapeHTML(str) {
   } [m]));
 }
 
+
 function saveTitle() {
   const newTitle = document.getElementById("appTitle").textContent.trim();
   if (newTitle) {
@@ -802,7 +803,9 @@ document.getElementById("backToTopBtn").addEventListener("click", () => {
 
 window.onload = function() {
   document.getElementById("buttonGroupWrapper").classList.add("hidden");
+  
   loadShortcuts();
+
   const savedTitle = localStorage.getItem("appTitle");
   if (savedTitle) {
     document.getElementById("appTitle").textContent = savedTitle;
@@ -827,4 +830,5 @@ window.onload = function() {
       ]
     }
   });
+
 };
