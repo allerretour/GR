@@ -1,3 +1,4 @@
+let quill;
 let activeTagFilter = [];
 let shortcuts = [];
 let alphabeticalSorting = false;
@@ -504,10 +505,7 @@ function deleteShortcut(index) {
 function showTooltipModal(text) {
   const tooltipContent = document.getElementById("tooltipContent");
   const parts = (text || "Aucune info disponible.").split("\n\n");
-  tooltipContent.innerHTML = `
-    <div style="color: blue; ">${escapeHTML(parts[0])}</div>
-    <div style="margin-top: 2px;">${escapeHTML(parts.slice(1).join("\n\n\n"))}</div>
-  `;
+  tooltipContent.innerHTML = text || "<em>Aucune info disponible.</em>";
 
   document.getElementById("tooltipModal").style.display = "flex";
 }
@@ -517,33 +515,30 @@ function closeTooltipModal() {
 }
 
 function openAddModal() {
-  // Clear all fields
   document.getElementById("editName").value = "";
   document.getElementById("editUrl").value = "";
   document.getElementById("editTags").value = "";
-  document.getElementById("editTooltip").value = "";
   document.getElementById("editInfo").value = "";
   document.getElementById('editTagsInput').value = '';
-  selectedTags = []; // reset
-  populateTagSuggestions(); // get latest list
-  renderSelectedTags(); // show nothing initially
-  // Reset index to indicate "new" shortcut
+  if (quill) quill.root.innerHTML = ""; // ✅ Reset tooltip editor
+  selectedTags = []; 
+  populateTagSuggestions();
+  renderSelectedTags();
   editIndex = null;
-  // Set modal title
   document.querySelector("#editModal h3").textContent = "Ajouter un nouveau raccourci";
-  // Set up confirmation button
   const confirmBtn = document.getElementById("confirmBtn");
   confirmBtn.textContent = "✅ Ajouter";
   confirmBtn.onclick = confirmAdd;
-  // Show modal
   document.getElementById("editModal").style.display = "flex";
 }
 
+
 function confirmAdd() {
-  const name = document.getElementById("editName").value.trim();
+   const tooltip = quill.root.innerHTML.trim();  
+   const name = document.getElementById("editName").value.trim();
   const url = document.getElementById("editUrl").value.trim();
   const tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const tooltip = document.getElementById("editTooltip").value.trim();
+  
   const info = document.getElementById("editInfo").value.trim();
   if (name && url) {
     const newShortcut = {
@@ -575,7 +570,7 @@ function editShortcut(index) {
   // Fill form fields
   document.getElementById("editName").value = shortcut.name;
   document.getElementById("editUrl").value = shortcut.url;
-  document.getElementById("editTooltip").value = shortcut.tooltip || "";
+  quill.root.innerHTML = shortcut.tooltip || "";
   document.getElementById("editInfo").value = shortcut.info || "";
   document.getElementById('editTagsInput').value = '';
   // Prepare tags
@@ -597,7 +592,8 @@ function confirmEdit() {
   const name = document.getElementById("editName").value.trim();
   const url = document.getElementById("editUrl").value.trim();
   const tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const tooltip = document.getElementById("editTooltip").value.trim();
+  const tooltip = quill.root.innerHTML.trim();
+
   const info = document.getElementById("editInfo").value.trim();
   if (name && url && editIndex !== null) {
     shortcuts[editIndex] = {
@@ -777,6 +773,8 @@ document.getElementById("backToTopBtn").addEventListener("click", () => {
 });
 
 
+
+
 window.onload = function() {
   document.getElementById("buttonGroupWrapper").classList.add("hidden");
   loadShortcuts();
@@ -785,7 +783,20 @@ window.onload = function() {
     document.getElementById("appTitle").textContent = savedTitle;
   }
   updateLastExportDisplay();
-  // ✅ Force green dot
   isExportNeeded = false;
   updateExportStatusDot();
+
+  // ✅ Initialize Quill
+  quill = new Quill('#editTooltip', {
+    theme: 'snow',
+    placeholder: 'Saisissez du texte enrichi...',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ 'header': [1, 2, false] }],
+        [{ 'color': [] }, { 'background': [] }],
+        ['clean']
+      ]
+    }
+  });
 };
