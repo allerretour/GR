@@ -819,7 +819,10 @@ window.onload = function() {
       toolbar: [
         ['bold', 'italic', 'underline'],
         [{ 'header': [1, 2, false] }],
+        
         [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ['link'],
         ['clean']
       ]
     }
