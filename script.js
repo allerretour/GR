@@ -238,7 +238,8 @@ function displayShortcuts() {
   }
   if (searchTerm) {
     list = list.filter(shortcut => {
-      return shortcut.name.toLowerCase().includes(searchTerm) || shortcut.url.toLowerCase().includes(searchTerm) || (shortcut.tooltip && shortcut.tooltip.toLowerCase().includes(searchTerm)) || (shortcut.info && shortcut.info.toLowerCase().includes(searchTerm));
+      return shortcut.name.toLowerCase().includes(searchTerm) || shortcut.url.toLowerCase().includes(searchTerm) || (shortcut.tooltip && shortcut.tooltip.toLowerCase().includes(searchTerm)) ||
+(shortcut.tooltipPlain && shortcut.tooltipPlain.toLowerCase().includes(searchTerm)) || (shortcut.info && shortcut.info.toLowerCase().includes(searchTerm));
     });
   }
   const isAndMode = document.getElementById("tagFilterModeToggle").checked;
@@ -534,7 +535,9 @@ function openAddModal() {
 
 
 function confirmAdd() {
-   const tooltip = quill.root.innerHTML.trim();  
+   const tooltipHtml = quill.root.innerHTML.trim();
+const tooltipText = quill.getText().trim(); // plain text fallback
+
    const name = document.getElementById("editName").value.trim();
   const url = document.getElementById("editUrl").value.trim();
   const tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
@@ -542,12 +545,13 @@ function confirmAdd() {
   const info = document.getElementById("editInfo").value.trim();
   if (name && url) {
     const newShortcut = {
-      name,
-      url,
-      tags,
-      tooltip,
-      info
-    };
+  name,
+  url,
+  tags,
+  tooltip: tooltipHtml,
+  tooltipPlain: tooltipText,
+  info
+};
     // Add to shortcuts
     shortcuts.push(newShortcut);
     // Save and update display
@@ -592,17 +596,19 @@ function confirmEdit() {
   const name = document.getElementById("editName").value.trim();
   const url = document.getElementById("editUrl").value.trim();
   const tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const tooltip = quill.root.innerHTML.trim();
+  const tooltipHtml = quill.root.innerHTML.trim();
+const tooltipText = quill.getText().trim();
 
   const info = document.getElementById("editInfo").value.trim();
   if (name && url && editIndex !== null) {
     shortcuts[editIndex] = {
-      name,
-      url,
-      tags,
-      tooltip,
-      info
-    };
+  name,
+  url,
+  tags,
+  tooltip: tooltipHtml,
+  tooltipPlain: tooltipText,
+  info
+};
     saveShortcuts();
     displayShortcuts();
     closeEditModal();
