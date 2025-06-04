@@ -220,13 +220,32 @@ function toggleEditMode() {
 }
 
 function getTagColor(tag) {
-  const colors = ["#007bff", "#28a745", "#ffc107", "#dc3545", "#17a2b8", "#6610f2", "#fd7e14", "#6f42c1", "#20c997", "#e83e8c"];
+  const colors = [
+    "#1f77b4", // strong blue
+    "#2ca02c", // green
+    "#d62728", // red
+    "#9467bd", // purple
+    "#ff7f0e", // orange
+    "#17becf", // cyan
+    "#7f7f7f", // gray
+    "#bcbd22", // olive
+    "#8c564b", // brown
+    "#e377c2", // pink
+    "#393b79", // deep blue
+    "#637939", // moss green
+    "#843c39", // brick red
+    "#6b6ecf", // violet
+    "#9c9ede", // steel blue
+    "#17a2b8"  // teal blue
+  ];
   let hash = 0;
   for (let i = 0; i < tag.length; i++) {
     hash = tag.charCodeAt(i) + ((hash << 5) - hash);
   }
   return colors[Math.abs(hash) % colors.length];
 }
+
+
 
 function showCopyToast() {
   const toast = document.getElementById("copyToast");
