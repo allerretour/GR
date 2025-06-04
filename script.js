@@ -266,9 +266,10 @@ function displayShortcuts() {
     const baseText = shortcut.url.trim() === "?" 
   ? "Appuyez pour les infos" 
   : shortcut.url;
-const tooltipContent = shortcut.tooltip ? `\n\n${shortcut.tooltip}` : "";
+const tooltipContent = shortcut.tooltipPlain ? `\n\n${shortcut.tooltipPlain}` : "";
 const fullTooltip = `${baseText}${tooltipContent}`;
 shortcutElement.setAttribute("title", escapeHTML(fullTooltip));
+
 
     shortcutElement.setAttribute("data-index", trueIndex);
     shortcutElement.style.cursor = editMode ? 'default' : 'pointer';
