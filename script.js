@@ -368,42 +368,7 @@ function displayShortcuts() {
       shortcutElement.classList.remove("hold-pop");
     });
 
-    // --- TOUCH HANDLING ---
-    const activeTouchIds = new Set();
-
-    shortcutElement.addEventListener("touchstart", (e) => {
-      if (editMode) return;
-      for (const touch of e.changedTouches) {
-        activeTouchIds.add(touch.identifier);
-      }
-    });
-
-    shortcutElement.addEventListener("touchend", (e) => {
-      if (editMode) return;
-      const touchCount = activeTouchIds.size;
-
-      if (touchCount === 2) {
-        const text = shortcut.url.trim() === "?" 
-          ? "Appuyez pour les infos" 
-          : `${shortcut.url}\n\n${shortcut.tooltip || ""}`.trim();
-        showTooltipModal(text);
-      } else if (touchCount === 3) {
-        navigator.clipboard.writeText(shortcut.url).then(() => {
-          shortcutElement.style.backgroundColor = "#d4edda";
-          setTimeout(() => {
-            shortcutElement.style.backgroundColor = "";
-          }, 800);
-          if (navigator.vibrate) navigator.vibrate(50);
-          showCopyToast();
-        });
-      }
-
-      activeTouchIds.clear();
-    });
-
-    shortcutElement.addEventListener("touchcancel", () => {
-      activeTouchIds.clear();
-    });
+    
 
     // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
