@@ -5,6 +5,9 @@ document.addEventListener("keydown", function(event) {
     toggleSearchBar();
     return;
   }
+
+
+
   // Avoid shortcuts while typing in input/textarea or contentEditable
   if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA" || event.target.isContentEditable) {
     return;

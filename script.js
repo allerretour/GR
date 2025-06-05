@@ -325,50 +325,90 @@ function displayShortcuts() {
     }
 
     // --- HOLD & CLICK HANDLING ---
-    let holdTimer;
-    let heldTriggered = false;
-    shortcutElement.addEventListener("contextmenu", (e) => e.preventDefault());
+let holdTimer;
+let heldTriggered = false;
 
-    shortcutElement.addEventListener("mousedown", (e) => {
-      if (!editMode && e.button === 0) {
-        heldTriggered = false;
-        shortcutElement.classList.add("hold-pop");
-        holdTimer = setTimeout(() => {
-          heldTriggered = true;
-          const base = shortcut.url.trim() === "?" ? "" : shortcut.url;
-          const tooltip = shortcut.tooltip ? `\n\n${shortcut.tooltip}` : "";
-          showTooltipModal(`${base}${tooltip}`);
-        }, 1000);
-      } else if (e.button === 2 && !editMode) {
-        navigator.clipboard.writeText(shortcut.url).then(() => {
-          const originalBg = shortcutElement.style.backgroundColor;
-          shortcutElement.style.backgroundColor = "#d4edda";
-          setTimeout(() => {
-            shortcutElement.style.backgroundColor = originalBg || "";
-          }, 800);
-          showCopyToast();
-        });
-      }
-    });
+shortcutElement.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+  if (!editMode) {
+    const base = shortcut.url.trim() === "?"
+      ? ""
+      : `<a href="${shortcut.url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
+    const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
+    showTooltipModal(`${base}${tooltip}`, true); // true = isHtml
+  }
+});
 
-    shortcutElement.addEventListener("mouseup", (e) => {
-      clearTimeout(holdTimer);
-      shortcutElement.classList.remove("hold-pop");
-      if (e.button === 0 && !heldTriggered && !editMode) {
-        if (shortcut.url.trim() === "?") {
-          showTooltipModal(shortcut.tooltip || "Aucune info disponible.");
-        } else {
-          window.open(shortcut.url, "_blank");
-        }
-      }
-    });
+shortcutElement.addEventListener("mousedown", (e) => {
+  if (!editMode && e.button === 0) {
+    heldTriggered = false;
+    shortcutElement.classList.add("hold-pop");
 
-    shortcutElement.addEventListener("mouseleave", () => {
-      clearTimeout(holdTimer);
-      shortcutElement.classList.remove("hold-pop");
-    });
+    holdTimer = setTimeout(() => {
+      heldTriggered = true;
+      navigator.clipboard.writeText(shortcut.url).then(() => {
+        const originalBg = shortcutElement.style.backgroundColor;
+        shortcutElement.style.backgroundColor = "#d4edda";
+        setTimeout(() => {
+          shortcutElement.style.backgroundColor = originalBg || "";
+        }, 800);
+        if (navigator.vibrate) navigator.vibrate(50);
+        showCopyToast();
+      });
+    }, 1000); // hold for 1s to trigger copy
+  }
+});
+
+shortcutElement.addEventListener("mouseup", (e) => {
+  clearTimeout(holdTimer);
+  shortcutElement.classList.remove("hold-pop");
+
+  if (e.button === 0 && !heldTriggered && !editMode) {
+  const url = shortcut.url.trim();
+  if (url === "?") {
+    const tooltip = shortcut.tooltip || "Aucune info disponible.";
+    showTooltipModal(tooltip);
+  } else {
+    window.open(url, "_blank");
+  }
+}
+
+});
+
+shortcutElement.addEventListener("mouseleave", () => {
+  clearTimeout(holdTimer);
+  shortcutElement.classList.remove("hold-pop");
+});
+
 
     
+// --- TOUCH: Long-press = show info modal ---
+let touchHoldTimer;
+
+shortcutElement.addEventListener("touchstart", (e) => {
+  if (editMode || e.touches.length !== 1) return;
+
+  // Start a timer when user touches and holds
+  touchHoldTimer = setTimeout(() => {
+    const url = shortcut.url.trim();
+    const base = url === "?"
+      ? ""
+      : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
+    const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
+    showTooltipModal(`${base}${tooltip}`, true); // HTML modal
+  }, 700); // Hold duration (ms)
+});
+
+shortcutElement.addEventListener("touchend", () => {
+  clearTimeout(touchHoldTimer);
+});
+
+shortcutElement.addEventListener("touchcancel", () => {
+  clearTimeout(touchHoldTimer);
+});
+
+
+
 
     // --- HTML CONTENT ---
     shortcutElement.innerHTML = `
