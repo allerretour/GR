@@ -700,10 +700,12 @@ function exportShortcuts() {
   const now = new Date();
   const timestamp = now.toLocaleString('sv-SE', {
     hour12: false,
-    timeZone: 'America/Toronto'  // Optional: lock to Canada Eastern time
+    timeZone: 'America/Toronto'
   }).replace(' ', '_').replace(/:/g, '-');
 
-  const filename = `${sanitizedTitle || "shortcuts"}_${timestamp}.json`;
+  const baseFilename = `${sanitizedTitle || "shortcuts"}_${timestamp}`;
+  const jsonFilename = `${baseFilename}.json`;
+  const zipFilename = `${baseFilename}.zip`;
 
   const data = {
     title: title,
@@ -711,29 +713,40 @@ function exportShortcuts() {
     tagOrder: tagOrder
   };
   const dataStr = JSON.stringify(data, null, 4);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
+  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  // ✅ Required for Safari on iOS to trigger download
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  if (isiOS) {
+    // ✅ Export as ZIP for iPhone
+    const zip = new JSZip();
+    zip.file(jsonFilename, dataStr);
+    zip.generateAsync({ type: "blob" }).then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = zipFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  } else {
+    // ✅ Export JSON directly for desktop or Android
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = jsonFilename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
-  URL.revokeObjectURL(url);
-
-  // Save metadata
-  localStorage.setItem("lastExportFilename", filename);
+  // Save export info
+  localStorage.setItem("lastExportFilename", isiOS ? zipFilename : jsonFilename);
   setExportNeeded(false);
   updateLastExportDisplay();
-
-  // iOS Safari tip
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    alert("On iPhone: Tap the Share icon in the top bar and choose 'Save to Files' to save the exported file.");
-  }
 }
 
 
