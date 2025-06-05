@@ -390,17 +390,28 @@ shortcutElement.addEventListener("touchstart", (e) => {
 
   // Start a timer when user touches and holds
   touchHoldTimer = setTimeout(() => {
+    // Prevent text selection & iOS popups before showing modal
+    shortcutElement.style.userSelect = "none";
+    shortcutElement.style.webkitUserSelect = "none";
+    shortcutElement.style.webkitTouchCallout = "none";
+    shortcutElement.style.touchAction = "manipulation";
+
     const url = shortcut.url.trim();
     const base = url === "?"
       ? ""
       : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
     const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
-    showTooltipModal(`${base}${tooltip}`, true); // HTML modal
-  }, 700); // Hold duration (ms)
+    showTooltipModal(`${base}${tooltip}`, true);
+  }, 700);
 });
 
 shortcutElement.addEventListener("touchend", () => {
   clearTimeout(touchHoldTimer);
+  // Optionally restore default styles
+  shortcutElement.style.userSelect = "";
+  shortcutElement.style.webkitUserSelect = "";
+  shortcutElement.style.webkitTouchCallout = "";
+  shortcutElement.style.touchAction = "";
 });
 
 shortcutElement.addEventListener("touchcancel", () => {
