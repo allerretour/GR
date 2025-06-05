@@ -696,29 +696,46 @@ function saveShortcuts() {
 function exportShortcuts() {
   const title = document.getElementById("appTitle").textContent.trim();
   const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
   const now = new Date();
   const timestamp = now.toLocaleString('sv-SE', {
-    hour12: false
+    hour12: false,
+    timeZone: 'America/Toronto'  // Optional: lock to Canada Eastern time
   }).replace(' ', '_').replace(/:/g, '-');
+
   const filename = `${sanitizedTitle || "shortcuts"}_${timestamp}.json`;
+
   const data = {
     title: title,
     shortcuts: shortcuts,
     tagOrder: tagOrder
   };
   const dataStr = JSON.stringify(data, null, 4);
-  const blob = new Blob([dataStr], {
-    type: "application/json"
-  });
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  a.href = url;
   a.download = filename;
+
+  // ✅ Required for Safari on iOS to trigger download
+  document.body.appendChild(a);
   a.click();
-  // ✅ Show and save the last export filename
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+  // Save metadata
   localStorage.setItem("lastExportFilename", filename);
   setExportNeeded(false);
   updateLastExportDisplay();
+
+  // iOS Safari tip
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    alert("On iPhone: Tap the Share icon in the top bar and choose 'Save to Files' to save the exported file.");
+  }
 }
+
 
 function importShortcuts(event) {
   const file = event.target.files[0];
