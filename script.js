@@ -704,8 +704,7 @@ function exportShortcuts() {
   }).replace(' ', '_').replace(/:/g, '-');
 
   const baseFilename = `${sanitizedTitle || "shortcuts"}_${timestamp}`;
-  const jsonFilename = `${baseFilename}.json`;
-  const zipFilename = `${baseFilename}.zip`;
+  const lstFilename = `${baseFilename}.lst`;
 
   const data = {
     title: title,
@@ -716,48 +715,27 @@ function exportShortcuts() {
 
   const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  if (isiOS) {
-    // Export as ZIP for iOS to avoid JSON preview
-    const zip = new JSZip();
-    zip.file(jsonFilename, dataStr);
-    zip.generateAsync({ type: "blob" }).then(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = zipFilename;
+  const blob = new Blob([dataStr], { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = lstFilename;
 
-      document.body.appendChild(a);
-      requestAnimationFrame(() => {
-        a.click();
-        setTimeout(() => {
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }, 1000); // Give Safari time
-      });
-    });
-  } else {
-    // Export JSON for desktop or Android
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = jsonFilename;
-
-    document.body.appendChild(a);
-    requestAnimationFrame(() => {
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 1000);
-    });
-  }
+  document.body.appendChild(a);
+  requestAnimationFrame(() => {
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+  });
 
   // Save export info
-  localStorage.setItem("lastExportFilename", isiOS ? zipFilename : jsonFilename);
+  localStorage.setItem("lastExportFilename", lstFilename);
   setExportNeeded(false);
   updateLastExportDisplay();
 }
+
 
 
 
