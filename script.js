@@ -388,30 +388,32 @@ let touchHoldTimer;
 shortcutElement.addEventListener("touchstart", (e) => {
   if (editMode || e.touches.length !== 1) return;
 
-  // Start a timer when user touches and holds
-  touchHoldTimer = setTimeout(() => {
-    // Prevent text selection & iOS popups before showing modal
-    shortcutElement.style.userSelect = "none";
-    shortcutElement.style.webkitUserSelect = "none";
-    shortcutElement.style.webkitTouchCallout = "none";
-    shortcutElement.style.touchAction = "manipulation";
+  // Apply styles early to block selection and callout
+  shortcutElement.style.userSelect = "none";
+  shortcutElement.style.webkitUserSelect = "none";
+  shortcutElement.style.webkitTouchCallout = "none";
+  shortcutElement.style.touchAction = "manipulation";
 
+  touchHoldTimer = setTimeout(() => {
     const url = shortcut.url.trim();
     const base = url === "?"
       ? ""
       : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
     const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
     showTooltipModal(`${base}${tooltip}`, true);
+
+    // Delay restoring styles slightly
+    setTimeout(() => {
+      shortcutElement.style.userSelect = "";
+      shortcutElement.style.webkitUserSelect = "";
+      shortcutElement.style.webkitTouchCallout = "";
+      shortcutElement.style.touchAction = "";
+    }, 1000); // delay in ms
   }, 700);
 });
 
 shortcutElement.addEventListener("touchend", () => {
   clearTimeout(touchHoldTimer);
-  // Optionally restore default styles
-  shortcutElement.style.userSelect = "";
-  shortcutElement.style.webkitUserSelect = "";
-  shortcutElement.style.webkitTouchCallout = "";
-  shortcutElement.style.touchAction = "";
 });
 
 shortcutElement.addEventListener("touchcancel", () => {
