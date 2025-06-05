@@ -697,28 +697,44 @@ function exportShortcuts() {
   const title = document.getElementById("appTitle").textContent.trim();
   const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
   const now = new Date();
-  const timestamp = now.toLocaleString('sv-SE', {
-    hour12: false
-  }).replace(' ', '_').replace(/:/g, '-');
+  const timestamp = now.toISOString().replace(/[:.]/g, '-');
   const filename = `${sanitizedTitle || "shortcuts"}_${timestamp}.json`;
+
   const data = {
-    title: title,
-    shortcuts: shortcuts,
-    tagOrder: tagOrder
+    title,
+    shortcuts,
+    tagOrder
   };
-  const dataStr = JSON.stringify(data, null, 4);
-  const blob = new Blob([dataStr], {
-    type: "application/json"
-  });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-  // ✅ Show and save the last export filename
+
+  const jsonStr = JSON.stringify(data, null, 4);
+  const blob = new Blob([jsonStr], { type: "application/json" });
+  const blobUrl = URL.createObjectURL(blob);
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (isIOS) {
+    // iOS fallback: open the content in a new tab as plain text
+    const newWindow = window.open();
+    newWindow.document.write('<pre>' + jsonStr.replace(/</g, '&lt;') + '</pre>');
+    newWindow.document.title = filename;
+  } else {
+    // Normal download for desktop/Android
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  // Save filename and update state
   localStorage.setItem("lastExportFilename", filename);
   setExportNeeded(false);
   updateLastExportDisplay();
 }
+
 
 function importShortcuts(event) {
   const file = event.target.files[0];
