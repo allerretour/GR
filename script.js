@@ -717,7 +717,7 @@ function exportShortcuts() {
   const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   if (isiOS) {
-    // ✅ Export as ZIP for iPhone
+    // Export as ZIP for iOS to avoid JSON preview
     const zip = new JSZip();
     zip.file(jsonFilename, dataStr);
     zip.generateAsync({ type: "blob" }).then(blob => {
@@ -725,22 +725,32 @@ function exportShortcuts() {
       const a = document.createElement("a");
       a.href = url;
       a.download = zipFilename;
+
       document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      requestAnimationFrame(() => {
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 1000); // Give Safari time
+      });
     });
   } else {
-    // ✅ Export JSON directly for desktop or Android
+    // Export JSON for desktop or Android
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = jsonFilename;
+
     document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    requestAnimationFrame(() => {
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 1000);
+    });
   }
 
   // Save export info
@@ -748,6 +758,7 @@ function exportShortcuts() {
   setExportNeeded(false);
   updateLastExportDisplay();
 }
+
 
 
 function importShortcuts(event) {
