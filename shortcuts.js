@@ -5,6 +5,13 @@ document.addEventListener("keydown", function(event) {
     toggleSearchBar();
     return;
   }
+// F4 → Toggle Option
+  if (event.code === "F4") {
+    event.preventDefault();
+    toggleButtonGroup();
+    importBtn.focus();
+    return;
+  }
 
 
 
