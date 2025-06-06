@@ -788,7 +788,7 @@ function exportShortcuts() {
     timeZone: 'America/Toronto'
   }).replace(' ', '_').replace(/:/g, '-');
 
-  const baseFilename = `${sanitizedTitle || "shortcuts"}_${timestamp}`;
+  const baseFilename = `GDR_${sanitizedTitle || "shortcuts"}_${timestamp}`;
   const lstFilename = `${baseFilename}.lst`;
 
   const data = {
