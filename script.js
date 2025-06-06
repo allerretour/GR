@@ -853,21 +853,20 @@ document.querySelectorAll(".shortcut").forEach((el) => {
   el.addEventListener("dragend", dragEnd);
 });
 
-// Show/hide the back-to-top button
 window.addEventListener("scroll", () => {
   const btn = document.getElementById("backToTopBtn");
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-    btn.style.display = "block";
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+  if (scrollTop > 100) {
+    btn.classList.add("show");
   } else {
-    btn.style.display = "none";
+    btn.classList.remove("show");
   }
 });
 
-// Scroll to top on click
 document.getElementById("backToTopBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-
 
 
 
