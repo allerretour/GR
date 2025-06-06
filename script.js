@@ -771,6 +771,8 @@ function importShortcuts(event) {
       saveShortcuts();
       displayShortcuts();
       setExportNeeded(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
     } catch {
       alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
     }
