@@ -49,7 +49,36 @@ function placeCaretAtEnd(el) {
 function toggleTags() {
   const tagContainer = document.getElementById("tagFilters");
   tagContainer.classList.toggle("hidden");
+  const el = document.getElementById("tagFilters");
+  uiToggleState.tagFilters = !uiToggleState.tagFilters;
+  el.classList.toggle("hidden", !uiToggleState.tagFilters);
+  saveUIState();
 }
+
+
+
+
+const UI_STATE_KEY = "uiToggleState";
+
+let uiToggleState = {
+  searchBar: true,
+  tagFilters: true,
+  
+};
+
+function saveUIState() {
+  localStorage.setItem(UI_STATE_KEY, JSON.stringify(uiToggleState));
+}
+
+function loadUIState() {
+  const saved = localStorage.getItem(UI_STATE_KEY);
+  if (saved) {
+    uiToggleState = { ...uiToggleState, ...JSON.parse(saved) };
+  }
+}
+
+
+
 
 
 
@@ -87,18 +116,22 @@ function toggleSearchBar() {
   const isHidden = searchContainer.style.display === "none" || searchContainer.style.display === "";
   if (isHidden) {
     searchContainer.style.display = "flex";
-    icon.classList.remove("fa-solid", "fa-magnifying-glass");
-    icon.classList.add("fa-solid", "fa-chevron-up");
+    
     searchInput.focus(); // <-- focus here
   } else {
     searchInput.value = "";
     clearBtn.style.display = "none";
     handleSearchInput();
     searchContainer.style.display = "none";
-    icon.classList.remove("fa-solid", "fa-chevron-up");
-    icon.classList.add("fa-solid", "fa-magnifying-glass");
+    
   }
+const el = document.getElementById("searchContainer");
+  uiToggleState.searchBar = !uiToggleState.searchBar;
+  el.style.display = uiToggleState.searchBar ? "flex" : "none";
+  saveUIState();
 }
+
+
 let selectedTags = [];
 
 function getAllExistingTags() {
@@ -180,6 +213,7 @@ function toggleButtonGroup() {
   } else {
     toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
   }
+
 }
 
 function loadShortcuts() {
@@ -924,9 +958,32 @@ window.addEventListener("scroll", () => {
   }
 });
 
+
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "F4") {
+    e.preventDefault();
+    toggleTags();
+  }
+});
+
 document.getElementById("backToTopBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadUIState();
+
+  // Search Bar
+  document.getElementById("searchContainer").style.display = uiToggleState.searchBar ? "flex" : "none";
+
+  // Tag Filters
+  document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
+
+});
+
 
 
 
