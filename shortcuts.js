@@ -13,6 +13,12 @@ document.addEventListener("keydown", function(event) {
     return;
   }
 
+if (event.code === "F8") {
+    event.preventDefault();
+    toggleTags();
+    
+    return;
+  }
 
 
   // Avoid shortcuts while typing in input/textarea or contentEditable
