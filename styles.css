@@ -35,6 +35,31 @@ color: #025ba8;
   cursor: pointer;
 }
 
+#titleLockBtn:hover {
+  color: #333;
+}
+
+#titleLockBtn:focus {
+  outline: 2px solid #555;
+  outline-offset: 2px;
+}
+
+.app-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 2em;
+  text-align: center;
+}
+
+
+.app-title[contenteditable="true"] {
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 2px;
+  outline: none;
+}
+
+
+
 #backToTopBtn {
   position: fixed;
   bottom: 20px;

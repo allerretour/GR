@@ -15,6 +15,38 @@ function escapeHTML(str) {
   } [m]));
 }
 
+const appTitle = document.getElementById("appTitle");
+const titleLockBtn = document.getElementById("titleLockBtn");
+const lockIcon = titleLockBtn.querySelector("i");
+
+let titleLocked = true;
+
+function toggleTitleLock() {
+  titleLocked = !titleLocked;
+  appTitle.contentEditable = !titleLocked;
+
+  if (titleLocked) {
+    lockIcon.classList.replace("fa-lock-open", "fa-lock");
+  } else {
+    lockIcon.classList.replace("fa-lock", "fa-lock-open");
+    appTitle.focus();
+    placeCaretAtEnd(appTitle);
+  }
+}
+
+titleLockBtn.addEventListener("click", toggleTitleLock);
+
+function placeCaretAtEnd(el) {
+  el.focus();
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+
 
 function saveTitle() {
   const newTitle = document.getElementById("appTitle").textContent.trim();

@@ -21,7 +21,34 @@
       <button id="searchToggleBtn" onclick="toggleSearchBar()" title="[F2] Afficher/masquer la recherche">
         <i id="searchToggleIcon" class="fa-solid fa-magnifying-glass"></i>
       </button>
-      <h2 id="appTitle" contenteditable="true" onblur="saveTitle()">Gestionnaire de raccourcis</h2>
+
+<div class="title-container"
+     style="display: flex; justify-content: center; margin: 10px auto; max-width: 600px;">
+
+  <div class="title-inner" style="display: inline-flex; align-items: center; gap: 10px;">
+    <!-- Lock Button -->
+    <button id="titleLockBtn" title="Verrouiller/déverrouiller le titre"
+        style="
+          background: none; 
+          border: none; 
+          cursor: pointer; 
+          color: #ddd;             /* Light gray for subtle look */
+          font-size: 1.2em; 
+          padding: 4px;
+          transition: color 0.3s ease;
+        ">
+  <i class="fa-solid fa-lock"></i>
+</button>
+
+<h2 id="appTitle" class="app-title" contenteditable="false" onblur="saveTitle()">
+  Gestionnaire de raccourcis
+</h2>
+
+  </div>
+</div>
+
+
+      
     </div>
     <div style="display: flex; align-items: center; margin-top: 15px; gap: 10px;">
       <!-- Tag Filters -->
