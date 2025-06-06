@@ -363,17 +363,32 @@ shortcutElement.addEventListener("mouseup", (e) => {
   clearTimeout(holdTimer);
   shortcutElement.classList.remove("hold-pop");
 
-  if (e.button === 0 && !heldTriggered && !editMode) {
-  const url = shortcut.url.trim();
+  if (e.button !== 0 || heldTriggered || editMode) return;
+
+  let url = shortcut.url.trim();
+
   if (url === "?") {
     const tooltip = shortcut.tooltip || "Aucune info disponible.";
     showTooltipModal(tooltip);
-  } else {
-    window.open(url, "_blank");
+    return;
   }
-}
 
+  // Auto-prepend https:// if no scheme
+  if (!/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
+    url = "https://" + url;
+  }
+
+  // Validate and open
+  try {
+    const parsed = new URL(url);
+    window.open(parsed.href, "_blank");
+  } catch (err) {
+    alert("URL invalide : " + url);
+  }
 });
+
+
+
 shortcutElement.addEventListener("mouseleave", () => {
   clearTimeout(holdTimer);
   shortcutElement.classList.remove("hold-pop");
