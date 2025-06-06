@@ -374,7 +374,6 @@ shortcutElement.addEventListener("mouseup", (e) => {
 }
 
 });
-
 shortcutElement.addEventListener("mouseleave", () => {
   clearTimeout(holdTimer);
   shortcutElement.classList.remove("hold-pop");
@@ -741,15 +740,21 @@ function exportShortcuts() {
 
 function importShortcuts(event) {
   const file = event.target.files[0];
+  if (!file) return;
+
+  // ✅ Only allow .lst files
+  if (!file.name.toLowerCase().endsWith(".lst")) {
+    alert("Seuls les fichiers .lst sont autorisés.");
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const importedData = JSON.parse(e.target.result);
       if (Array.isArray(importedData)) {
-        // Old format: just shortcuts
         shortcuts = importedData;
       } else if (importedData.shortcuts && Array.isArray(importedData.shortcuts)) {
-        // New format: contains title and shortcuts
         shortcuts = importedData.shortcuts;
         if (importedData.title) {
           document.getElementById("appTitle").textContent = importedData.title;
@@ -760,18 +765,19 @@ function importShortcuts(event) {
           localStorage.setItem("tagOrder", JSON.stringify(tagOrder));
         }
       } else {
-        alert("Invalid JSON format.");
+        alert("Format JSON invalide.");
         return;
       }
       saveShortcuts();
       displayShortcuts();
       setExportNeeded(false);
     } catch {
-      alert("Error reading file. Please upload a valid JSON.");
+      alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
     }
   };
   reader.readAsText(file);
 }
+
 
 function showInfoModal() {
   const modal = document.getElementById("infoModal");
