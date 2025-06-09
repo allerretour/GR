@@ -402,13 +402,22 @@ let heldTriggered = false;
 shortcutElement.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   if (!editMode) {
-    const base = shortcut.url.trim() === "?"
+    let url = shortcut.url.trim();
+
+    // Auto-prepend https:// if no scheme and not "?" placeholder
+    if (url !== "?" && !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
+      url = "https://" + url;
+    }
+
+    const base = url === "?"
       ? ""
-      : `<a href="${shortcut.url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
+      : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
+
     const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
     showTooltipModal(`${base}${tooltip}`, true); // true = isHtml
   }
 });
+
 
 shortcutElement.addEventListener("mousedown", (e) => {
   if (!editMode && e.button === 0) {
@@ -467,35 +476,40 @@ shortcutElement.addEventListener("mouseleave", () => {
 
 
     
-// --- TOUCH: Long-press = show info modal ---
-let touchHoldTimer;
-
 shortcutElement.addEventListener("touchstart", (e) => {
   if (editMode || e.touches.length !== 1) return;
 
-  // Apply styles early to block selection and callout
+  // Prevent default touch interactions
   shortcutElement.style.userSelect = "none";
   shortcutElement.style.webkitUserSelect = "none";
   shortcutElement.style.webkitTouchCallout = "none";
   shortcutElement.style.touchAction = "manipulation";
 
   touchHoldTimer = setTimeout(() => {
-    const url = shortcut.url.trim();
+    let url = shortcut.url.trim();
+
+    // Normalize URL if not "?" and no scheme present
+    if (url !== "?" && !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
+      url = "https://" + url;
+    }
+
     const base = url === "?"
       ? ""
       : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
     const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
+
     showTooltipModal(`${base}${tooltip}`, true);
 
-    // Delay restoring styles slightly
+    // Delay restoring styles
     setTimeout(() => {
       shortcutElement.style.userSelect = "";
       shortcutElement.style.webkitUserSelect = "";
       shortcutElement.style.webkitTouchCallout = "";
       shortcutElement.style.touchAction = "";
-    }, 1000); // delay in ms
+    }, 1000);
   }, 700);
 });
+
 
 shortcutElement.addEventListener("touchend", () => {
   clearTimeout(touchHoldTimer);
