@@ -146,15 +146,46 @@
             </div>
         </div>
     </div>
-    <div id="tooltipModal" onclick="closeTooltipModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-        <div onclick="event.stopPropagation()" style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%;">
-            <h3>💡 Info du raccourci</h3>
-            <div id="tooltipContent" style="white-space: pre-wrap; text-align: left;"></div>
-            <div style="text-align:right; margin-top: 20px;">
-                <button onclick="closeTooltipModal()">Fermer</button>
-            </div>
+   <div id="tooltipModal" onclick="closeTooltipModal()" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+">
+    <div onclick="event.stopPropagation()" style="
+        background:white;
+        padding:20px;
+        border-radius:8px;
+        max-width:600px;
+        width:90%;
+        max-height:80vh;
+        display: flex;
+        flex-direction: column;
+    ">
+        <h3 style="margin: 0;">💡 Info du raccourci</h3>
+
+        <div id="tooltipContent" style="
+            white-space: pre-wrap;
+            text-align: left;
+            overflow: auto;
+            flex-grow: 1;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        "></div>
+
+        <div style="text-align:right;">
+            <button onclick="closeTooltipModal()">Fermer</button>
         </div>
     </div>
+</div>
+
+
 
     <div id="infoModal" onclick="closeInfoModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
         <div onclick="event.stopPropagation()" class="info-modal-content">
