@@ -4,6 +4,8 @@ let shortcuts = [];
 let alphabeticalSorting = false;
 let manualOrder = [];
 let editMode = false;
+let compactMode = false;
+
 
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
@@ -57,14 +59,14 @@ function toggleTags() {
 
 
 
-
 const UI_STATE_KEY = "uiToggleState";
 
 let uiToggleState = {
     searchBar: true,
     tagFilters: true,
-
+    
 };
+
 
 function saveUIState() {
     localStorage.setItem(UI_STATE_KEY, JSON.stringify(uiToggleState));
@@ -393,7 +395,8 @@ function displayShortcuts() {
             shortcutElement.style.backgroundColor = "#fff4e5";
         }
 
-        shortcutElement.className = "shortcut";
+        shortcutElement.className = "shortcut" + (compactMode ? " compact" : "");
+
         const baseText = isInfoOnly ? "Appuyez pour les infos" : shortcut.url;
         const tooltipContent = shortcut.tooltipPlain ? `\n\n${shortcut.tooltipPlain}` : "";
         shortcutElement.setAttribute("title", escapeHTML(`${baseText}${tooltipContent}`));
@@ -533,28 +536,31 @@ function displayShortcuts() {
 
 
         // --- HTML CONTENT ---
-        shortcutElement.innerHTML = `
-      <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
-        <i class="fas fa-arrows-alt"></i>
-      </span>
-      <div style="text-align: left; flex-grow: 1;">
-        <div style="display: flex; align-items: center; font-weight: bold; gap: 6px;">
-          ${escapeHTML(shortcut.name)}
-        </div>
-        <div class="info" style="font-size: 0.75em; color: #B3B3B3;">
-          ${escapeHTML(shortcut.info || "")}
-        </div>
-        <div class="tags">${tagsHTML}</div>
-      </div>
-      <div class="icons" style="${editMode ? '' : 'visibility:hidden'}">
-        <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
-          <i class="fas fa-edit"></i>
-        </span>
-        <span class="icon" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
-          <i class="fas fa-trash-alt"></i>
-        </span>
-      </div>
-    `;
+shortcutElement.innerHTML = compactMode ? `
+  <div style="font-weight: bold;">${escapeHTML(shortcut.name)}</div>
+` : `
+  <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
+    <i class="fas fa-arrows-alt"></i>
+  </span>
+  <div style="text-align: left; flex-grow: 1;">
+    <div style="display: flex; align-items: center; font-weight: bold; gap: 6px;">
+      ${escapeHTML(shortcut.name)}
+    </div>
+    <div class="info" style="font-size: 0.75em; color: #B3B3B3;">
+      ${escapeHTML(shortcut.info || "")}
+    </div>
+    <div class="tags">${tagsHTML}</div>
+  </div>
+  <div class="icons" style="${editMode ? '' : 'visibility:hidden'}">
+    <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
+      <i class="fas fa-edit"></i>
+    </span>
+    <span class="icon" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
+      <i class="fas fa-trash-alt"></i>
+    </span>
+  </div>
+`;
+
 
         container.appendChild(shortcutElement);
     });
@@ -989,12 +995,7 @@ window.addEventListener("scroll", () => {
 
 
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "F4") {
-        e.preventDefault();
-        toggleTags();
-    }
-});
+
 
 document.getElementById("backToTopBtn").addEventListener("click", () => {
     window.scrollTo({

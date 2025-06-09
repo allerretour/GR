@@ -21,6 +21,15 @@ if (event.code === "F8") {
   }
 
 
+// F9 → Toggle compact
+  if (event.code === "F9") {
+    event.preventDefault();
+    compactMode = !compactMode;
+        displayShortcuts();
+    return;
+  }
+
+
   // Avoid shortcuts while typing in input/textarea or contentEditable
   if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA" || event.target.isContentEditable) {
     return;

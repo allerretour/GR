@@ -99,6 +99,10 @@
                 <i class="fas fa-tags"></i>
             </button>
 
+<button onclick="compactMode = !compactMode; displayShortcuts();" >
+  <i class="fas fa-compress-arrows-alt"></i>
+</button>
+
             <div style="display: flex; align-items: center; gap: 6px;">
                 <span style="font-size: 14px;">Édition</span>
                 <label class="switch" title="Mode édition">
@@ -106,6 +110,10 @@
                     <span class="slider"></span>
                 </label>
             </div>
+
+
+
+
         </div>
         <input type="file" id="importFile" style="display:none" onchange="importShortcuts(event)">
     </div>
@@ -201,6 +209,7 @@
                         <li><strong>F2</strong> : Afficher / cacher la barre de recherche</li>
                         <li><strong>F4</strong> : Afficher / cacher les options</li>
                         <li><strong>F8</strong> : Afficher / cacher les étiquettes</li>
+                        <li><strong>F9</strong> : Afficher / cacher mode compact</li>
                         <li><strong>t</strong> : Tri alphabétique / manuel</li>
                         <li><strong>e</strong> : Activer / désactiver édition</li>
                         <li><strong>a</strong> : Ajouter une fiche</li>

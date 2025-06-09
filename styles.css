@@ -340,6 +340,23 @@ input[type="text"] {
   border: 1px solid #ccc;
 }
 
+.shortcut.compact {
+  padding: 14px 6px 14px 15px; /* top, right, bottom, left */
+  min-height: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 1em;
+}
+
+.shortcut.compact .info,
+.shortcut.compact .tags,
+.shortcut.compact .icons,
+.shortcut.compact .move-handle {
+  display: none !important;
+}
+
+
 .shortcut-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
