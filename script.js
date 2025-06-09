@@ -386,14 +386,17 @@ function displayShortcuts() {
             .map(tag => `<span class="tag" style="background-color:${getTagColor(tag)}">${escapeHTML(tag)}</span>`).join(" ");
 
         const shortcutElement = document.createElement("div");
-        const isInfoOnly = shortcut.url.trim() === "?";
-        const isFileUrl = shortcut.url.trim().toLowerCase().startsWith("file://");
+        
+        const trimmedUrl = shortcut.url.trim();
+        const isInfoOnly = trimmedUrl === "?";
+        const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
 
         if (isInfoOnly) {
-            shortcutElement.style.backgroundColor = "#e7f1fb";
+          shortcutElement.style.backgroundColor = "#e7f1fb"; // Info-only blue
         } else if (isFileUrl) {
-            shortcutElement.style.backgroundColor = "#fff4e5";
+          shortcutElement.style.backgroundColor = "#fff4e5"; // File URL orange
         }
+
 
         shortcutElement.className = "shortcut" + (compactMode ? " compact" : "");
 
