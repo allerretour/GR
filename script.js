@@ -204,17 +204,26 @@ function renderSelectedTags() {
 
 function toggleButtonGroup() {
   const group = document.getElementById("buttonGroupWrapper");
+  const toggleBtn = document.getElementById("toggleBtnGroup");
+
   group.classList.toggle("hidden");
   group.classList.toggle("visible");
-  // Optionally change the icon/text on the toggle button
-  const toggleBtn = document.getElementById("toggleBtnGroup");
+
   if (group.classList.contains("hidden")) {
     toggleBtn.innerHTML = '<i class="fas fa-cog"></i>';
   } else {
     toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
-  }
 
+    // Scroll the button group into view smoothly
+    setTimeout(() => {
+      group.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 100);
+  }
 }
+
 
 function loadShortcuts() {
   const savedData = localStorage.getItem("shortcuts");
