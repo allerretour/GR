@@ -114,7 +114,7 @@
     </div>
     <!-- Modal for editing -->
     <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-        <div style="background:white; padding:20px; border-radius:8px; max-width:500px; width:90%;">
+        <div style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%;">
             <h3>Modifier le raccourci</h3>
             <div style="margin-bottom: 12px;">
                 <label for="editName" class="form-label">Nom :</label>
@@ -129,14 +129,14 @@
                 <input type="text" id="editUrl" placeholder="URL ou ?" style="width:90%;" />
             </div>
             <div style="margin-bottom: 12px;">
-                <label for="editTags" class="form-label">Étiquettes :</label>
+                <label for="editTags" class="form-label">🏷️ Étiquettes :</label>
                 <input type="text" id="editTagsInput" placeholder="Ajouter des étiquettes..." list="tagSuggestions" style="width:90%;" onkeydown="handleTagInput(event)">
                 <datalist id="tagSuggestions"></datalist>
                 <div id="editTagsContainer" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
                 <input type="hidden" id="editTags" />
             </div>
             <div style="margin-bottom: 12px;">
-                <label for="editTooltip" class="form-label">💡 Info :</label>
+                <label for="editTooltip" class="form-label">💡 Info du raccourci:</label>
                 <div id="editTooltip" style="height: 150px; background: white;"></div>
 
             </div>
