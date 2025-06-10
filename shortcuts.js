@@ -1,6 +1,3 @@
-document.addEventListener("keydown", function(event) {
-  
-
 function showShortcutFeedback(keyLabel) {
   const feedback = document.createElement("div");
   feedback.className = "shortcut-feedback";
@@ -14,11 +11,17 @@ function showShortcutFeedback(keyLabel) {
 }
 
 
+document.addEventListener("keydown", function(event) {
+  
+
+
+
+
   // F2 → Toggle Search Bar
   if (event.code === "F2") {
     event.preventDefault();
     toggleSearchBar();
-    showShortcutFeedback("Search Bar (F2)");
+    showShortcutFeedback("Bar recherche (F2)");
     return;
   }
 
@@ -35,7 +38,7 @@ function showShortcutFeedback(keyLabel) {
   if (event.code === "F8") {
     event.preventDefault();
     toggleTags();
-    showShortcutFeedback("Tags (F8)");
+    showShortcutFeedback("Cacher étiquettes (F8)");
     return;
   }
 
@@ -44,7 +47,7 @@ function showShortcutFeedback(keyLabel) {
     event.preventDefault();
     compactMode = !compactMode;
     displayShortcuts();
-    showShortcutFeedback("Compact Mode (F9)");
+    showShortcutFeedback("Mode compact (F9)");
     return;
   }
 
@@ -54,13 +57,27 @@ function showShortcutFeedback(keyLabel) {
     return;
   }
 
+
+if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
+    event.preventDefault();
+    if (confirm("Voulez vous vraiment réinitialiser la page ?")) {
+        localStorage.clear();
+        showShortcutFeedback("LocalStorage Reset (Ctrl + Shift + R)");
+        location.reload();
+    }
+    return;
+}
+
+
+
+
   // E → Toggle Edit Mode
   if (event.key.toLowerCase() === "e") {
     const editToggle = document.getElementById("editToggle");
     if (editToggle) {
       editToggle.checked = !editToggle.checked;
       toggleEditMode();
-      showShortcutFeedback("Edit Mode (E)");
+      showShortcutFeedback("Mode édition (E)");
     }
     return;
   }
@@ -73,7 +90,7 @@ function showShortcutFeedback(keyLabel) {
     } else {
       closeInfoModal();
     }
-    showShortcutFeedback("Info Modal (I)");
+    showShortcutFeedback("Info aide (I)");
     return;
   }
 
@@ -83,7 +100,7 @@ function showShortcutFeedback(keyLabel) {
     if (toggle) {
       toggle.checked = !toggle.checked;
       displayShortcuts();
-      showShortcutFeedback("Tag Filter Mode (M)");
+      showShortcutFeedback("Mode A/O étiquette (M)");
     }
     return;
   }
@@ -91,43 +108,37 @@ function showShortcutFeedback(keyLabel) {
   // L → Import File Dialog
   if (event.key.toLowerCase() === "l") {
     document.getElementById('importFile').click();
-    showShortcutFeedback("Import (L)");
+    showShortcutFeedback("Charger liste (L)");
     return;
   }
 
   // S → Export Shortcuts
   if (event.key.toLowerCase() === "s") {
     exportShortcuts();
-    showShortcutFeedback("Export (S)");
+    showShortcutFeedback("Sauvegarder liste (S)");
     return;
   }
 
   // N → New List
   if (event.key.toLowerCase() === "n") {
     clearShortcuts();
-    showShortcutFeedback("New List (N)");
+    showShortcutFeedback("Nouvelle liste (N)");
     return;
   }
 
   // A → Add Item
   if (event.key.toLowerCase() === "a") {
     openAddModal();
-    showShortcutFeedback("Add Item (A)");
+    showShortcutFeedback("Ajouter (A)");
     return;
   }
 
   // T → Toggle Sorting
   if (event.key.toLowerCase() === "t") {
     toggleSorting();
-    showShortcutFeedback("Sort (T)");
+    showShortcutFeedback("Mode tri (T)");
     return;
   }
 
-  // O → Options Panel
-  if (event.key.toLowerCase() === "o") {
-    toggleButtonGroup();
-    importBtn.focus();
-    showShortcutFeedback("Options (O)");
-    return;
-  }
+  
 });

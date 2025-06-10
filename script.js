@@ -7,6 +7,8 @@ let editMode = false;
 let compactMode = false;
 
 
+
+
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
         '&': '&amp;',
@@ -58,7 +60,6 @@ function toggleTags() {
 }
 
 
-
 const UI_STATE_KEY = "uiToggleState";
 
 let uiToggleState = {
@@ -66,7 +67,6 @@ let uiToggleState = {
     tagFilters: true,
     
 };
-
 
 function saveUIState() {
     localStorage.setItem(UI_STATE_KEY, JSON.stringify(uiToggleState));
@@ -860,6 +860,8 @@ function exportShortcuts() {
 
 
 function importShortcuts(event) {
+    
+    
     const file = event.target.files[0];
     if (!file) return;
 
@@ -889,6 +891,8 @@ function importShortcuts(event) {
                 alert("Format JSON invalide.");
                 return;
             }
+            
+            
             saveShortcuts();
             displayShortcuts();
             setExportNeeded(false);
@@ -896,7 +900,8 @@ function importShortcuts(event) {
                 top: 0,
                 behavior: "smooth"
             });
-
+            
+            
         } catch {
             alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
         }
