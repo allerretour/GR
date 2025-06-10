@@ -82,6 +82,19 @@ function loadUIState() {
     }
 }
 
+function ensureDefaultShortcut() {
+    if (shortcuts.length === 0) {
+        shortcuts.push({
+            name: "Exemple",
+            url: "https://google.com",
+            info: "Ceci est un raccourci par défaut.",
+            tags: ["exemple"],
+            tooltip: "<p>Voici une info-bulle HTML <strong>éditable</strong>.</p>",
+            tooltipPlain: "Voici une info-bulle HTML éditable."
+        });
+        saveShortcuts();
+    }
+}
 
 
 
@@ -251,7 +264,7 @@ function loadShortcuts() {
     if (updated) {
         saveShortcuts(); // Resave only if we made changes
     }
-
+    ensureDefaultShortcut();  // ✅ inject default if needed
     displayShortcuts();
 }
 
@@ -603,81 +616,94 @@ function saveTagOrder(order) {
 }
 
 function displayTagFilters() {
-    const tagContainer = document.getElementById("tagFilters");
-    tagContainer.innerHTML = "";
-    const tagSet = new Set();
-    shortcuts.forEach(s => (s.tags || []).forEach(t => tagSet.add(t)));
-    if (tagSet.size === 0) return;
-    const allTags = Array.from(tagSet);
-    if (tagOrder.length === 0) tagOrder = [...allTags];
-    else tagOrder = tagOrder.filter(t => allTags.includes(t)).concat(allTags.filter(t => !tagOrder.includes(t)));
-    const clearBtn = document.createElement("span");
-    clearBtn.className = "tag-filter" + (activeTagFilter.length === 0 ? " active" : "");
-    clearBtn.textContent = "Tous";
-    clearBtn.onclick = () => {
-        activeTagFilter = [];
-        displayShortcuts();
-    };
-    tagContainer.appendChild(clearBtn);
-    tagOrder.forEach(tag => {
-        const btn = document.createElement("span");
-        btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
-        btn.textContent = tag;
-        btn.style.display = "inline-flex";
-        btn.style.alignItems = "center";
-        btn.style.gap = "6px";
-        const moveIcon = document.createElement("i");
-        moveIcon.className = "fas fa-arrows-alt";
-        moveIcon.style.color = "#999";
-        moveIcon.style.cursor = "grab";
-        moveIcon.style.display = editMode ? "inline-block" : "none";
-        if (editMode) {
-            btn.draggable = true;
-            btn.ondragstart = e => {
-                e.dataTransfer.setData("text/plain", tag);
-                e.dataTransfer.effectAllowed = "move";
-            };
-            btn.ondragover = e => e.preventDefault();
-            btn.ondrop = e => {
-                e.preventDefault();
-                const fromTag = e.dataTransfer.getData("text/plain");
-                const toTag = tag;
-                const fromIndex = tagOrder.indexOf(fromTag);
-                const toIndex = tagOrder.indexOf(toTag);
-                if (fromIndex > -1 && toIndex > -1 && fromIndex !== toIndex) {
-                    const reordered = [...tagOrder];
-                    const [moved] = reordered.splice(fromIndex, 1);
-                    reordered.splice(toIndex, 0, moved);
-                    tagOrder = reordered;
-                    saveTagOrder(tagOrder);
-                    displayTagFilters();
-                }
-            };
-        } else {
-            btn.draggable = false;
-            btn.ondragstart = null;
-            btn.ondragover = null;
-            btn.ondrop = null;
+  const tagContainer = document.getElementById("tagFilters");
+  tagContainer.innerHTML = "";
+
+  const tagSet = new Set();
+  shortcuts.forEach(s => (s.tags || []).forEach(t => tagSet.add(t)));
+  if (tagSet.size === 0) return;
+
+  const allTags = Array.from(tagSet);
+
+  // Maintain tag order with new/removed tags
+  tagOrder = tagOrder.filter(t => allTags.includes(t)).concat(
+    allTags.filter(t => !tagOrder.includes(t))
+  );
+
+  // "Tous" (All) clear button
+  const clearBtn = document.createElement("span");
+  clearBtn.className = "tag-filter" + (activeTagFilter.length === 0 ? " active" : "");
+  clearBtn.textContent = "Tous";
+  clearBtn.onclick = () => {
+    activeTagFilter = [];
+    displayShortcuts();
+  };
+  tagContainer.appendChild(clearBtn);
+
+  tagOrder.forEach(tag => {
+    const btn = document.createElement("span");
+    btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
+    btn.textContent = tag;
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.gap = "6px";
+
+    // Move icon
+    const moveIcon = document.createElement("i");
+    moveIcon.className = "fas fa-arrows-alt";
+    moveIcon.style.color = "#999";
+    moveIcon.style.cursor = "grab";
+    moveIcon.style.display = editMode ? "inline-block" : "none";
+
+    // Drag-and-drop behavior in edit mode
+    if (editMode) {
+      btn.draggable = true;
+      btn.ondragstart = e => {
+        e.dataTransfer.setData("text/plain", tag);
+        e.dataTransfer.effectAllowed = "move";
+      };
+      btn.ondragover = e => e.preventDefault();
+      btn.ondrop = e => {
+        e.preventDefault();
+        const fromTag = e.dataTransfer.getData("text/plain");
+        const toTag = tag;
+        const fromIndex = tagOrder.indexOf(fromTag);
+        const toIndex = tagOrder.indexOf(toTag);
+        if (fromIndex > -1 && toIndex > -1 && fromIndex !== toIndex) {
+          const reordered = [...tagOrder];
+          const [moved] = reordered.splice(fromIndex, 1);
+          reordered.splice(toIndex, 0, moved);
+          tagOrder = reordered;
+          saveTagOrder(tagOrder);
+          displayTagFilters();
         }
-        btn.insertBefore(moveIcon, btn.firstChild);
-        btn.onclick = () => {
-            if (activeTagFilter.includes(tag)) {
-                activeTagFilter = activeTagFilter.filter(t => t !== tag);
-            } else {
-                activeTagFilter.push(tag);
-            }
-            displayShortcuts();
-        };
-        tagContainer.appendChild(btn);
-    });
-    // Apply color mode class (AND = blue, OR = green)
-    const isAndMode = document.getElementById("tagFilterModeToggle").checked;
-    const tagFilterEls = document.querySelectorAll(".tag-filter");
-    tagFilterEls.forEach(el => {
-        el.classList.remove("and-mode", "or-mode");
-        el.classList.add(isAndMode ? "and-mode" : "or-mode");
-    });
+      };
+    } else {
+      btn.draggable = false;
+    }
+
+    btn.insertBefore(moveIcon, btn.firstChild);
+
+    btn.onclick = () => {
+      if (activeTagFilter.includes(tag)) {
+        activeTagFilter = activeTagFilter.filter(t => t !== tag);
+      } else {
+        activeTagFilter.push(tag);
+      }
+      displayShortcuts();
+    };
+
+    tagContainer.appendChild(btn);
+  });
+
+  // Apply AND/OR mode class
+  const isAndMode = document.getElementById("tagFilterModeToggle").checked;
+  document.querySelectorAll(".tag-filter").forEach(el => {
+    el.classList.remove("and-mode", "or-mode");
+    el.classList.add(isAndMode ? "and-mode" : "or-mode");
+  });
 }
+
 
 function deleteShortcut(index) {
     const shortcut = shortcuts[index];
@@ -927,6 +953,7 @@ function closeInfoModal() {
 function clearShortcuts() {
     if (confirm("Voulez vous réinitialiser la liste?")) {
         shortcuts = [];
+        ensureDefaultShortcut();  // ✅ add fallback
         saveShortcuts();
         localStorage.removeItem("manualOrder");
         // Reset the title
