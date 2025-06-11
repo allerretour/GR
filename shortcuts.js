@@ -119,6 +119,14 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
     return;
   }
 
+// V → Export Shortcuts visible
+  if (event.key.toLowerCase() === "v") {
+    exportVisibleShortcutsAsText();
+    showShortcutFeedback("Exporter raccourcis visibles (V)");
+    return;
+  }
+
+
   // N → New List
   if (event.key.toLowerCase() === "n") {
     clearShortcuts();
