@@ -918,7 +918,8 @@ function importShortcuts(event) {
                 return;
             }
             
-            
+            activeTagFilter = []; // ✅ Reset to "Tous"
+            document.getElementById("searchInput").value = ""; // ✅ Clear search input
             saveShortcuts();
             displayShortcuts();
             setExportNeeded(false);

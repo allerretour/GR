@@ -32,44 +32,43 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="16.8125"
-     inkscape:cx="14.66171"
-     inkscape:cy="14.542751"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:cx="14.63197"
+     inkscape:cy="14.513011"
+     inkscape:window-width="1500"
+     inkscape:window-height="1032"
+     inkscape:window-x="2146"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
-  <path
-     d="m 240,-80 q -33,0 -56.5,-23.5 Q 160,-127 160,-160 v -640 q 0,-33 23.5,-56.5 Q 207,-880 240,-880 h 480 q 33,0 56.5,23.5 23.5,23.5 23.5,56.5 v 640 q 0,33 -23.5,56.5 Q 753,-80 720,-80 Z m 0,-80 h 480 v -640 h -80 v 280 l -100,-60 -100,60 V -800 H 240 Z m 0,0 v -640 z m 200,-360 100,-60 100,60 -100,-60 z"
-     id="path1"
-     style="display:none;fill:#ff6600;stroke:#000000;stroke-width:19.72;stroke-dasharray:none" />
-  <circle
-     style="display:none;fill:#ff6600;stroke:#000000;stroke-width:18.12;stroke-dasharray:none"
-     id="path2"
-     cx="539.47955"
-     cy="-346.76578"
-     r="129.79173" />
+  <rect
+     style="fill:#ffccaa;fill-opacity:0.496032;stroke-width:93.0445"
+     id="rect1"
+     width="960"
+     height="960"
+     x="1.4210855e-14"
+     y="-960" />
   <text
      xml:space="preserve"
-     style="font-weight:bold;font-size:1114.8px;font-family:Arial-BoldMT, Arial, sans-serif;-inkscape-font-specification:'Arial-BoldMT, Arial, sans-serif, Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ff6600;stroke:none;stroke-width:3.8016"
-     x="42.681919"
-     y="-80.768021"
-     id="text8"><tspan
+     style="font-weight:bold;font-size:1005.11px;font-family:Arial-BoldMT, Arial, sans-serif;-inkscape-font-specification:'Arial-BoldMT, Arial, sans-serif, Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ff6600;stroke:#ffffff;stroke-width:11.44;stroke-dasharray:none"
+     x="-205.3168"
+     y="-338.55716"
+     id="text8"
+     transform="matrix(0.98021136,0.26700721,-0.2719244,0.94611658,0,0)"><tspan
        sodipodi:role="line"
        id="tspan8"
-       style="stroke-width:3.8016;stroke:none"
-       x="42.681919"
-       y="-80.768021">G</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:1005.11px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke:#ffffff;stroke-width:11.44;stroke-dasharray:none"
+       x="-205.3168"
+       y="-338.55716">G</tspan></text>
   <text
      xml:space="preserve"
-     style="font-weight:bold;font-size:619.188px;font-family:Arial-BoldMT, Arial, sans-serif;-inkscape-font-specification:'Arial-BoldMT, Arial, sans-serif, Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:5.07512;stroke-dasharray:none"
-     x="308.18011"
-     y="-315.24161"
-     id="text9"><tspan
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:1191.56px;font-family:Arial;-inkscape-font-specification:'Arial, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#8787de;stroke:#ffffff;stroke-width:9.76641;stroke-dasharray:none"
+     x="464.37546"
+     y="242.84439"
+     id="text9"
+     transform="matrix(1.0885753,-0.36623784,0.30198362,0.81703319,0,0)"><tspan
        sodipodi:role="line"
        id="tspan9"
-       style="fill:#000000;stroke:none;stroke-width:5.07512;stroke-dasharray:none"
-       x="308.18011"
-       y="-315.24161">r</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:1191.56px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#8787de;stroke:#ffffff;stroke-width:9.76641;stroke-dasharray:none"
+       x="464.37546"
+       y="242.84439">r</tspan></text>
 </svg>

@@ -256,14 +256,16 @@ color: #025ba8;
 
 .labels h2 {
   margin: 0 auto;
-  font-size: 40px;
+  font-size: clamp(32px, 5vw, 48px);
   font-weight: 600;
   text-align: center;
-  color: #025BA8;
-  letter-spacing: -0.5px;
+  color: #ff7e5f;
+  letter-spacing: 0.5px;
   line-height: 1.2;
   position: relative;
   width: fit-content;
+  
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .button-group {
@@ -612,3 +614,11 @@ text-align: left;
 .hidden {
   display: none !important;
 }
+
+
+
+
+
+
+
+
