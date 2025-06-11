@@ -19,11 +19,11 @@
 <body>
     <div class="container">
         <div class="labels" style="position: relative;">
-
-            <!-- Toggle Button -->
+<!-- Toggle Button -->
             <button id="searchToggleBtn" onclick="toggleSearchBar()" title="Afficher/masquer la recherche (F2)">
                 <i id="searchToggleIcon" class="fa-solid fa-magnifying-glass"></i>
             </button>
+            
             <div class="title-container" style="display: flex; justify-content: center; margin: 10px auto; max-width: 600px;">
 
                 <div class="title-inner" style="display: inline-flex; align-items: center; gap: 10px;">
@@ -51,7 +51,7 @@
 
         </div>
 
-        <div style="display: flex; align-items: center; margin-top: 15px; gap: 10px;">
+        <div style="display: flex; align-items: center; margin-top: 10px; gap: 10px;">
             <!-- Tag Filters -->
 
 
@@ -59,10 +59,10 @@
             <div id="tagFilters" class="tag-filter-container" style="cursor: move; flex-grow: 1;"></div>
         </div>
 
-
+        
 
         <!-- Search Bar (initially visible) -->
-        <div id="searchContainer" style="display: none; position: relative; margin-top: 10px; justify-content: center;">
+        <div id="searchContainer" style="display: none; position: relative; margin-top: 5px; justify-content: center;">
             <div style="position: relative; width: 100%; max-width: 300px;">
                 <input type="text" id="searchInput" placeholder="🔍 Rechercher un raccourci..." oninput="handleSearchInput()" style="width: 100%; padding: 6px 28px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
                 <i id="clearSearchBtn" class="fas fa-times-circle" onclick="clearSearch()" title="Effacer la recherche" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2; pointer-events: auto;"></i>
@@ -207,27 +207,27 @@
                 <div>
                     <h3>⌨️ Clavier</h3>
                     <ul>
-                        <li><i class="fas fa-keyboard"></i> <strong>i</strong> : Cette fenêtre</li>
+                        <li><strong>I</strong> : Cette fenêtre</li>
                         <li><strong>F2</strong> : Afficher / cacher la barre de recherche</li>
                         <li><strong>F4</strong> : Afficher / cacher les options</li>
                         <li><strong>F8</strong> : Afficher / cacher les étiquettes</li>
                         <li><strong>F9</strong> : Afficher / cacher mode compact</li>
-                        <li><strong>t</strong> : Tri alphabétique / manuel</li>
-                        <li><strong>e</strong> : Activer / désactiver édition</li>
-                        <li><strong>a</strong> : Ajouter une fiche</li>
-                        <li><strong>l</strong> : Charger une liste</li>
-                        <li><strong>s</strong> : Exporter la liste</li>
-                        <li><strong>n</strong> : Nouvelle liste</li>
-                        <li><strong>m</strong> : Filtre ET / OU</li>
-                        <li><strong>CTRL+SHIFT+r</strong> : réinitialiser la page</li>
+                        <li><strong>T</strong> : Tri alphabétique / manuel</li>
+                        <li><strong>E</strong> : Activer / désactiver édition</li>
+                        <li><strong>A</strong> : Ajouter une fiche</li>
+                        <li><strong>L</strong> : Charger une liste</li>
+                        <li><strong>S</strong> : Exporter la liste</li>
+                        <li><strong>N</strong> : Nouvelle liste</li>
+                        <li><strong>M</strong> : Filtre ET / OU</li>
+                        <li><strong>CTRL+SHIFT+R</strong> : réinitialiser la page</li>
                     </ul>
                 </div>
                 <div>
                     <h3>🖱️ Souris</h3>
                     <ul>
-                        <li><strong>Clic gauche</strong> : Ouvrir URL</li>
-                        <li><strong>Clic gauche garder 1 sec.</strong> : Copier URL</li>
-                        <li><strong>Clic droit</strong> : 💡 Info</li>
+                        <li><strong>Clic GAUCHE</strong> : Ouvrir URL</li>
+                        <li><strong>Clic GAUCHE garder 1 sec.</strong> : Copier URL</li>
+                        <li><strong>Clic DROIT</strong> : 💡 Info</li>
                     </ul>
                 </div>
             </div>
