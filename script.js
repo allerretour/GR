@@ -922,7 +922,10 @@ function importShortcuts(event) {
             document.getElementById("searchInput").value = ""; // ✅ Clear search input
             saveShortcuts();
             displayShortcuts();
+            localStorage.setItem("lastExportFilename", "");
             setExportNeeded(false);
+            updateLastExportDisplay();
+
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
