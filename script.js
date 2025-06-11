@@ -207,7 +207,8 @@ function exportVisibleShortcutsAsText() {
     const header = [
         `Liste : ${listTitle}`,
         `Nombre de raccourcis exportés : ${count}`,
-        ""  // blank line after header
+        `===============================`,
+        " " // blank line after header
     ].join("\n");
 
     const body = visibleShortcuts.join("\n\n");
@@ -221,7 +222,7 @@ function exportVisibleShortcutsAsText() {
         timeZone: 'America/Toronto'
     }).replace(' ', '_').replace(/:/g, '-');
 
-    const filename = `visible_shortcuts_${timestamp}.txt`;
+    const filename = `raccourcis_visible_${timestamp}.txt`;
 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
