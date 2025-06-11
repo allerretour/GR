@@ -9,6 +9,7 @@ let compactMode = false;
 
 
 
+
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
         '&': '&amp;',
@@ -178,6 +179,59 @@ function handleTagInput(event) {
         input.value = "";
     }
 }
+
+
+function exportVisibleShortcutsAsText() {
+    const visibleShortcuts = [];
+    const shortcutElements = document.querySelectorAll("#shortcuts .shortcut");
+
+    const listTitle = document.getElementById("appTitle").textContent.trim() || "Sans titre";
+
+    shortcutElements.forEach(el => {
+        const index = parseInt(el.getAttribute("data-index"));
+        const shortcut = shortcuts[index];
+        if (shortcut && shortcut.url.trim() !== "?") {
+            const name = shortcut.name || "Sans nom";
+            const url = shortcut.url || "";
+            visibleShortcuts.push(`${name}\n${url}`);
+        }
+    });
+
+    const count = visibleShortcuts.length;
+    if (count === 0) {
+        alert("Aucun raccourci valide à exporter (les raccourcis avec URL '?' sont ignorés).");
+        return;
+    }
+
+    // Header + 1 blank line after
+    const header = [
+        `Liste : ${listTitle}`,
+        `Nombre de raccourcis exportés : ${count}`,
+        ""  // blank line after header
+    ].join("\n");
+
+    const body = visibleShortcuts.join("\n\n");
+    const textContent = header + "\n" + body; // final blank line added here
+
+    const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+
+    const now = new Date();
+    const timestamp = now.toLocaleString('sv-SE', {
+        hour12: false,
+        timeZone: 'America/Toronto'
+    }).replace(' ', '_').replace(/:/g, '-');
+
+    const filename = `visible_shortcuts_${timestamp}.txt`;
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(link.href);
+    document.body.removeChild(link);
+}
+
 
 function renderSelectedTags() {
     const container = document.getElementById("editTagsContainer");
