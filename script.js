@@ -87,10 +87,10 @@ function ensureDefaultShortcut() {
         shortcuts.push({
             name: "Exemple",
             url: "https://google.com",
-            info: "Ceci est un raccourci par défaut.",
-            tags: ["exemple"],
-            tooltip: "<p>Voici une info-bulle HTML <strong>éditable</strong>.</p>",
-            tooltipPlain: "Voici une info-bulle HTML éditable."
+            info: "Clic de DROIT pour plus d'infos",
+            tags: ["instruction"],
+            tooltip: "<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>",
+            tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
         });
         saveShortcuts();
     }
