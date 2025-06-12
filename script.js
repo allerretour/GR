@@ -281,6 +281,7 @@ function exportVisibleShortcutsAsText() {
     link.click();
     URL.revokeObjectURL(link.href);
     document.body.removeChild(link);
+    hideOptionsAndScrollTop();
 }
 
 
