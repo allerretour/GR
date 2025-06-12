@@ -61,9 +61,15 @@ function toggleTags() {
 }
 
 function saveActiveTagFilter() {
-    localStorage.setItem("activeTagFilter", JSON.stringify(activeTagFilter));
-    setExportNeeded(true);
+    const current = localStorage.getItem("activeTagFilter");
+    const serialized = JSON.stringify(activeTagFilter);
+
+    if (current !== serialized) {
+        localStorage.setItem("activeTagFilter", serialized);
+        setExportNeeded(true);
+    }
 }
+
 
 
 function hideOptionsAndScrollTop() {
@@ -663,7 +669,7 @@ shortcutElement.innerHTML = compactMode ? `
     if (!alphabeticalSorting && editMode) {
         addDragAndDropEvents();
     }
-
+    saveActiveTagFilter(); // ✅ Save filter every time it’s applied
     displayTagFilters();
     document.getElementById("shortcutCount").textContent = `Affichés: ${list.length} / Total: ${shortcuts.length}`;
 }
@@ -715,7 +721,7 @@ function displayTagFilters() {
   clearBtn.textContent = "Tous";
   clearBtn.onclick = () => {
   activeTagFilter = [];
-  saveActiveTagFilter();         // ✅ Save when cleared
+  
   displayShortcuts();
 };
 
@@ -771,7 +777,7 @@ function displayTagFilters() {
   } else {
     activeTagFilter.push(tag);
   }
-  saveActiveTagFilter();         // ✅ Save when changed
+  
   displayShortcuts();
    };
 
