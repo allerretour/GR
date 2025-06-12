@@ -364,13 +364,16 @@ input[type="text"] {
 }
 
 .shortcut.compact {
-  padding: 14px 6px 14px 15px; /* top, right, bottom, left */
-  min-height: auto;
+  display: flex;
+  padding: 8px 8px 8px 8px;
+  min-height: 80px;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  font-size: 1em;
+  align-items: center;        /* horizontal center (for column) */
+  justify-content: center;    /* vertical center */
+  font-size: 1.5em;
+  text-align: center;         /* aligns multi-line text inside */
 }
+
 
 .shortcut.compact .info,
 .shortcut.compact .tags,
