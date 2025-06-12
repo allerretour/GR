@@ -58,6 +58,7 @@ function toggleTags() {
     uiToggleState.tagFilters = !uiToggleState.tagFilters;
     el.classList.toggle("hidden", !uiToggleState.tagFilters);
     saveUIState();
+hideOptionsAndScrollTop()
 }
 
 function saveActiveTagFilter() {

@@ -43,6 +43,7 @@ if (event.code === "F8") {
   saveUIState();                        // ✅ Persist
   setExportNeeded(true);               // ✅ Export tracking
   showShortcutFeedback("Cacher étiquettes (F8)");
+
   return;
 }
 
@@ -53,6 +54,7 @@ if (event.code === "F9") {
   localStorage.setItem("compactMode", compactMode); // ✅ Persist
   setExportNeeded(true);                             // ✅ Export tracking
   displayShortcuts();
+
   showShortcutFeedback("Mode compact (F9)");
   return;
 }
@@ -107,6 +109,7 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
     if (toggle) {
       toggle.checked = !toggle.checked;
       displayShortcuts();
+
       showShortcutFeedback("Mode A/O étiquette (M)");
     }
     return;
@@ -151,6 +154,7 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
   // T → Toggle Sorting
   if (event.key.toLowerCase() === "t") {
     toggleSorting();
+
     showShortcutFeedback("Mode tri (T)");
     return;
   }
