@@ -60,6 +60,30 @@ function toggleTags() {
     saveUIState();
 }
 
+function saveActiveTagFilter() {
+    localStorage.setItem("activeTagFilter", JSON.stringify(activeTagFilter));
+    setExportNeeded(true);
+}
+
+
+function hideOptionsAndScrollTop() {
+    const group = document.getElementById("buttonGroupWrapper");
+    const toggleBtn = document.getElementById("toggleBtnGroup");
+
+    if (group) {
+        group.classList.add("hidden");
+
+        // ✅ Reset icon
+        if (toggleBtn) {
+            toggleBtn.innerHTML = '<i class="fas fa-cog"></i>';
+        }
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+
+
 
 const UI_STATE_KEY = "uiToggleState";
 
@@ -690,9 +714,11 @@ function displayTagFilters() {
   clearBtn.className = "tag-filter" + (activeTagFilter.length === 0 ? " active" : "");
   clearBtn.textContent = "Tous";
   clearBtn.onclick = () => {
-    activeTagFilter = [];
-    displayShortcuts();
-  };
+  activeTagFilter = [];
+  saveActiveTagFilter();         // ✅ Save when cleared
+  displayShortcuts();
+};
+
   tagContainer.appendChild(clearBtn);
 
   tagOrder.forEach(tag => {
@@ -740,13 +766,15 @@ function displayTagFilters() {
     btn.insertBefore(moveIcon, btn.firstChild);
 
     btn.onclick = () => {
-      if (activeTagFilter.includes(tag)) {
-        activeTagFilter = activeTagFilter.filter(t => t !== tag);
-      } else {
-        activeTagFilter.push(tag);
-      }
-      displayShortcuts();
-    };
+  if (activeTagFilter.includes(tag)) {
+    activeTagFilter = activeTagFilter.filter(t => t !== tag);
+  } else {
+    activeTagFilter.push(tag);
+  }
+  saveActiveTagFilter();         // ✅ Save when changed
+  displayShortcuts();
+   };
+
 
     tagContainer.appendChild(btn);
   });
@@ -910,7 +938,8 @@ function exportShortcuts() {
         shortcuts: shortcuts,
         tagOrder: tagOrder,
         uiToggleState: uiToggleState,     // ✅ Save UI toggle states
-        compactMode: compactMode          // ✅ Save compact mode state
+        compactMode: compactMode,          // ✅ Save compact mode state
+        activeTagFilter: activeTagFilter        // ✅ Save selected tag filters
     };
     const dataStr = JSON.stringify(data, null, 4);
 
@@ -934,6 +963,7 @@ function exportShortcuts() {
     localStorage.setItem("lastExportFilename", lstFilename);
     setExportNeeded(false);
     updateLastExportDisplay();
+    hideOptionsAndScrollTop();
 }
 
 
@@ -943,6 +973,7 @@ function importShortcuts(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // ✅ Only accept .lst files
     if (!file.name.toLowerCase().endsWith(".lst")) {
         alert("Seuls les fichiers .lst sont autorisés.");
         return;
@@ -952,19 +983,30 @@ function importShortcuts(event) {
     reader.onload = function(e) {
         try {
             const importedData = JSON.parse(e.target.result);
+
+            // Reset defaults
+            activeTagFilter = [];
+
             if (Array.isArray(importedData)) {
                 shortcuts = importedData;
             } else if (importedData.shortcuts && Array.isArray(importedData.shortcuts)) {
                 shortcuts = importedData.shortcuts;
 
+                // Restore title
                 if (importedData.title) {
                     document.getElementById("appTitle").textContent = importedData.title;
                     localStorage.setItem("appTitle", importedData.title);
                 }
 
+                // Restore tag order
                 if (Array.isArray(importedData.tagOrder)) {
                     tagOrder = importedData.tagOrder;
                     localStorage.setItem("tagOrder", JSON.stringify(tagOrder));
+                }
+
+                // ✅ Restore selected tag filters
+                if (Array.isArray(importedData.activeTagFilter)) {
+                    activeTagFilter = importedData.activeTagFilter;
                 }
 
                 // ✅ Restore UI toggle state
@@ -986,28 +1028,33 @@ function importShortcuts(event) {
                 return;
             }
 
-            // ✅ Reset filters and update UI
-            activeTagFilter = [];
+            // ✅ Clear search input
             document.getElementById("searchInput").value = "";
-            saveShortcuts();
 
-            // ✅ Apply UI state after import
+            // ✅ Apply UI state to DOM
             document.getElementById("searchContainer").style.display = uiToggleState.searchBar ? "flex" : "none";
             document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
 
+            // ✅ Save & re-render everything
+            saveShortcuts();
             displayShortcuts();
-            localStorage.setItem("lastExportFilename", "");
+
+            // ✅ Reset export flag
             setExportNeeded(false);
+            localStorage.setItem("lastExportFilename", "");
             updateLastExportDisplay();
 
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            hideOptionsAndScrollTop(); 
+
 
         } catch {
             alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
         }
     };
+
     reader.readAsText(file);
 }
+
 
 
 
@@ -1135,6 +1182,20 @@ window.onload = function() {
 
     const savedCompact = localStorage.getItem("compactMode");  // ✅ Restore compact
     compactMode = savedCompact === "true";
+
+const savedFilter = localStorage.getItem("activeTagFilter");
+if (savedFilter) {
+    try {
+        const parsed = JSON.parse(savedFilter);
+        if (Array.isArray(parsed)) {
+            activeTagFilter = parsed;
+        }
+    } catch (e) {
+        console.warn("Erreur parsing activeTagFilter:", e);
+    }
+}
+
+
 
     loadShortcuts();
 
