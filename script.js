@@ -908,11 +908,11 @@ function exportShortcuts() {
     const data = {
         title: title,
         shortcuts: shortcuts,
-        tagOrder: tagOrder
+        tagOrder: tagOrder,
+        uiToggleState: uiToggleState,     // ✅ Save UI toggle states
+        compactMode: compactMode          // ✅ Save compact mode state
     };
     const dataStr = JSON.stringify(data, null, 4);
-
-    const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     const blob = new Blob([dataStr], {
         type: "application/octet-stream"
@@ -931,7 +931,6 @@ function exportShortcuts() {
         }, 1000);
     });
 
-    // Save export info
     localStorage.setItem("lastExportFilename", lstFilename);
     setExportNeeded(false);
     updateLastExportDisplay();
@@ -941,12 +940,9 @@ function exportShortcuts() {
 
 
 function importShortcuts(event) {
-    
-    
     const file = event.target.files[0];
     if (!file) return;
 
-    // ✅ Only allow .lst files
     if (!file.name.toLowerCase().endsWith(".lst")) {
         alert("Seuls les fichiers .lst sont autorisés.");
         return;
@@ -960,39 +956,59 @@ function importShortcuts(event) {
                 shortcuts = importedData;
             } else if (importedData.shortcuts && Array.isArray(importedData.shortcuts)) {
                 shortcuts = importedData.shortcuts;
+
                 if (importedData.title) {
                     document.getElementById("appTitle").textContent = importedData.title;
                     localStorage.setItem("appTitle", importedData.title);
                 }
+
                 if (Array.isArray(importedData.tagOrder)) {
                     tagOrder = importedData.tagOrder;
                     localStorage.setItem("tagOrder", JSON.stringify(tagOrder));
+                }
+
+                // ✅ Restore UI toggle state
+                if (importedData.uiToggleState) {
+                    uiToggleState = {
+                        ...uiToggleState,
+                        ...importedData.uiToggleState
+                    };
+                    saveUIState();
+                }
+
+                // ✅ Restore compact mode
+                if (typeof importedData.compactMode === "boolean") {
+                    compactMode = importedData.compactMode;
+                    localStorage.setItem("compactMode", compactMode);
                 }
             } else {
                 alert("Format JSON invalide.");
                 return;
             }
-            
-            activeTagFilter = []; // ✅ Reset to "Tous"
-            document.getElementById("searchInput").value = ""; // ✅ Clear search input
+
+            // ✅ Reset filters and update UI
+            activeTagFilter = [];
+            document.getElementById("searchInput").value = "";
             saveShortcuts();
+
+            // ✅ Apply UI state after import
+            document.getElementById("searchContainer").style.display = uiToggleState.searchBar ? "flex" : "none";
+            document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
+
             displayShortcuts();
             localStorage.setItem("lastExportFilename", "");
             setExportNeeded(false);
             updateLastExportDisplay();
 
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-            
-            
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
         } catch {
             alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
         }
     };
     reader.readAsText(file);
 }
+
 
 
 function showInfoModal() {
@@ -1117,39 +1133,32 @@ document.addEventListener("DOMContentLoaded", () => {
 window.onload = function() {
     document.getElementById("buttonGroupWrapper").classList.add("hidden");
 
+    const savedCompact = localStorage.getItem("compactMode");  // ✅ Restore compact
+    compactMode = savedCompact === "true";
+
     loadShortcuts();
 
     const savedTitle = localStorage.getItem("appTitle");
     if (savedTitle) {
         document.getElementById("appTitle").textContent = savedTitle;
     }
+
     updateLastExportDisplay();
     isExportNeeded = false;
     updateExportStatusDot();
 
-    // ✅ Initialize Quill
     quill = new Quill('#editTooltip', {
         theme: 'snow',
         placeholder: 'Saisissez du texte enrichi...',
         modules: {
             toolbar: [
                 ['bold', 'italic', 'underline'],
-
-                [{
-                    'size': ['small', false, 'large', 'huge']
-                }],
-                [{
-                    'color': []
-                }, {
-                    'background': []
-                }],
-                [{
-                    'align': []
-                }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
                 ['link'],
                 ['clean']
             ]
         }
     });
-
 };

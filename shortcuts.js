@@ -18,38 +18,45 @@ document.addEventListener("keydown", function(event) {
 
 
   // F2 → Toggle Search Bar
-  if (event.code === "F2") {
-    event.preventDefault();
-    toggleSearchBar();
-    showShortcutFeedback("Bar recherche (F2)");
-    return;
-  }
+if (event.code === "F2") {
+  event.preventDefault();
+  toggleSearchBar();
+  saveUIState();                        // ✅ Persist
+  setExportNeeded(true);               // ✅ Export tracking
+  showShortcutFeedback("Bar recherche (F2)");
+  return;
+}
 
-  // F4 → Toggle Option
-  if (event.code === "F4") {
-    event.preventDefault();
-    toggleButtonGroup();
-    importBtn.focus();
-    showShortcutFeedback("Options (F4)");
-    return;
-  }
+// F4 → Toggle Option
+if (event.code === "F4") {
+  event.preventDefault();
+  toggleButtonGroup();
+  importBtn.focus();
+  showShortcutFeedback("Options (F4)");
+  return;
+}
 
-  // F8 → Toggle Tags
-  if (event.code === "F8") {
-    event.preventDefault();
-    toggleTags();
-    showShortcutFeedback("Cacher étiquettes (F8)");
-    return;
-  }
+// F8 → Toggle Tags
+if (event.code === "F8") {
+  event.preventDefault();
+  toggleTags();
+  saveUIState();                        // ✅ Persist
+  setExportNeeded(true);               // ✅ Export tracking
+  showShortcutFeedback("Cacher étiquettes (F8)");
+  return;
+}
 
-  // F9 → Toggle Compact Mode
-  if (event.code === "F9") {
-    event.preventDefault();
-    compactMode = !compactMode;
-    displayShortcuts();
-    showShortcutFeedback("Mode compact (F9)");
-    return;
-  }
+// F9 → Toggle Compact Mode
+if (event.code === "F9") {
+  event.preventDefault();
+  compactMode = !compactMode;
+  localStorage.setItem("compactMode", compactMode); // ✅ Persist
+  setExportNeeded(true);                             // ✅ Export tracking
+  displayShortcuts();
+  showShortcutFeedback("Mode compact (F9)");
+  return;
+}
+
 
 
 // Avoid shortcuts while typing in input/textarea or contentEditable
