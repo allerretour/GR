@@ -115,6 +115,7 @@ function loadUIState() {
 
 function ensureDefaultShortcut() {
     if (shortcuts.length === 0) {
+        // ✅ Add default shortcut
         shortcuts.push({
             name: "Exemple",
             url: "https://google.com",
@@ -123,9 +124,27 @@ function ensureDefaultShortcut() {
             tooltip: "<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>",
             tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
         });
+
+        // ✅ Reset and save default UI states
+        uiToggleState = {
+            searchBar: true,
+            tagFilters: true
+        };
+        saveUIState();
+
+        // ✅ Reset compact mode
+        compactMode = false;
+        localStorage.setItem("compactMode", "false");
+
+        // ✅ Reset tag filters
+        activeTagFilter = [];
+        saveActiveTagFilter();
+
+        // ✅ Save everything
         saveShortcuts();
     }
 }
+
 
 
 
