@@ -6,10 +6,6 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 
-
-
-
-
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
         '&': '&amp;',
@@ -52,9 +48,6 @@ function placeCaretAtEnd(el) {
 }
 
 
-
-
-
 function toggleTags() {
     const tagContainer = document.getElementById("tagFilters");
     tagContainer.classList.toggle("hidden");
@@ -94,8 +87,6 @@ function hideOptionsAndScrollTop() {
 }
 
 
-
-
 const UI_STATE_KEY = "uiToggleState";
 
 let uiToggleState = {
@@ -119,36 +110,34 @@ function loadUIState() {
 }
 
 function ensureDefaultShortcut() {
-    if (shortcuts.length === 0) {
-        // ✅ Add default shortcut
+    if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
         shortcuts.push({
             name: "Exemple",
             url: "https://google.com",
             info: "Clic de DROIT pour plus d'infos",
             tags: ["instruction"],
-            tooltip: "<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>",
+            tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
             tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
         });
 
-        // ✅ Reset and save default UI states
-        uiToggleState = {
-            searchBar: true,
-            tagFilters: true
-        };
-        saveUIState();
+        if (!uiToggleState) {
+            uiToggleState = {
+                searchBar: true,
+                tagFilters: true
+            };
+            saveUIState();
+        }
 
-        // ✅ Reset compact mode
         compactMode = false;
         localStorage.setItem("compactMode", "false");
 
-        // ✅ Reset tag filters
         activeTagFilter = [];
         saveActiveTagFilter();
 
-        // ✅ Save everything
         saveShortcuts();
     }
 }
+
 
 
 
@@ -427,23 +416,23 @@ function toggleEditMode() {
 
 function getTagColor(tag) {
     const colors = [
-        "#1f77b4", // strong blue
-        "#2ca02c", // green
-        "#d62728", // red
-        "#9467bd", // purple
-        "#ff7f0e", // orange
-        "#17becf", // cyan
-        "#7f7f7f", // gray
-        "#bcbd22", // olive
-        "#8c564b", // brown
-        "#e377c2", // pink
-        "#393b79", // deep blue
-        "#637939", // moss green
-        "#843c39", // brick red
-        "#6b6ecf", // violet
-        "#9c9ede", // steel blue
-        "#17a2b8" // teal blue
-    ];
+    "#d32f2f", // vivid red
+    "#1976d2", // bold blue
+    "#388e3c", // rich green
+    "#fbc02d", // vibrant yellow (on black text)
+    "#7b1fa2", // deep purple
+    "#f57c00", // bright orange
+    "#00796b", // teal green
+    "#c2185b", // raspberry
+    "#512da8", // indigo
+    "#0288d1", // sky blue
+    "#c62828", // crimson
+    "#2e7d32", // forest green
+    "#ff5722", // neon orange
+    "#5d4037", // chocolate
+    "#0097a7", // deep cyan
+    "#303f9f"  // dark indigo
+];
     let hash = 0;
     for (let i = 0; i < tag.length; i++) {
         hash = tag.charCodeAt(i) + ((hash << 5) - hash);
@@ -678,9 +667,7 @@ shortcutElement.innerHTML = compactMode ? `
 </div>
 
 
-    <div class="info" style="font-size: 0.75em; color: #B3B3B3;">
-      ${escapeHTML(shortcut.info || "")}
-    </div>
+    <div class="info">${escapeHTML(shortcut.info || "")}</div>
     <div class="tags">${tagsHTML}</div>
   </div>
   <div class="icons" style="${editMode ? '' : 'visibility:hidden'}">

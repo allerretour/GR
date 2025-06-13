@@ -367,22 +367,28 @@ input[type="text"] {
 
 .shortcut.compact {
   display: flex;
-  padding: 8px 8px 8px 8px;
+  padding: 10px;
   min-height: 80px;
   flex-direction: column;
-  align-items: center;        /* horizontal center (for column) */
-  justify-content: center;    /* vertical center */
+  align-items: center;
+  justify-content: center;
   font-size: 1.5em;
-  text-align: center;         /* aligns multi-line text inside */
+  text-align: center;
+  background: #f8f9fa; /* light gray background */
+  color: #222;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-
+/* Hide extras in compact mode */
 .shortcut.compact .info,
 .shortcut.compact .tags,
 .shortcut.compact .icons,
 .shortcut.compact .move-handle {
   display: none !important;
 }
+
 
 .shortcut-grid {
   display: grid;
@@ -392,29 +398,43 @@ input[type="text"] {
 }
 
 .shortcut {
-  background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
-  border: 1px solid #ddd;
+  background: linear-gradient(to bottom right, #fdfdfd, #e9ecef); /* light background */
+  color: #222; /* dark text for contrast */
+  font-weight: bold;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 6px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* soft shadow */
+  padding: 10px 14px;
   margin: 4px;
   min-height: 80px;
-  /* ✅ ensures uniform height */
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
 }
 
+.info {
+  font-size: 0.75em;
+  color: #888;  /* soft gray */
+  margin-top: 6px;
+  font-style: italic;
+  font-weight: normal;
+  user-select: text; /* allow selecting/copying */
+  line-height: 1.2;
+}
+
+
 .shortcut:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12); /* deeper shadow on hover */
 }
 
 .shortcut.drag-over {
   border: 2px dashed #007bff;
+  background: #f0f8ff; /* subtle highlight for drop target */
 }
+
 
 #sortButton {
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -441,12 +461,13 @@ input[type="text"] {
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 12px;
+  font-weight: bold; /* makes white text crisper */
+text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* makes white readable on bright backgrounds */
 }
 
 .tag-filter-container {
   margin: 15px 0;
   display: flex;
-
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
@@ -463,18 +484,8 @@ input[type="text"] {
   transition: background-color 0.25s ease, transform 0.2s ease;
   font-size: 14px;
   color: #333;
-}
-
-.tag-filter.and-mode.active {
-  background-color: #28a745 !important;
-  /* Green */
-  color: white;
-}
-
-.tag-filter.or-mode.active {
-  background-color: #007bff !important;
-  /* Blue */
-  color: white;
+  font-weight: bold;
+  text-shadow: none;
 }
 
 .tag-filter:hover {
@@ -482,15 +493,29 @@ input[type="text"] {
   transform: scale(1.05);
 }
 
-.tag-filter.active:hover.and-mode {
-  background-color: #1c7c35 !important;
-  /* darker green */
+/* --- Active AND Mode --- */
+.tag-filter.and-mode.active {
+  background-color: #28a745 !important; /* Green */
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.tag-filter.active:hover.or-mode {
-  background-color: #0056b3 !important;
-  /* darker blue */
+/* --- Active OR Mode --- */
+.tag-filter.or-mode.active {
+  background-color: #007bff !important; /* Blue */
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
+
+/* --- Hover while active --- */
+.tag-filter.and-mode.active:hover {
+  background-color: #1c7c35 !important; /* Darker green */
+}
+
+.tag-filter.or-mode.active:hover {
+  background-color: #0056b3 !important; /* Darker blue */
+}
+
 
 .icons {
   display: flex;
