@@ -620,6 +620,21 @@ text-align: left;
   display: none !important;
 }
 
+.link-with-copy {
+  position: relative;
+}
+
+.copy-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.link-with-copy:hover .copy-icon {
+  opacity: 1;
+}
 
 
 

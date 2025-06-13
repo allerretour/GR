@@ -842,24 +842,26 @@ function showTooltipModal(text) {
     const tooltipContent = document.getElementById("tooltipContent");
     const safeText = text?.trim() || "Aucune info disponible.";
 
+    
     tooltipContent.innerHTML = safeText;
 
-    const linkEl = tooltipContent.querySelector("a[href]");
+    const links = tooltipContent.querySelectorAll("a[href]");
 
-    if (linkEl) {
+    links.forEach(linkEl => {
         const url = linkEl.getAttribute("href");
 
-        // Create copy icon/button
+        // Wrap link and icon in a container span
+        const wrapper = document.createElement("span");
+        wrapper.className = "link-with-copy";
+        linkEl.parentNode.insertBefore(wrapper, linkEl);
+        wrapper.appendChild(linkEl);
+
+        // Create the hidden copy icon
         const copyBtn = document.createElement("span");
         copyBtn.textContent = "📋";
         copyBtn.title = "Copier le lien";
-        copyBtn.style.cssText = `
-            margin-right: 6px;
-            cursor: pointer;
-            font-size: 1em;
-        `;
+        copyBtn.className = "copy-icon";
 
-        // Handle copy action
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(url).then(() => {
                 copyBtn.textContent = "✅";
@@ -869,9 +871,8 @@ function showTooltipModal(text) {
             });
         };
 
-        // Insert before the link
-        linkEl.parentNode.insertBefore(copyBtn, linkEl);
-    }
+        wrapper.appendChild(copyBtn);
+    });
 
     document.getElementById("tooltipModal").style.display = "flex";
 }
