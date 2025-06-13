@@ -655,15 +655,19 @@ function displayShortcuts() {
 
         // --- HTML CONTENT ---
 shortcutElement.innerHTML = compactMode ? `
-  <div style="font-weight: bold;">${escapeHTML(shortcut.name)}</div>
+  <div style="font-weight: bold; color: ${trimmedUrl === "?" ? 'blue' : 'inherit'};">
+  ${escapeHTML(shortcut.name)}
+</div>
+
 ` : `
   <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
     <i class="fas fa-arrows-alt"></i>
   </span>
   <div style="text-align: left; flex-grow: 1;">
-    <div style="display: flex; align-items: center; font-weight: bold; gap: 6px;">
-      ${escapeHTML(shortcut.name)}
-    </div>
+    <div style="display: flex; align-items: center; font-weight: bold; gap: 6px; color: ${trimmedUrl === "?" ? 'blue' : 'inherit'};">
+  ${escapeHTML(shortcut.name)}
+</div>
+
     <div class="info" style="font-size: 0.75em; color: #B3B3B3;">
       ${escapeHTML(shortcut.info || "")}
     </div>
