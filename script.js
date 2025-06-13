@@ -51,6 +51,10 @@ function placeCaretAtEnd(el) {
     sel.addRange(range);
 }
 
+
+
+
+
 function toggleTags() {
     const tagContainer = document.getElementById("tagFilters");
     tagContainer.classList.toggle("hidden");

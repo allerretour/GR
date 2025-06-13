@@ -1,9 +1,11 @@
 body {
-  background: linear-gradient(to right, #ff7e5f, #feb47b, #86a8e7, #7f7fd5);
+  background: linear-gradient(to right, #ffe0d1, #ffe9cc, #dce3fa, #dad9f7);
   font-family: 'Roboto', sans-serif;
   color: #666;
   text-align: center;
 }
+
+
 
 .container {
   max-width: 1400px;
@@ -456,7 +458,7 @@ input[type="text"] {
 .tag-filter {
   background-color: #e0e0e0;
   padding: 4px 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.25s ease, transform 0.2s ease;
   font-size: 14px;
