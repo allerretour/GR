@@ -390,7 +390,7 @@ input[type="text"] {
 }
 
 .shortcut {
-  background: linear-gradient(to bottom right, #ffffff, #f1f5f9); /* ✅ Light gradient */
+  background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
