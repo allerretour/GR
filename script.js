@@ -510,12 +510,6 @@ function displayShortcuts() {
         const isInfoOnly = trimmedUrl === "?";
         const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
 
-        if (isInfoOnly) {
-          shortcutElement.style.backgroundColor = "#e7f1fb"; // Info-only blue
-        } else if (isFileUrl) {
-          shortcutElement.style.backgroundColor = "#fff4e5"; // File URL orange
-        }
-
 
         shortcutElement.className = "shortcut" + (compactMode ? " compact" : "");
 
@@ -832,11 +826,43 @@ function deleteShortcut(index) {
 
 function showTooltipModal(text) {
     const tooltipContent = document.getElementById("tooltipContent");
-    const parts = (text || "Aucune info disponible.").split("\n\n");
-    tooltipContent.innerHTML = text || "<em>Aucune info disponible.</em>";
+    const safeText = text?.trim() || "Aucune info disponible.";
+
+    tooltipContent.innerHTML = safeText;
+
+    const linkEl = tooltipContent.querySelector("a[href]");
+
+    if (linkEl) {
+        const url = linkEl.getAttribute("href");
+
+        // Create copy icon/button
+        const copyBtn = document.createElement("span");
+        copyBtn.textContent = "📋";
+        copyBtn.title = "Copier le lien";
+        copyBtn.style.cssText = `
+            margin-right: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        `;
+
+        // Handle copy action
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(url).then(() => {
+                copyBtn.textContent = "✅";
+                setTimeout(() => {
+                    copyBtn.textContent = "📋";
+                }, 1500);
+            });
+        };
+
+        // Insert before the link
+        linkEl.parentNode.insertBefore(copyBtn, linkEl);
+    }
 
     document.getElementById("tooltipModal").style.display = "flex";
 }
+
+
 
 function closeTooltipModal() {
     document.getElementById("tooltipModal").style.display = "none";
