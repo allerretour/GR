@@ -621,28 +621,30 @@ function displayShortcuts() {
             shortcutElement.style.touchAction = "manipulation";
 
             touchHoldTimer = setTimeout(() => {
-                let url = shortcut.url.trim();
+    let url = shortcut.url.trim();
 
-                // Normalize URL if not "?" and no scheme present
-                if (url !== "?" && !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
-                    url = "https://" + url;
-                }
+    // Normalize URL if not "?" and no scheme present
+    if (url !== "?" && !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
+        url = "https://" + url;
+    }
 
-                const base = url === "?" ?
-                    "" :
-                    `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
-                const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
+    const base = (url === "?")
+        ? ""
+        : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
 
-                showTooltipModal(`${base}${tooltip}`, true);
+    const tooltip = shortcut.tooltip?.trim() ? `<br><br>${shortcut.tooltip}` : "";
 
-                // Delay restoring styles
-                setTimeout(() => {
-                    shortcutElement.style.userSelect = "";
-                    shortcutElement.style.webkitUserSelect = "";
-                    shortcutElement.style.webkitTouchCallout = "";
-                    shortcutElement.style.touchAction = "";
-                }, 1000);
-            }, 700);
+    showTooltipModal(`${base}${tooltip}`, true); // true = HTML content
+
+    // Restore touch interaction styles after delay
+    setTimeout(() => {
+        shortcutElement.style.userSelect = "";
+        shortcutElement.style.webkitUserSelect = "";
+        shortcutElement.style.webkitTouchCallout = "";
+        shortcutElement.style.touchAction = "";
+    }, 1000);
+
+}, 700); // Long press duration
         });
 
 
