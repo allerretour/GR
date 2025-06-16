@@ -234,26 +234,26 @@ function exportVisibleShortcutsAsText() {
         if (shortcut && shortcut.url.trim() !== "?") {
             const name = shortcut.name || "Sans nom";
             const url = shortcut.url || "";
-            visibleShortcuts.push(`${name}\n${url}`);
+            visibleShortcuts.push(`${name}\n${url}\n---`);
         }
     });
 
     const count = visibleShortcuts.length;
     if (count === 0) {
-        alert("Aucun raccourci valide à exporter (les raccourcis avec URL '?' sont ignorés).");
+        showToast("Aucun raccourci valide à exporter (URL '?' ignorées).");
         return;
     }
 
-    // Header + 1 blank line after
-    const header = [
+    const headerLines = [
         `Liste : ${listTitle}`,
         `Nombre de raccourcis exportés : ${count}`,
         `===============================`,
-        " " // blank line after header
-    ].join("\n");
+        " "
+    ];
 
+    const header = headerLines.join("\n");
     const body = visibleShortcuts.join("\n\n");
-    const textContent = header + "\n" + body; // final blank line added here
+    const textContent = header + "\n" + body;
 
     const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
 
@@ -272,10 +272,11 @@ function exportVisibleShortcutsAsText() {
     link.click();
     URL.revokeObjectURL(link.href);
     document.body.removeChild(link);
-    hideOptionsAndScrollTop();
-    showToast("Raccourcis visibles exportés !");
 
+    hideOptionsAndScrollTop();
+    showToast(`Raccourcis visibles exportés !`);
 }
+
 
 
 function renderSelectedTags() {
@@ -1308,17 +1309,21 @@ if (savedFilter) {
     updateExportStatusDot();
 
     quill = new Quill('#editTooltip', {
-        theme: 'snow',
-        placeholder: 'Saisissez du texte enrichi...',
-        modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline'],
-                [{ 'size': ['small', false, 'large', 'huge'] }],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }],
-                ['link'],
-                ['clean']
-            ]
-        }
-    });
+    theme: 'snow',
+    placeholder: 'Saisissez du texte enrichi...',
+    modules: {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [
+                { 'color': ['black','grey', 'red', 'blue', 'green', 'orange', 'purple', 'white'] },
+                { 'background': ['white', 'yellow', 'lightgreen', 'lightblue', 'pink'] }
+            ],
+            [{ 'align': [] }],
+            ['link'],
+            ['clean']
+        ]
+    }
+});
+
 };
