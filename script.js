@@ -140,8 +140,6 @@ function ensureDefaultShortcut() {
 
 
 
-
-
 function saveTitle() {
     const newTitle = document.getElementById("appTitle").textContent.trim();
     if (newTitle) {
@@ -539,7 +537,7 @@ function displayShortcuts() {
                     "" :
                     `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
 
-                const tooltip = shortcut.tooltip ? `<br><br>${shortcut.tooltip}` : "";
+                const tooltip = shortcut.tooltip ? `<br>${shortcut.tooltip}` : "";
                 showTooltipModal(`${base}${tooltip}`, true); // true = isHtml
             }
         });
@@ -623,7 +621,7 @@ function displayShortcuts() {
         ? ""
         : `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
 
-    const tooltip = shortcut.tooltip?.trim() ? `<br><br>${shortcut.tooltip}` : "";
+    const tooltip = shortcut.tooltip?.trim() ? `<br>${shortcut.tooltip}` : "";
 
     showTooltipModal(`${base}${tooltip}`, true); // true = HTML content
 
@@ -1114,6 +1112,36 @@ function importShortcuts(event) {
 
 
 
+const dropZone = document.getElementById("dropZone");
+
+dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = "#9966ff";
+    dropZone.style.color = "#9966ff";
+});
+
+dropZone.addEventListener("dragleave", () => {
+    dropZone.style.borderColor = "#ccc";
+    dropZone.style.color = "#888";
+});
+
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = "#ccc";
+    dropZone.style.color = "#888";
+
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    // Trigger import using your existing logic
+    const fakeEvent = { target: { files: [file] } };
+    importShortcuts(fakeEvent);
+});
+
+
+
+
+
 
 function showInfoModal() {
     const modal = document.getElementById("infoModal");
@@ -1228,6 +1256,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Tag Filters
     document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
+
 
 });
 
