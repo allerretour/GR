@@ -865,6 +865,7 @@ function showTooltipModal(text, isHtml = false, shortcutName = "") {
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(url).then(() => {
                 copyBtn.textContent = "✅";
+                showToast("Lien copié !");
                 setTimeout(() => {
                     copyBtn.textContent = "📋";
                 }, 1500);
