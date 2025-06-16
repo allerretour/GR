@@ -134,20 +134,22 @@ color: #025ba8;
 
 
 .left-button {
-  background: linear-gradient(45deg, #007bff, #00c6ff);
-  color: white;
+  background: transparent;
+  color: #bbb;
 
   margin: 5px;
   border: none;
   border-radius: 6px;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 24px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  
 }
 
 .left-button:hover {
-  background: linear-gradient(45deg, #0056b3, #0091d1);
+background: transparent;  
+color: #000;
+
 }
 
 @keyframes holdPopEffect {
