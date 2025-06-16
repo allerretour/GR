@@ -273,6 +273,8 @@ function exportVisibleShortcutsAsText() {
     URL.revokeObjectURL(link.href);
     document.body.removeChild(link);
     hideOptionsAndScrollTop();
+    showToast("Raccourcis visibles exportés !");
+
 }
 
 
@@ -440,13 +442,15 @@ function getTagColor(tag) {
 
 
 
-function showCopyToast() {
+function showToast(message) {
     const toast = document.getElementById("copyToast");
+    toast.textContent = message;
     toast.classList.add("show");
     setTimeout(() => {
         toast.classList.remove("show");
     }, 1500);
 }
+
 
 function getTooltipText(text) {
     return text && text.trim() !== "" ? text.trim() : "Aucune info disponible.";
@@ -557,7 +561,7 @@ function displayShortcuts() {
                             shortcutElement.style.backgroundColor = originalBg || "";
                         }, 800);
                         if (navigator.vibrate) navigator.vibrate(50);
-                        showCopyToast();
+                        showToast("Lien copié!");
                     });
                 }, 1000); // hold for 1s to trigger copy
             }
@@ -1019,6 +1023,8 @@ function exportShortcuts() {
     setExportNeeded(false);
     updateLastExportDisplay();
     hideOptionsAndScrollTop();
+    showToast("Exportation réussie !");
+
 }
 
 
@@ -1100,6 +1106,13 @@ function importShortcuts(event) {
             updateLastExportDisplay();
 
             hideOptionsAndScrollTop(); 
+
+// ✅ Réinitialise le champ fichier pour permettre une nouvelle importation du même fichier
+event.target.value = "";
+
+// ✅ Affiche une confirmation
+showToast("Importation réussie !");
+
 
 
         } catch {
