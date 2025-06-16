@@ -400,12 +400,9 @@ input[type="text"] {
 }
 
 .shortcut {
-  background: 
-  radial-gradient(circle at top left, rgba(180, 140, 255, 0.3), transparent 60%),
-  linear-gradient(145deg, #ffffff, #dcdde1);
-box-shadow:
-  inset 5px 5px 10px rgba(0, 0, 0, 0.1),
-  inset -5px -5px 10px rgba(255, 255, 255, 0.7);
+  background:
+  radial-gradient(circle at top right, rgba(216, 199, 249, 0.3), transparent 70%),
+  linear-gradient(to bottom right, #fdfdfd, #e9ecef);
 
 
   color: #333; /* dark text for contrast */
