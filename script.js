@@ -543,7 +543,8 @@ function displayShortcuts() {
                     `<a href="${url}" target="_blank" rel="noopener noreferrer">Lien du raccourci</a>`;
 
                 const tooltip = shortcut.tooltip ? `<br>${shortcut.tooltip}` : "";
-                showTooltipModal(`${base}${tooltip}`, true); // true = isHtml
+                showTooltipModal(`${base}${tooltip}`, true, shortcut.name);
+
             }
         });
 
@@ -578,7 +579,8 @@ function displayShortcuts() {
 
             if (url === "?") {
                 const tooltip = shortcut.tooltip || "Aucune info disponible.";
-                showTooltipModal(tooltip);
+                showTooltipModal(tooltip, true, shortcut.name);
+
                 return;
             }
 
@@ -628,7 +630,8 @@ function displayShortcuts() {
 
     const tooltip = shortcut.tooltip?.trim() ? `<br>${shortcut.tooltip}` : "";
 
-    showTooltipModal(`${base}${tooltip}`, true); // true = HTML content
+    showTooltipModal(`${base}${tooltip}`, true, shortcut.name);
+
 
     // Restore touch interaction styles after delay
     setTimeout(() => {
@@ -828,25 +831,32 @@ function deleteShortcut(index) {
     }
 }
 
-function showTooltipModal(text) {
+function showTooltipModal(text, isHtml = false, shortcutName = "") {
     const tooltipContent = document.getElementById("tooltipContent");
+
     const safeText = text?.trim() || "Aucune info disponible.";
 
-    
-    tooltipContent.innerHTML = safeText;
+    let finalContent = safeText;
 
+    if (shortcutName) {
+       const titleHtml = `<div style="margin-bottom: 10px; color: #555; text-align: center;">
+  💡 Info du raccourci : <strong>${escapeHTML(shortcutName)}</strong>
+</div>`;
+        finalContent = titleHtml + finalContent;
+    }
+
+    tooltipContent.innerHTML = isHtml ? finalContent : escapeHTML(finalContent);
+
+    // Ajout des boutons "copier" pour chaque lien
     const links = tooltipContent.querySelectorAll("a[href]");
-
     links.forEach(linkEl => {
         const url = linkEl.getAttribute("href");
 
-        // Wrap link and icon in a container span
         const wrapper = document.createElement("span");
         wrapper.className = "link-with-copy";
         linkEl.parentNode.insertBefore(wrapper, linkEl);
         wrapper.appendChild(linkEl);
 
-        // Create the hidden copy icon
         const copyBtn = document.createElement("span");
         copyBtn.textContent = "📋";
         copyBtn.title = "Copier le lien";
@@ -866,6 +876,7 @@ function showTooltipModal(text) {
 
     document.getElementById("tooltipModal").style.display = "flex";
 }
+
 
 
 
