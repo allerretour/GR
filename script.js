@@ -522,8 +522,8 @@ function displayShortcuts() {
         const isInfoOnly = trimmedUrl === "?";
         const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
         
-        const nameColor = isInfoOnly ? "grey" : "inherit";
-        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-display" style="margin-right: 4px;color: #0079fa;"></i>' : "";
+        const nameColor = isInfoOnly ? "#549eb5" : "inherit";
+        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-circle-info" style="margin-right: 4px;color: #0079fa;"></i>' : "";
 
 
 
