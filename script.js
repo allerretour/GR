@@ -47,6 +47,22 @@ function placeCaretAtEnd(el) {
     sel.addRange(range);
 }
 
+async function pasteFromClipboard(targetId) {
+  const input = document.getElementById(targetId);
+  try {
+    const text = await navigator.clipboard.readText();
+    if (input) {
+      input.value = text;
+      input.focus();
+    }
+  } catch (err) {
+    alert("⚠️ Autorisation refusée. Utilisez Ctrl+V pour coller manuellement.");
+    console.warn("Clipboard paste failed:", err);
+  }
+}
+
+
+
 
 function toggleTags() {
     const tagContainer = document.getElementById("tagFilters");
@@ -506,8 +522,8 @@ function displayShortcuts() {
         const isInfoOnly = trimmedUrl === "?";
         const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
         
-        const nameColor = isInfoOnly ? "#0d47a1" : "inherit";
-        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-file" style="margin-right: 6px;"></i>' : "";
+        const nameColor = isInfoOnly ? "grey" : "inherit";
+        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-display" style="margin-right: 4px;color: #0079fa;"></i>' : "";
 
 
 
