@@ -61,6 +61,10 @@ async function pasteFromClipboard(targetId) {
   }
 }
 
+
+
+
+
 function mergeShortcuts(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1234,14 +1238,14 @@ dropZone.addEventListener("dragover", (e) => {
 });
 
 dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#ccc";
-    dropZone.style.color = "#888";
+    dropZone.style.borderColor = "#fff";
+    dropZone.style.color = "#ddd";
 });
 
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = "#ccc";
-    dropZone.style.color = "#888";
+    dropZone.style.borderColor = "#fff";
+    dropZone.style.color = "#ddd";
 
     const file = e.dataTransfer.files[0];
     if (!file) return;
