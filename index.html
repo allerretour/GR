@@ -204,6 +204,24 @@
           </label>
         </div>
 
+
+<button
+  id="mergeBtn"
+  title="Fusionner une autre liste (.lst)"
+  onclick="document.getElementById('mergeFile').click()"
+>
+  <i class="fas fa-layer-group"></i>
+</button>
+<input
+  type="file"
+  id="mergeFile"
+  accept=".lst"
+  style="display: none"
+  onchange="mergeShortcuts(event)"
+/>
+
+
+
       </div>
       <input
         type="file"

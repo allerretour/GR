@@ -61,6 +61,75 @@ async function pasteFromClipboard(targetId) {
   }
 }
 
+function mergeShortcuts(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!confirm("Souhaitez-vous fusionner cette liste avec la liste actuelle ?")) {
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+
+            if (!Array.isArray(importedData.shortcuts)) {
+                alert("Le fichier ne contient pas de raccourcis valides.");
+                return;
+            }
+
+            const existingKeys = new Set(shortcuts.map(s => `${s.name}|||${s.url}`));
+            let addedCount = 0;
+
+            importedData.shortcuts.forEach(s => {
+                const key = `${s.name}|||${s.url}`;
+                if (!existingKeys.has(key)) {
+                    shortcuts.push(s);
+                    existingKeys.add(key);
+                    addedCount++;
+                }
+            });
+
+            // Merge tagOrder
+            if (Array.isArray(importedData.tagOrder)) {
+                tagOrder = Array.from(new Set([...tagOrder, ...importedData.tagOrder]));
+            }
+
+            // Optional data
+            if (importedData.appLogo) {
+                localStorage.setItem("appLogo", importedData.appLogo);
+                loadLogo();
+            }
+
+            if (importedData.uiToggleState) {
+                uiToggleState = {
+                    ...uiToggleState,
+                    ...importedData.uiToggleState
+                };
+                saveUIState();
+            }
+
+            if (importedData.appTitle) {
+                document.getElementById("appTitle").textContent = importedData.appTitle;
+                localStorage.setItem("appTitle", importedData.appTitle);
+            }
+
+            setExportNeeded(true);
+            saveShortcuts();
+            displayShortcuts();
+
+            // ✅ Show confirmation toast
+            showToast(`✅ ${addedCount} raccourci${addedCount > 1 ? 's' : ''} ajouté${addedCount > 1 ? 's' : ''} à la liste`);
+
+        } catch (err) {
+            alert("Erreur lors de la fusion : " + err.message);
+        }
+    };
+
+    reader.readAsText(file);
+}
+
 
 
 

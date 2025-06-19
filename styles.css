@@ -234,6 +234,10 @@ color: #000;
 }
 
 #buttonGroupWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
   transition: max-height 0.3s ease, opacity 0.3s ease;
   overflow: hidden;
 }
@@ -245,11 +249,11 @@ color: #000;
 }
 
 #buttonGroupWrapper.visible {
-  max-height: 200px;
-  /* adjust as needed */
+  max-height: 200px; /* adjust height as needed */
   opacity: 1;
   pointer-events: auto;
 }
+
 
 .labels {
   display: flex;
@@ -722,10 +726,3 @@ text-align: left;
 .link-with-copy:hover .copy-icon {
   opacity: 1;
 }
-
-
-
-
-
-
-
