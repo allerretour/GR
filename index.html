@@ -131,7 +131,7 @@
 
       </div>
 
-      <div
+   <div
         id="buttonGroupWrapper"
         class="button-group"
         style="margin-top: 15px;"
@@ -147,6 +147,15 @@
         <button title="Ajouter (A)" onclick="openAddModal()">
           <i class="fas fa-plus"></i>
         </button>
+
+<button
+  id="mergeBtn"
+  title="Fusionner une autre liste (.lst)"
+  onclick="document.getElementById('mergeFile').click()"
+>
+  <i class="fas fa-layer-group"></i>
+</button>
+
         <div class="filter-toggle">
           <input
             type="checkbox"
@@ -158,12 +167,7 @@
           </label>
         </div>
 
-        <button title="Exporter (S)" onclick="exportShortcuts()">
-          <i class="fas fa-floppy-disk"></i>
-        </button>
-        <button title="Tout effacer (N)" onclick="clearShortcuts()">
-          <i class="fas fa-trash"></i>
-        </button>
+        
         <button
           id="sortButton"
           title="Trier (T)"
@@ -188,11 +192,9 @@
           <i class="fas fa-compress-arrows-alt"></i>
         </button>
 
-        <button title="Exporter raccourcis visibles (V)" onclick="exportVisibleShortcutsAsText()">
-          <i class="fa-solid fa-users-viewfinder"></i>
-        </button>
+        
 
-        <div style="display: flex; align-items: center; gap: 6px;">
+        
           <span style="font-size: 14px;">Édition</span>
           <label class="switch" title="Mode édition">
             <input
@@ -202,16 +204,15 @@
             />
             <span class="slider"></span>
           </label>
-        </div>
 
+        <button title="Tout effacer (N)" onclick="clearShortcuts()">
+          <i class="fas fa-trash"></i>
+        </button>
 
-<button
-  id="mergeBtn"
-  title="Fusionner une autre liste (.lst)"
-  onclick="document.getElementById('mergeFile').click()"
->
-  <i class="fas fa-layer-group"></i>
-</button>
+        <button title="Exporter raccourcis visibles (V)" onclick="exportVisibleShortcutsAsText()">
+          <i class="fa-solid fa-users-viewfinder"></i>
+        </button>
+
 <input
   type="file"
   id="mergeFile"
@@ -219,16 +220,19 @@
   style="display: none"
   onchange="mergeShortcuts(event)"
 />
-
-
-
-      </div>
+      
       <input
         type="file"
         id="importFile"
         style="display:none"
         onchange="importShortcuts(event)"
       />
+
+        <button title="Exporter (S)" onclick="exportShortcuts()">
+          <i class="fas fa-floppy-disk"></i>
+        </button>
+
+</div>
 
 <div id="dropZone" onclick="document.getElementById('importFile').click()" style="
   border: 2px dashed #ddd;
