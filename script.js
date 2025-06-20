@@ -239,6 +239,7 @@ function saveTitle() {
     if (newTitle) {
         localStorage.setItem("appTitle", newTitle); // Save to localStorage
         setExportNeeded(true);
+        showToast("✅ Titre modifié !");
     }
 }
 let isExportNeeded = false;

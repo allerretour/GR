@@ -183,10 +183,10 @@ color: #025ba8;
 }
 
 .app-title {
-  margin: 0;
+  font-size: 1.8em;
   font-weight: 600;
-  font-size: 2em;
-  text-align: center;
+  color: #f0f0f0;
+  text-shadow: 1px 1px 2px #000;
 }
 
 
