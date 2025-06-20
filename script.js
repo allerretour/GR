@@ -100,11 +100,7 @@ function mergeShortcuts(event) {
                 tagOrder = Array.from(new Set([...tagOrder, ...importedData.tagOrder]));
             }
 
-            // Optional data
-            if (importedData.appLogo) {
-                localStorage.setItem("appLogo", importedData.appLogo);
-                loadLogo();
-            }
+            
 
             if (importedData.uiToggleState) {
                 uiToggleState = {
@@ -200,15 +196,24 @@ function loadUIState() {
 
 function ensureDefaultShortcut() {
     if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
-        shortcuts.push({
-            name: "Exemple",
-            url: "https://google.com",
-            info: "Clic de DROIT pour plus d'infos",
-            tags: ["instruction"],
-            tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
-            tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
-        });
-
+        shortcuts.push(
+            {
+                name: "Exemple",
+                url: "https://google.com",
+                info: "Clic de DROIT pour plus d'infos",
+                tags: ["instruction"],
+                tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
+                tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
+            },
+            {
+                name: "Site de test",
+                url: "https://example.com",
+                info: "Second raccourci de démonstration",
+                tags: ["démo"],
+                tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
+                tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
+            }
+        );
         if (!uiToggleState) {
             uiToggleState = {
                 searchBar: true,
@@ -311,19 +316,18 @@ function handleTagInput(event) {
 }
 
 
-function exportVisibleShortcutsAsText() {
+function exportVisibleShortcuts(format) {
+    closeExportFormatModal(); // Close the modal when a button is clicked
+
     const visibleShortcuts = [];
     const shortcutElements = document.querySelectorAll("#shortcuts .shortcut");
-
     const listTitle = document.getElementById("appTitle").textContent.trim() || "Sans titre";
 
     shortcutElements.forEach(el => {
         const index = parseInt(el.getAttribute("data-index"));
         const shortcut = shortcuts[index];
         if (shortcut && shortcut.url.trim() !== "?") {
-            const name = shortcut.name || "Sans nom";
-            const url = shortcut.url || "";
-            visibleShortcuts.push(`${name}\n${url}\n---`);
+            visibleShortcuts.push(shortcut);
         }
     });
 
@@ -333,38 +337,61 @@ function exportVisibleShortcutsAsText() {
         return;
     }
 
-    const headerLines = [
-        `Liste : ${listTitle}`,
-        `Nombre de raccourcis exportés : ${count}`,
-        `===============================`,
-        " "
-    ];
-
-    const header = headerLines.join("\n");
-    const body = visibleShortcuts.join("\n\n");
-    const textContent = header + "\n" + body;
-
-    const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
-
     const now = new Date();
     const timestamp = now.toLocaleString('sv-SE', {
         hour12: false,
         timeZone: 'America/Toronto'
     }).replace(' ', '_').replace(/:/g, '-');
 
-    const filename = `raccourcis_visible_${timestamp}.txt`;
+    const safeTitle = listTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const baseFilename = `raccourcis_visible_${safeTitle}_${timestamp}`;
 
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    URL.revokeObjectURL(link.href);
-    document.body.removeChild(link);
+    if (format === "txt" || format === "both") {
+        const textLines = visibleShortcuts.map(sc => `${sc.name || "Sans nom"}\n${sc.url || ""}\n---`);
+        const header = [
+            `Liste : ${listTitle}`,
+            `Nombre de raccourcis exportés : ${count}`,
+            `===============================`,
+            " "
+        ].join("\n");
+        const textContent = header + "\n" + textLines.join("\n\n");
+        const textBlob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+
+        const textLink = document.createElement("a");
+        textLink.href = URL.createObjectURL(textBlob);
+        textLink.download = `${baseFilename}.txt`;
+        document.body.appendChild(textLink);
+        textLink.click();
+        document.body.removeChild(textLink);
+    }
+
+    if (format === "lst" || format === "both") {
+        const jsonData = {
+            title: listTitle,
+            shortcuts: visibleShortcuts
+        };
+        const jsonBlob = new Blob([JSON.stringify(jsonData, null, 4)], { type: "application/octet-stream" });
+
+        const jsonLink = document.createElement("a");
+        jsonLink.href = URL.createObjectURL(jsonBlob);
+        jsonLink.download = `${baseFilename}.lst`;
+        document.body.appendChild(jsonLink);
+        jsonLink.click();
+        document.body.removeChild(jsonLink);
+    }
 
     hideOptionsAndScrollTop();
-    showToast(`Raccourcis visibles exportés !`);
+    showToast("Exportation réussie !");
 }
+
+function openExportFormatModal() {
+  document.getElementById("exportFormatModal").classList.add("show");
+}
+
+function closeExportFormatModal() {
+  document.getElementById("exportFormatModal").classList.remove("show");
+}
+
 
 
 
