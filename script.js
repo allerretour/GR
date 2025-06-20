@@ -317,88 +317,112 @@ function handleTagInput(event) {
 
 
 function exportVisibleShortcuts(format) {
-    closeExportFormatModal(); // Close the modal when a button is clicked
+  closeExportFormatModal();
 
-    const visibleShortcuts = [];
-    const shortcutElements = document.querySelectorAll("#shortcuts .shortcut");
-    const listTitle = document.getElementById("appTitle").textContent.trim() || "Sans titre";
+  const visibleShortcuts = [];
+  const shortcutElements = document.querySelectorAll("#shortcuts .shortcut");
+  const listTitle = document.getElementById("appTitle").textContent.trim() || "Sans titre";
 
-    shortcutElements.forEach(el => {
-        const index = parseInt(el.getAttribute("data-index"));
-        const shortcut = shortcuts[index];
-        if (shortcut && shortcut.url.trim() !== "?") {
-            visibleShortcuts.push(shortcut);
-        }
+  shortcutElements.forEach(el => {
+    const index = parseInt(el.getAttribute("data-index"));
+    const shortcut = shortcuts[index];
+    if (shortcut) {
+      visibleShortcuts.push(shortcut);
+    }
+  });
+
+  const count = visibleShortcuts.length;
+  if (count === 0) {
+    showToast("Aucun raccourci à exporter.");
+    return;
+  }
+
+  const now = new Date();
+  const timestamp = now.toLocaleString('sv-SE', {
+    hour12: false,
+    timeZone: 'America/Toronto'
+  }).replace(' ', '_').replace(/:/g, '-');
+
+  const safeTitle = listTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  const baseFilename = `raccourcis_visible_${safeTitle}_${timestamp}`;
+
+  if (format === "txt" || format === "both") {
+    const textLines = visibleShortcuts.map(sc => {
+      const name = sc.name || "Sans nom";
+      const url = sc.url?.trim() === "?" ? "[ INFORMATIONS SEULEMENT ]" : sc.url || "";
+      return `${name}\n${url}\n---`;
     });
 
-    const count = visibleShortcuts.length;
-    if (count === 0) {
-        showToast("Aucun raccourci valide à exporter (URL '?' ignorées).");
-        return;
-    }
+    const header = [
+      `Liste : ${listTitle}`,
+      `Nombre de raccourcis exportés : ${count}`,
+      `===============================`,
+      " "
+    ].join("\n");
 
-    const now = new Date();
-    const timestamp = now.toLocaleString('sv-SE', {
-        hour12: false,
-        timeZone: 'America/Toronto'
-    }).replace(' ', '_').replace(/:/g, '-');
+    const textContent = header + "\n" + textLines.join("\n\n");
+    const textBlob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
 
-    const safeTitle = listTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const baseFilename = `raccourcis_visible_${safeTitle}_${timestamp}`;
+    const textLink = document.createElement("a");
+    textLink.href = URL.createObjectURL(textBlob);
+    textLink.download = `${baseFilename}.txt`;
+    document.body.appendChild(textLink);
+    textLink.click();
+    document.body.removeChild(textLink);
+  }
 
-    if (format === "txt" || format === "both") {
-        const textLines = visibleShortcuts.map(sc => `${sc.name || "Sans nom"}\n${sc.url || ""}\n---`);
-        const header = [
-            `Liste : ${listTitle}`,
-            `Nombre de raccourcis exportés : ${count}`,
-            `===============================`,
-            " "
-        ].join("\n");
-        const textContent = header + "\n" + textLines.join("\n\n");
-        const textBlob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+  if (format === "lst" || format === "both") {
+    const jsonData = {
+      title: listTitle,
+      shortcuts: visibleShortcuts
+    };
+    const jsonBlob = new Blob([JSON.stringify(jsonData, null, 4)], { type: "application/octet-stream" });
 
-        const textLink = document.createElement("a");
-        textLink.href = URL.createObjectURL(textBlob);
-        textLink.download = `${baseFilename}.txt`;
-        document.body.appendChild(textLink);
-        textLink.click();
-        document.body.removeChild(textLink);
-    }
+    const jsonLink = document.createElement("a");
+    jsonLink.href = URL.createObjectURL(jsonBlob);
+    jsonLink.download = `${baseFilename}.lst`;
+    document.body.appendChild(jsonLink);
+    jsonLink.click();
+    document.body.removeChild(jsonLink);
+  }
 
-    if (format === "lst" || format === "both") {
-        const jsonData = {
-            title: listTitle,
-            shortcuts: visibleShortcuts
-        };
-        const jsonBlob = new Blob([JSON.stringify(jsonData, null, 4)], { type: "application/octet-stream" });
-
-        const jsonLink = document.createElement("a");
-        jsonLink.href = URL.createObjectURL(jsonBlob);
-        jsonLink.download = `${baseFilename}.lst`;
-        document.body.appendChild(jsonLink);
-        jsonLink.click();
-        document.body.removeChild(jsonLink);
-    }
-
-    hideOptionsAndScrollTop();
-    showToast("Exportation réussie !");
+  hideOptionsAndScrollTop();
+  showToast("Exportation réussie !");
 }
 
 function openExportFormatModal() {
-  const count = [...document.querySelectorAll("#shortcuts .shortcut")]
-    .filter(el => {
-      const index = parseInt(el.getAttribute("data-index"));
-      const shortcut = shortcuts[index];
-      return shortcut && shortcut.url.trim() !== "?";
-    }).length;
+  const shortcutsEls = [...document.querySelectorAll("#shortcuts .shortcut")];
+  let total = 0;
+  let infoOnly = 0;
 
-  const label = count === 1
-    ? `1 raccourci sera exporté.`
-    : `${count} raccourcis seront exportés.`;
+  shortcutsEls.forEach(el => {
+    const index = parseInt(el.getAttribute("data-index"));
+    const shortcut = shortcuts[index];
+    if (shortcut) {
+      total++;
+      if (shortcut.url.trim() === "?") {
+        infoOnly++;
+      }
+    }
+  });
+
+  let label = "";
+
+  if (total === 0) {
+    label = "Aucun raccourci à exporter.";
+  } else {
+    label = `${total} raccourci${total > 1 ? "s" : ""} seront exporté${total > 1 ? "s" : ""}`;
+    if (infoOnly > 0) {
+      label += `, dont ${infoOnly} "informations seulement"`;
+    }
+    label += ".";
+  }
 
   document.getElementById("exportCount").textContent = label;
   document.getElementById("exportFormatModal").classList.add("show");
 }
+
+
 
 
 function closeExportFormatModal() {
