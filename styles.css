@@ -232,13 +232,13 @@ color: #025ba8;
 
 .left-button {
   background: transparent;
-  color: #bbb;
-
-  margin: 5px;
+  font-size: 1.5em;
+  color: #777;
+  padding: 4px;
   border: none;
   border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 24px;
+  padding: 4px;
+  
   cursor: pointer;
   
 }

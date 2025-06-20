@@ -70,13 +70,7 @@
 
         </div>
 
-  <button
-          id="searchToggleBtn"
-          onclick="showInfoModal()"
-          title="Afficher/masquer l'aide (I)"
-        >
-          <i id="searchToggleIcon" class="fa-solid fa-circle-info"></i>
-        </button>            
+   
 
 </div>
 
@@ -118,19 +112,29 @@
         </div>
       </div>
       <div id="shortcuts" class="shortcut-grid"></div>
-      <div style="text-align: left;">
-        <button
-          onclick="toggleButtonGroup()"
-          id="toggleBtnGroup"
-          class="left-button"
-          title="Options (F4)"
-        >
-          <i class="fas fa-cog"></i>
-        </button>
+      <div style="text-align: left; display: flex; gap: 10px;">
+  <!-- Options button -->
+  <button
+    onclick="toggleButtonGroup()"
+    id="toggleBtnGroup"
+    class="left-button"
+    title="Options (F4)"
+    style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+  >
+    <i class="fas fa-cog" style="color: #777;"></i>
+  </button>
 
+  <!-- Info button -->
+  <button
+    id="searchToggleBtn"
+    onclick="showInfoModal()"
+    title="Afficher/masquer l'aide (I)"
+    style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+  >
+    <i id="searchToggleIcon" class="fa-solid fa-circle-info" style="color: #777;;"></i>
+  </button>
+</div>
 
-
-      </div>
 
    <div
         id="buttonGroupWrapper"
