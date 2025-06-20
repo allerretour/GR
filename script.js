@@ -812,13 +812,15 @@ function displayShortcuts() {
 
         // --- HTML CONTENT ---
 shortcutElement.innerHTML = compactMode ? `
-  <div style="font-weight: bold; color: ${nameColor};">
+<i class="shortcut-icon ${shortcut.icon || 'fa-solid fa-bookmark'}"></i>  
+<div style="font-weight: bold; color: ${nameColor};">
   ${namePrefix}${escapeHTML(shortcut.name)}
 </div>
 
 
 ` : `
-  <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
+<i class="shortcut-icon ${shortcut.icon || 'fa-solid fa-bookmark'}"></i>  
+<span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
     <i class="fas fa-arrows-alt"></i>
   </span>
   <div style="text-align: left; flex-grow: 1;">
