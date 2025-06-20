@@ -110,15 +110,7 @@ body {
   display: flex;
 }
 
-.shortcut-icon {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  font-size: 1.1em;
-  color: #9966ff;
-  opacity: 0.8;
-  pointer-events: none;
-}
+
 
 
 .shortcut-feedback {
