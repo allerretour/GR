@@ -385,8 +385,21 @@ function exportVisibleShortcuts(format) {
 }
 
 function openExportFormatModal() {
+  const count = [...document.querySelectorAll("#shortcuts .shortcut")]
+    .filter(el => {
+      const index = parseInt(el.getAttribute("data-index"));
+      const shortcut = shortcuts[index];
+      return shortcut && shortcut.url.trim() !== "?";
+    }).length;
+
+  const label = count === 1
+    ? `1 raccourci sera exporté.`
+    : `${count} raccourcis seront exportés.`;
+
+  document.getElementById("exportCount").textContent = label;
   document.getElementById("exportFormatModal").classList.add("show");
 }
+
 
 function closeExportFormatModal() {
   document.getElementById("exportFormatModal").classList.remove("show");
