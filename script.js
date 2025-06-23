@@ -67,9 +67,6 @@ async function pasteFromClipboard(targetId) {
 }
 
 
-
-
-
 function mergeShortcuts(event) {
     const file = event.target.files[0];
     if (!file) return;
