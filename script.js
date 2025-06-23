@@ -951,15 +951,23 @@ function displayTagFilters() {
 
     btn.insertBefore(moveIcon, btn.firstChild);
 
-    btn.onclick = () => {
+    btn.onclick = (e) => {
+  if (e.button === 2) return; // prevent default right click behavior here
   if (activeTagFilter.includes(tag)) {
     activeTagFilter = activeTagFilter.filter(t => t !== tag);
   } else {
     activeTagFilter.push(tag);
   }
-  
   displayShortcuts();
-   };
+};
+
+// Add right-click behavior (contextmenu)
+btn.oncontextmenu = (e) => {
+  e.preventDefault();
+  activeTagFilter = [tag]; // Only keep the right-clicked tag
+  displayShortcuts();
+};
+
 
 
     tagContainer.appendChild(btn);
