@@ -6,6 +6,11 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 
+
+const icons = Quill.import('ui/icons');
+icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
+
+
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
         '&': '&amp;',
@@ -993,10 +998,9 @@ function showTooltipModal(text, isHtml = false, shortcutName = "") {
     let finalContent = safeText;
 
     if (shortcutName) {
-       const titleHtml = `<div style="margin-bottom: 10px; color: #333; text-align: center;">
-  💡 Info du raccourci : <strong>${escapeHTML(shortcutName)}</strong>
+       const titleHtml = `<div style="color: #333; text-align: center;">💡 Info du raccourci : <strong>${escapeHTML(shortcutName)}</strong>
 </div>
-<hr style="border: none; border-top: 1px solid #ccc; margin: 5px 0;" />
+<hr style="border: none; border-top: 1px solid #ccc; " />
 `;
         finalContent = titleHtml + finalContent;
     }
@@ -1476,22 +1480,51 @@ if (savedFilter) {
     isExportNeeded = false;
     updateExportStatusDot();
 
+
+const BlockEmbed = Quill.import('blots/block/embed');
+
+  class HorizontalRule extends BlockEmbed {
+    static create() {
+      const node = super.create();
+      return node;
+    }
+  }
+
+  HorizontalRule.blotName = 'hr';
+  HorizontalRule.tagName = 'hr';
+
+  Quill.register(HorizontalRule);
+
+
+
     quill = new Quill('#editTooltip', {
     theme: 'snow',
     placeholder: 'Saisissez du texte enrichi...',
     modules: {
-        toolbar: [
-            ['bold', 'italic', 'underline'],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
-            [
-                { 'color': ['black','grey', 'red', 'blue', 'green', 'orange', 'purple', 'white'] },
-                { 'background': ['white', 'yellow', 'lightgreen', 'lightblue', 'pink'] }
-            ],
-            [{ 'align': [] }],
-            ['link'],
-            ['clean']
-        ]
+  toolbar: {
+    container: [
+      ['bold', 'italic', 'underline'],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [
+        { 'color': ['black','grey', 'red', 'blue', 'green', 'orange', 'purple', 'white'] },
+        { 'background': ['white', 'yellow', 'lightgreen', 'lightblue', 'pink'] }
+      ],
+      [{ 'align': [] }],
+      ['link'],
+      ['hr'],  // Add 'hr' here
+      ['clean']
+    ],
+    handlers: {
+      hr: function () {
+        const range = this.quill.getSelection(true);
+        if (range) {
+          this.quill.insertEmbed(range.index, 'hr', true, Quill.sources.USER);
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        }
+      }
     }
+  }
+}
 });
 
 };
