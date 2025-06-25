@@ -15,6 +15,33 @@ body {
   border-radius: 12px;
 }
 
+.emoji-display {
+  font-size: 1.4rem;
+  min-width: 32px;
+  max-width: 38px;
+  max-height: 38px;
+  line-height: 1;
+  margin-bottom: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+}
+
+.emoji-display:not([onclick]) {
+  cursor: default;
+}
+
+.emoji-display:hover {
+  transform: scale(1.1);
+}
+
+
+
+
+
 /* Modal Overlay */
 .modal-overlay {
   display: none;

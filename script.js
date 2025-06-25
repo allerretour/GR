@@ -8,6 +8,7 @@ let compactMode = false;
 const DEFAULT_EMOJI = "🔗";
 
 
+
 const icons = Quill.import('ui/icons');
 icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
 
@@ -845,10 +846,11 @@ shortcutElement.innerHTML = compactMode ? `
 ` : `
   <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
   <div
-    style="font-size: 1.3rem; min-width: 32px; line-height: 1; margin-bottom: 4px; cursor: ${editMode ? 'pointer' : 'default'};"
-    onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
-    title="${editMode ? 'Changer l’emoji' : ''}"
-  >
+  class="emoji-display"
+  onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
+  title="${editMode ? 'Changer l’emoji' : ''}"
+>
+
     ${escapeHTML(shortcut.emoji || DEFAULT_EMOJI)}
   </div>
   <i class="fas fa-arrows-alt" style="${editMode ? '' : 'visibility:hidden'}"></i>
