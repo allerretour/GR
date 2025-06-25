@@ -845,7 +845,7 @@ shortcutElement.innerHTML = compactMode ? `
 ` : `
   <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
   <div
-    style="font-size: 1.3rem; line-height: 1; margin-bottom: 4px; cursor: ${editMode ? 'pointer' : 'default'};"
+    style="font-size: 1.3rem; min-width: 32px; line-height: 1; margin-bottom: 4px; cursor: ${editMode ? 'pointer' : 'default'};"
     onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
     title="${editMode ? 'Changer l’emoji' : ''}"
   >
