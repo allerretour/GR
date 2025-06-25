@@ -5,6 +5,7 @@ let alphabeticalSorting = false;
 let manualOrder = [];
 let editMode = false;
 let compactMode = false;
+const DEFAULT_EMOJI = "🔗";
 
 
 const icons = Quill.import('ui/icons');
@@ -51,6 +52,21 @@ function placeCaretAtEnd(el) {
     sel.removeAllRanges();
     sel.addRange(range);
 }
+
+
+function promptEmojiChange(index) {
+  if (!editMode) return;
+
+  const current = shortcuts[index].emoji || DEFAULT_EMOJI;
+  const newEmoji = prompt("Nouveau emoji :", current);
+
+  if (newEmoji && newEmoji !== current) {
+    shortcuts[index].emoji = newEmoji;
+    saveShortcuts();
+    displayShortcuts();
+  }
+}
+
 
 async function pasteFromClipboard(targetId) {
   const input = document.getElementById(targetId);
@@ -203,6 +219,7 @@ function ensureDefaultShortcut() {
                 name: "Exemple",
                 url: "https://google.com",
                 info: "Clic de DROIT pour plus d'infos",
+                emoji: DEFAULT_EMOJI,
                 tags: ["instruction"],
                 tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
                 tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
@@ -211,6 +228,7 @@ function ensureDefaultShortcut() {
                 name: "Site de test",
                 url: "https://example.com",
                 info: "Second raccourci de démonstration",
+                emoji: DEFAULT_EMOJI,
                 tags: ["démo"],
                 tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
                 tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
@@ -508,14 +526,19 @@ function loadShortcuts() {
     // ✅ MIGRATION: Add tooltipPlain if missing
     let updated = false;
     shortcuts.forEach(sc => {
-        if (sc.tooltip && !sc.tooltipPlain) {
-            // Strip HTML tags for plain text
-            const temp = document.createElement("div");
-            temp.innerHTML = sc.tooltip;
-            sc.tooltipPlain = temp.textContent.trim();
-            updated = true;
-        }
-    });
+  if (!sc.tooltipPlain && sc.tooltip) {
+    const temp = document.createElement("div");
+    temp.innerHTML = sc.tooltip;
+    sc.tooltipPlain = temp.textContent.trim();
+    updated = true;
+  }
+
+  // ✅ Add emoji if missing
+  if (!sc.emoji) {
+    sc.emoji = DEFAULT_EMOJI;
+    updated = true;
+  }
+});
 
     if (updated) {
         saveShortcuts(); // Resave only if we made changes
@@ -820,15 +843,20 @@ shortcutElement.innerHTML = compactMode ? `
 
 
 ` : `
-  <span class="move-handle" style="${editMode ? '' : 'visibility:hidden'}">
-    <i class="fas fa-arrows-alt"></i>
-  </span>
+  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+  <div
+    style="font-size: 1.3rem; line-height: 1; margin-bottom: 4px; cursor: ${editMode ? 'pointer' : 'default'};"
+    onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
+    title="${editMode ? 'Changer l’emoji' : ''}"
+  >
+    ${escapeHTML(shortcut.emoji || DEFAULT_EMOJI)}
+  </div>
+  <i class="fas fa-arrows-alt" style="${editMode ? '' : 'visibility:hidden'}"></i>
+</span>
   <div style="text-align: left; flex-grow: 1;">
     <div style="display: flex; align-items: center; font-weight: bold; gap: 6px; color: ${nameColor};">
-  ${namePrefix}${escapeHTML(shortcut.name)}
-</div>
-
-
+      ${namePrefix}${escapeHTML(shortcut.name)}
+    </div>
     <div class="info">${escapeHTML(shortcut.info || "")}</div>
     <div class="tags">${tagsHTML}</div>
   </div>
@@ -1086,7 +1114,9 @@ function confirmAdd() {
             tags,
             tooltip: tooltipHtml,
             tooltipPlain: tooltipText,
-            info
+            info,
+            emoji: DEFAULT_EMOJI
+            
         };
         // Add to shortcuts
         shortcuts.push(newShortcut);
@@ -1143,7 +1173,8 @@ function confirmEdit() {
             tags,
             tooltip: tooltipHtml,
             tooltipPlain: tooltipText,
-            info
+            info,
+            emoji: shortcuts[editIndex].emoji || DEFAULT_EMOJI
         };
         saveShortcuts();
         displayShortcuts();
