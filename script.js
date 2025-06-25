@@ -966,6 +966,7 @@ btn.oncontextmenu = (e) => {
   e.preventDefault();
   activeTagFilter = [tag]; // Only keep the right-clicked tag
   displayShortcuts();
+  showToast(`🔎 Filtré uniquement par "${tag}"`);
 };
 
 
