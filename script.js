@@ -953,12 +953,21 @@ function displayTagFilters() {
   tagContainer.appendChild(clearBtn);
 
   tagOrder.forEach(tag => {
-    const btn = document.createElement("span");
-    btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
-    btn.textContent = tag;
-    btn.style.display = "inline-flex";
-    btn.style.alignItems = "center";
-    btn.style.gap = "6px";
+  const btn = document.createElement("span");
+  btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
+  btn.textContent = tag;
+  btn.style.display = "inline-flex";
+  btn.style.alignItems = "center";
+  btn.style.gap = "6px";
+
+  // ✅ Tooltip ici
+  btn.title = activeTagFilter.includes(tag)
+    ? `Cliquez pour retirer le filtre « ${tag} »\nCliquez droit pour filtre unique`
+    : `Cliquez pour filtrer par « ${tag} »\nCliquez droit pour filtre unique`;
+
+
+
+
 
     // Move icon
     const moveIcon = document.createElement("i");
