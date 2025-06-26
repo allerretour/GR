@@ -859,7 +859,7 @@ shortcutElement.innerHTML = compactMode ? `
 
 
 ` : `
-  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
   <div
   class="emoji-display"
   onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
@@ -877,14 +877,15 @@ shortcutElement.innerHTML = compactMode ? `
     <div class="info">${escapeHTML(shortcut.info || "")}</div>
     <div class="tags">${tagsHTML}</div>
   </div>
-  <div class="icons" style="${editMode ? '' : 'visibility:hidden'}">
-    <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
-      <i class="fas fa-edit"></i>
-    </span>
-    <span class="icon" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
-      <i class="fas fa-trash-alt"></i>
-    </span>
-  </div>
+  <div class="icons" style="display: flex; flex-direction: column; gap: 14px; ${editMode ? '' : 'visibility:hidden'}">
+  <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
+    <i class="fas fa-edit"></i>
+  </span>
+  <span class="icon" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
+    <i class="fas fa-trash-alt"></i>
+  </span>
+</div>
+
 `;
 
 
