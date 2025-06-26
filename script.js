@@ -962,8 +962,8 @@ function displayTagFilters() {
 
   // ✅ Tooltip ici
   btn.title = activeTagFilter.includes(tag)
-    ? `Cliquez pour retirer le filtre « ${tag} »\nCliquez droit pour filtre unique`
-    : `Cliquez pour filtrer par « ${tag} »\nCliquez droit pour filtre unique`;
+  ? `Tag déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
+  : `Cliquez 👈 pour filtrer par « ${tag} »\nCliquez 👉 pour filtre unique`;
 
 
 
