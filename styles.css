@@ -308,8 +308,8 @@ color: #000;
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 2em;
-  color: #ddd;
+  font-size: 1.7em;
+  color: #eee;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -318,6 +318,7 @@ color: #000;
 
 #searchToggleBtn:hover {
   color: #000;
+  
 }
 
 .status-dot.modifie {
@@ -373,7 +374,7 @@ color: #000;
 }
 
 #buttonGroupWrapper.visible {
-  max-height: 200px; /* adjust height as needed */
+  max-height: 250px; /* adjust height as needed */
   opacity: 1;
   pointer-events: auto;
 }
@@ -403,7 +404,7 @@ color: #000;
 
 
 .button-group {
-  margin-top: 15px;
+  margin-top: 20px;
   background: rgba(240, 240, 240, 0.8);
   /* Same subtle background */
   border-radius: 10px;
@@ -419,7 +420,7 @@ color: #000;
 
 button {
   padding: 6px 10px;
-  font-size: 20px;
+  font-size: 24px;
   border: none;
   background: linear-gradient(45deg, #007bff, #00c6ff);
   color: white;
@@ -558,9 +559,6 @@ input[type="text"] {
   background:
   linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 100%),
   radial-gradient(circle at top right, rgba(180, 160, 255, 0.12), transparent 60%);
-
-
-
 
   color: #2a2a2a;
   font-size: 1.05em;
@@ -722,8 +720,8 @@ font-weight: bold;
 
 .move-handle {
   padding-right: 10px;
-  font-size: 18px;
-  color: #666;
+  font-size: 20px;
+  color: #333;
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="small"]::before,
