@@ -838,9 +838,24 @@ function displayShortcuts() {
 
         // --- HTML CONTENT ---
 shortcutElement.innerHTML = compactMode ? `
-  <div style="font-weight: bold; color: ${nameColor};">
-  ${namePrefix}${escapeHTML(shortcut.name)}
-</div>
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <span class="emoji-display" style="
+      font-size: 2rem;
+      width: 38px;
+      height: 38px;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      flex-shrink: 0;
+    ">
+      ${escapeHTML(shortcut.emoji || DEFAULT_EMOJI)}
+    </span>
+    <div style="font-weight: bold; color: ${nameColor};">
+      ${namePrefix}${escapeHTML(shortcut.name)}
+    </div>
+  </div>
 
 
 ` : `
