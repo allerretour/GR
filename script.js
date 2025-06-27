@@ -56,17 +56,136 @@ function placeCaretAtEnd(el) {
 
 
 function promptEmojiChange(index) {
-  if (!editMode) return;
+  
 
-  const current = shortcuts[index].emoji || DEFAULT_EMOJI;
-  const newEmoji = prompt("Nouveau emoji :", current);
+  // Overlay
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.background = "rgba(0, 0, 0, 0.4)";
+  overlay.style.zIndex = 9998;
+  document.body.appendChild(overlay);
 
-  if (newEmoji && newEmoji !== current) {
-    shortcuts[index].emoji = newEmoji;
-    saveShortcuts();
-    displayShortcuts();
-  }
+  // Picker container
+  const picker = document.createElement("div");
+  picker.style.position = "fixed";
+  picker.style.top = "50%";
+  picker.style.left = "50%";
+  picker.style.transform = "translate(-50%, -50%)";
+  picker.style.background = "white";
+  picker.style.padding = "16px";
+  picker.style.border = "1px solid #ccc";
+  picker.style.borderRadius = "14px";
+  picker.style.boxShadow = "0 8px 20px rgba(0,0,0,0.3)";
+  picker.style.zIndex = 9999;
+  picker.style.display = "flex";
+  picker.style.flexDirection = "column";
+  picker.style.alignItems = "center";
+  picker.style.minWidth = "260px";
+
+  // Titre
+  const title = document.createElement("div");
+  title.textContent = "🧩 Choisissez un emoji";
+  title.style.fontSize = "1.1rem";
+  title.style.fontWeight = "bold";
+  title.style.marginBottom = "12px";
+  picker.appendChild(title);
+
+  // Emoji boutons
+  const emojiGrid = document.createElement("div");
+  emojiGrid.style.display = "flex";
+  emojiGrid.style.flexWrap = "wrap";
+  emojiGrid.style.justifyContent = "center";
+  emojiGrid.style.gap = "8px";
+  emojiGrid.style.marginBottom = "12px";
+
+  EMOJI_CHOICES.forEach(emoji => {
+    const btn = document.createElement("button");
+    btn.textContent = emoji;
+    btn.style.fontSize = "1.6rem";
+    btn.style.padding = "6px 10px";
+    btn.style.border = "none";
+    btn.style.background = "transparent";
+    btn.style.cursor = "pointer";
+    btn.onclick = () => {
+      shortcuts[index].emoji = emoji;
+      saveShortcuts();
+      displayShortcuts();
+      document.body.removeChild(picker);
+      document.body.removeChild(overlay);
+    };
+    emojiGrid.appendChild(btn);
+  });
+
+  picker.appendChild(emojiGrid);
+
+  // Ligne boutons bas
+  const buttonRow = document.createElement("div");
+  buttonRow.style.display = "flex";
+  buttonRow.style.justifyContent = "center";
+  buttonRow.style.gap = "10px";
+  buttonRow.style.marginTop = "6px";
+  buttonRow.style.width = "100%";
+
+  // Personnalisé
+  const customBtn = document.createElement("button");
+  customBtn.textContent = "🔧 Personnalisé…";
+  customBtn.style.padding = "6px 12px";
+  customBtn.style.fontSize = "0.95rem";
+  customBtn.style.borderRadius = "8px";
+  customBtn.style.border = "1px solid #ccc";
+  customBtn.style.cursor = "pointer";
+  customBtn.style.color = "black";
+  customBtn.style.background = "#f9f9f9";
+
+  customBtn.onclick = () => {
+    const customEmoji = prompt("Entrez un emoji personnalisé :");
+    if (customEmoji) {
+      shortcuts[index].emoji = customEmoji;
+      saveShortcuts();
+      displayShortcuts();
+    }
+    document.body.removeChild(picker);
+    document.body.removeChild(overlay);
+  };
+
+  // Annuler
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "❌ Annuler";
+  cancelBtn.style.padding = "6px 12px";
+  cancelBtn.style.fontSize = "0.95rem";
+  cancelBtn.style.borderRadius = "8px";
+  cancelBtn.style.border = "1px solid #ccc";
+  cancelBtn.style.cursor = "pointer";
+  cancelBtn.style.color = "black";
+  cancelBtn.style.background = "#f9f9f9";
+  cancelBtn.onclick = () => {
+    document.body.removeChild(picker);
+    document.body.removeChild(overlay);
+  };
+
+  buttonRow.appendChild(customBtn);
+  buttonRow.appendChild(cancelBtn);
+  picker.appendChild(buttonRow);
+
+  // Clic en dehors = fermeture
+  setTimeout(() => {
+    document.addEventListener("click", function handleOutsideClick(e) {
+      if (!picker.contains(e.target)) {
+        picker.remove();
+        overlay.remove();
+        document.removeEventListener("click", handleOutsideClick);
+      }
+    });
+  }, 0);
+
+  document.body.appendChild(picker);
 }
+
+
 
 
 async function pasteFromClipboard(targetId) {
@@ -963,7 +1082,7 @@ function displayTagFilters() {
 
   // ✅ Tooltip ici
   btn.title = activeTagFilter.includes(tag)
-  ? `Tag déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
+  ? `Filtre déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
   : `Cliquez 👈 pour filtrer par « ${tag} »\nCliquez 👉 pour filtre unique`;
 
 
