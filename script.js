@@ -56,9 +56,12 @@ function placeCaretAtEnd(el) {
 
 
 function promptEmojiChange(index) {
-  
+  function saveRecentEmoji(emoji) {
+    let recent = JSON.parse(localStorage.getItem("recentEmojis") || "[]");
+    recent = [emoji, ...recent.filter(e => e !== emoji)].slice(0, 5);
+    localStorage.setItem("recentEmojis", JSON.stringify(recent));
+  }
 
-  // Overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = 0;
@@ -69,7 +72,6 @@ function promptEmojiChange(index) {
   overlay.style.zIndex = 9998;
   document.body.appendChild(overlay);
 
-  // Picker container
   const picker = document.createElement("div");
   picker.style.position = "fixed";
   picker.style.top = "50%";
@@ -86,7 +88,6 @@ function promptEmojiChange(index) {
   picker.style.alignItems = "center";
   picker.style.minWidth = "260px";
 
-  // Titre
   const title = document.createElement("div");
   title.textContent = "🧩 Choisissez un emoji";
   title.style.fontSize = "1.1rem";
@@ -94,12 +95,141 @@ function promptEmojiChange(index) {
   title.style.marginBottom = "12px";
   picker.appendChild(title);
 
-  // Emoji boutons
+  const recent = JSON.parse(localStorage.getItem("recentEmojis") || "[]");
+  const currentEmoji = shortcuts[index].emoji || "";
+
+  // 🕘 Section récents (si disponible)
+  if (recent.length) {
+    const sectionTop = document.createElement("div");
+    sectionTop.style.width = "100%";
+    sectionTop.style.display = "flex";
+    sectionTop.style.justifyContent = "space-between";
+    sectionTop.style.alignItems = "center";
+    sectionTop.style.marginBottom = "6px";
+
+    const recentLabel = document.createElement("div");
+    recentLabel.textContent = "🕘 Récents";
+    recentLabel.style.fontWeight = "bold";
+    recentLabel.style.fontSize = "0.9rem";
+    sectionTop.appendChild(recentLabel);
+
+    const clearBtn = document.createElement("button");
+    clearBtn.textContent = "🧹 Effacer";
+    clearBtn.title = "Effacer les emojis récents";
+    clearBtn.style.fontSize = "0.8rem";
+    clearBtn.style.border = "none";
+    clearBtn.style.background = "transparent";
+    clearBtn.style.color = "#555";
+    clearBtn.style.cursor = "pointer";
+    clearBtn.onclick = () => {
+      localStorage.removeItem("recentEmojis");
+      picker.remove();
+      overlay.remove();
+      promptEmojiChange(index); // Recharge
+    };
+    sectionTop.appendChild(clearBtn);
+    picker.appendChild(sectionTop);
+
+    const recentRow = document.createElement("div");
+    recentRow.style.display = "flex";
+    recentRow.style.justifyContent = "center";
+    recentRow.style.flexWrap = "wrap";
+    recentRow.style.gap = "8px";
+    recentRow.style.marginBottom = "8px";
+
+    recent.forEach(emoji => {
+      const wrapper = document.createElement("div");
+      wrapper.style.display = "flex";
+      wrapper.style.flexDirection = "column";
+      wrapper.style.alignItems = "center";
+
+      const btn = document.createElement("button");
+      btn.textContent = emoji;
+      btn.style.fontSize = "1.6rem";
+      btn.style.padding = "6px 10px";
+      btn.style.border = emoji === currentEmoji ? "2px solid #007bff" : "none";
+      btn.style.borderRadius = "6px";
+      btn.style.background = "transparent";
+      btn.style.cursor = "pointer";
+      btn.title = emoji === currentEmoji ? "Emoji actuel" : "";
+      btn.onclick = () => {
+        shortcuts[index].emoji = emoji;
+        saveRecentEmoji(emoji);
+        saveShortcuts();
+        displayShortcuts();
+        document.body.removeChild(picker);
+        document.body.removeChild(overlay);
+      };
+
+      wrapper.appendChild(btn);
+
+      if (emoji === currentEmoji) {
+        const label = document.createElement("div");
+        label.textContent = "(actuel)";
+        label.style.fontSize = "0.75rem";
+        label.style.color = "#007bff";
+        label.style.marginTop = "2px";
+        wrapper.appendChild(label);
+      }
+
+      recentRow.appendChild(wrapper);
+    });
+
+    picker.appendChild(recentRow);
+
+    const separator = document.createElement("div");
+    separator.style.width = "100%";
+    separator.style.height = "1px";
+    separator.style.backgroundColor = "#ddd";
+    separator.style.margin = "12px 0";
+    picker.appendChild(separator);
+  }
+
+  // Si aucun récent mais emoji actuel : afficher quand même
+  else if (currentEmoji) {
+    const currentSection = document.createElement("div");
+    currentSection.style.textAlign = "center";
+    currentSection.style.marginBottom = "12px";
+
+    const label = document.createElement("div");
+    label.textContent = "🟢 Emoji actuel";
+    label.style.fontWeight = "bold";
+    label.style.fontSize = "0.9rem";
+    label.style.marginBottom = "4px";
+    currentSection.appendChild(label);
+
+    const emojiDisplay = document.createElement("div");
+    emojiDisplay.textContent = currentEmoji;
+    emojiDisplay.style.fontSize = "2rem";
+    emojiDisplay.style.border = "2px solid #007bff";
+    emojiDisplay.style.borderRadius = "6px";
+    emojiDisplay.style.display = "inline-block";
+    emojiDisplay.style.padding = "4px 10px";
+    currentSection.appendChild(emojiDisplay);
+
+    const labelText = document.createElement("div");
+    labelText.textContent = "(actuel)";
+    labelText.style.fontSize = "0.75rem";
+    labelText.style.color = "#007bff";
+    labelText.style.marginTop = "2px";
+    currentSection.appendChild(labelText);
+
+    picker.appendChild(currentSection);
+
+    const separator = document.createElement("div");
+    separator.style.width = "100%";
+    separator.style.height = "1px";
+    separator.style.backgroundColor = "#ddd";
+    separator.style.margin = "12px 0";
+    picker.appendChild(separator);
+  }
+
+  // Liste principale
   const emojiGrid = document.createElement("div");
   emojiGrid.style.display = "flex";
   emojiGrid.style.flexWrap = "wrap";
   emojiGrid.style.justifyContent = "center";
-  emojiGrid.style.gap = "8px";
+  emojiGrid.style.gap = "6px";
   emojiGrid.style.marginBottom = "12px";
 
   EMOJI_CHOICES.forEach(emoji => {
@@ -112,6 +242,7 @@ function promptEmojiChange(index) {
     btn.style.cursor = "pointer";
     btn.onclick = () => {
       shortcuts[index].emoji = emoji;
+      saveRecentEmoji(emoji);
       saveShortcuts();
       displayShortcuts();
       document.body.removeChild(picker);
@@ -122,7 +253,7 @@ function promptEmojiChange(index) {
 
   picker.appendChild(emojiGrid);
 
-  // Ligne boutons bas
+  // Boutons bas
   const buttonRow = document.createElement("div");
   buttonRow.style.display = "flex";
   buttonRow.style.justifyContent = "center";
@@ -130,7 +261,6 @@ function promptEmojiChange(index) {
   buttonRow.style.marginTop = "6px";
   buttonRow.style.width = "100%";
 
-  // Personnalisé
   const customBtn = document.createElement("button");
   customBtn.textContent = "🔧 Personnalisé…";
   customBtn.style.padding = "6px 12px";
@@ -140,11 +270,11 @@ function promptEmojiChange(index) {
   customBtn.style.cursor = "pointer";
   customBtn.style.color = "black";
   customBtn.style.background = "#f9f9f9";
-
   customBtn.onclick = () => {
     const customEmoji = prompt("Entrez un emoji personnalisé :");
     if (customEmoji) {
       shortcuts[index].emoji = customEmoji;
+      saveRecentEmoji(customEmoji);
       saveShortcuts();
       displayShortcuts();
     }
@@ -152,7 +282,6 @@ function promptEmojiChange(index) {
     document.body.removeChild(overlay);
   };
 
-  // Annuler
   const cancelBtn = document.createElement("button");
   cancelBtn.textContent = "❌ Annuler";
   cancelBtn.style.padding = "6px 12px";
@@ -171,7 +300,6 @@ function promptEmojiChange(index) {
   buttonRow.appendChild(cancelBtn);
   picker.appendChild(buttonRow);
 
-  // Clic en dehors = fermeture
   setTimeout(() => {
     document.addEventListener("click", function handleOutsideClick(e) {
       if (!picker.contains(e.target)) {
@@ -186,6 +314,15 @@ function promptEmojiChange(index) {
 }
 
 
+
+function saveRecentEmoji(emoji) {
+  let recent = JSON.parse(localStorage.getItem("recentEmojis") || "[]");
+  // Supprimer doublons + remettre en haut
+  recent = [emoji, ...recent.filter(e => e !== emoji)];
+  // Limiter à 5
+  recent = recent.slice(0, 5);
+  localStorage.setItem("recentEmojis", JSON.stringify(recent));
+}
 
 
 async function pasteFromClipboard(targetId) {
@@ -982,7 +1119,7 @@ shortcutElement.innerHTML = compactMode ? `
 
 
 ` : `
-  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 12epx;">
   <div
   class="emoji-display"
   onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
