@@ -226,6 +226,8 @@ function promptEmojiChange(index) {
 
   // Liste principale
   const emojiGrid = document.createElement("div");
+  emojiGrid.style.maxHeight = "200px";
+  emojiGrid.style.overflowY = "auto";
   emojiGrid.style.display = "flex";
   emojiGrid.style.flexWrap = "wrap";
   emojiGrid.style.justifyContent = "center";
@@ -264,23 +266,40 @@ function promptEmojiChange(index) {
   const customBtn = document.createElement("button");
   customBtn.textContent = "🔧 Personnalisé…";
   customBtn.style.padding = "6px 12px";
-  customBtn.style.fontSize = "0.95rem";
+  customBtn.style.fontSize = "0.75rem";
   customBtn.style.borderRadius = "8px";
   customBtn.style.border = "1px solid #ccc";
   customBtn.style.cursor = "pointer";
   customBtn.style.color = "black";
   customBtn.style.background = "#f9f9f9";
   customBtn.onclick = () => {
-    const customEmoji = prompt("Entrez un emoji personnalisé :");
+  const inputDiv = document.createElement("div");
+  const input = document.createElement("input");
+  input.placeholder = "Entrez un emoji…";
+  input.style.fontSize = "1.5rem";
+  input.style.textAlign = "center";
+  input.style.marginTop = "20px";
+  input.maxLength = 2;
+
+  const okBtn = document.createElement("button");
+  okBtn.textContent = "OK";
+  okBtn.onclick = () => {
+    const customEmoji = input.value.trim();
     if (customEmoji) {
       shortcuts[index].emoji = customEmoji;
       saveRecentEmoji(customEmoji);
       saveShortcuts();
       displayShortcuts();
     }
-    document.body.removeChild(picker);
-    document.body.removeChild(overlay);
+    picker.remove();
+    overlay.remove();
   };
+
+  inputDiv.appendChild(input);
+  inputDiv.appendChild(okBtn);
+  picker.appendChild(inputDiv);
+};
+
 
   const cancelBtn = document.createElement("button");
   cancelBtn.textContent = "❌ Annuler";
