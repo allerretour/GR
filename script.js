@@ -810,7 +810,11 @@ function displayShortcuts() {
 
 
 
-        shortcutElement.className = "shortcut" + (compactMode ? " compact" : "");
+        shortcutElement.className =
+  "shortcut" +
+  (compactMode ? " compact" : "") +
+  (editMode ? " editmode" : "");
+
 
         const baseText = isInfoOnly ? "Appuyez pour les infos" : shortcut.url;
         const tooltipContent = shortcut.tooltipPlain ? `\n\n${shortcut.tooltipPlain}` : "";

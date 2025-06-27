@@ -38,6 +38,18 @@ body {
   transform: scale(1.3);
 }
 
+@keyframes subtle-shake {
+  0%   { transform: translateX(-0.4px) rotate(-0.4deg); }
+  25%  { transform: translateX(0.4px) rotate(0.4deg); }
+  50%  { transform: translateX(-0.4px) rotate(-0.4deg); }
+  75%  { transform: translateX(0.4px) rotate(0.4deg); }
+  100% { transform: translateX(-0.4px) rotate(-0.4deg); }
+}
+
+.shortcut.editmode {
+  animation: subtle-shake 0.8s infinite ease-in-out;
+}
+
 
 
 
