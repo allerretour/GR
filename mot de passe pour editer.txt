@@ -1,18 +1,41 @@
-const EDIT_MODE_PASSWORD = "111"; // 🔐 Customize this securely
+1. Define the password
+At the top of your script, define your password:
 
-function toggleEditMode() {
-    const editToggle = document.getElementById("editToggle");
 
-    if (editToggle.checked) {
-        const input = prompt("Mot de passe requis pour activer le mode édition :");
-        if (input !== EDIT_MODE_PASSWORD) {
-            alert("Mot de passe incorrect.");
-            editToggle.checked = false;
-            return;
-        }
-    }
 
-    editMode = editToggle.checked;
-    document.getElementById("editStatus").textContent = `Mode édition: ${editMode ? 'Oui' : 'Non'}`;
-    displayShortcuts();
+const GLOBAL_PASSWORD = "secret123"; // Change this to your real password
+
+
+
+
+2. Create a helper to check password
+This prompts the user and caches the result in sessionStorage:
+
+
+
+function ensureAuthenticated() {
+  const ok = sessionStorage.getItem("authenticated") === "true";
+  if (ok) return true;
+
+  const input = prompt("🔒 Entrez le mot de passe pour accéder à cette fonction :");
+  if (input === GLOBAL_PASSWORD) {
+    sessionStorage.setItem("authenticated", "true");
+    return true;
+  } else {
+    alert("❌ Mot de passe incorrect.");
+    return false;
+  }
+}
+
+
+
+
+3. Wrap all protected actions
+Update functions like:
+
+
+function addShortcut() {
+  if (!ensureAuthenticated()) return;
+
+  // existing add logic here...
 }

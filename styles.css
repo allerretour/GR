@@ -164,7 +164,7 @@ body {
   color: white;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 10000;
   opacity: 1;
@@ -351,6 +351,7 @@ color: #000;
   color: white;
   padding: 10px 16px;
   border-radius: 8px;
+  font-size: 25px;
   font-weight: bold;
   opacity: 0;
   pointer-events: none;
@@ -806,21 +807,22 @@ font-weight: bold;
 }
 
 .info-modal-content h3 {
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 10px;
   color: #34495e;
+  text-align: left;
 }
 
 .info-modal-content ul {
   list-style: none;
   padding-left: 0;
-  margin: 0;
+  margin: 10px;
 }
 
 .info-modal-content li {
   margin-bottom: 8px;
   font-size: 14px;
-text-align: left;
+  text-align: left;
 }
 
 .close-btn {

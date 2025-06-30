@@ -1885,18 +1885,17 @@ const BlockEmbed = Quill.import('blots/block/embed');
     placeholder: 'Saisissez du texte enrichi...',
     modules: {
   toolbar: {
-    container: [
-      ['bold', 'italic', 'underline'],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
-      [
-        { 'color': ['black','grey', 'red', 'blue', 'green', 'orange', 'purple', 'white'] },
-        { 'background': ['white', 'yellow', 'lightgreen', 'lightblue', 'pink'] }
-      ],
-      [{ 'align': [] }],
-      ['link'],
-      ['hr'],  // Add 'hr' here
-      ['clean']
-    ],
+  container: [
+    ['bold', 'italic', 'underline', 'strike', 'code'],
+    [{ 'header': [1, 2, 3, false] }],
+    [{ 'size': ['small', false, 'large', 'huge'] }],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'align': [] }],
+    [{ 'color': [] }, { 'background': [] }],
+    ['link', 'blockquote'],
+    ['hr'],
+    ['clean']
+  ],
     handlers: {
       hr: function () {
         const range = this.quill.getSelection(true);
