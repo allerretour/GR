@@ -5,7 +5,8 @@ let alphabeticalSorting = false;
 let manualOrder = [];
 let editMode = false;
 let compactMode = false;
-const DEFAULT_EMOJI = "🔗";
+const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
+
 
 
 
@@ -425,6 +426,45 @@ function mergeShortcuts(event) {
 }
 
 
+function openVisibleShortcutsInTabs() {
+  const visibleCards = Array.from(document.querySelectorAll("#shortcuts .shortcut"))
+    .filter(card => card.offsetParent !== null);
+
+  const urls = visibleCards.map(card => {
+    const index = parseInt(card.getAttribute("data-index"));
+    const shortcut = shortcuts[index];
+    if (!shortcut || !shortcut.url || shortcut.url.trim() === "?") return null;
+
+    let url = shortcut.url.trim();
+    if (!/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url)) {
+      url = "https://" + url;
+    }
+
+    try {
+      return new URL(url).href;
+    } catch {
+      return null;
+    }
+  }).filter(Boolean);
+
+  if (urls.length === 0) {
+    showToast("Aucun lien valide à ouvrir.");
+    return;
+  }
+
+  if (!confirm(`⚠️ Ouvrir ${urls.length} lien(s) dans de nouveaux onglets ?`)) return;
+
+  const MAX_TABS = 10;
+  const slice = urls.slice(0, MAX_TABS);
+
+  if (urls.length > MAX_TABS) {
+    alert(`Seuls les ${MAX_TABS} premiers liens seront ouverts pour éviter les blocages navigateur.`);
+  }
+
+  slice.forEach(url => window.open(url, "_blank"));
+}
+
+
 
 
 function toggleTags() {
@@ -495,7 +535,7 @@ function ensureDefaultShortcut() {
                 name: "Exemple",
                 url: "https://google.com",
                 info: "Clic de DROIT pour plus d'infos",
-                emoji: DEFAULT_EMOJI,
+                emoji: DEFAULT_EMOJI(),
                 tags: ["instruction"],
                 tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
                 tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
@@ -504,7 +544,7 @@ function ensureDefaultShortcut() {
                 name: "Site de test",
                 url: "https://example.com",
                 info: "Second raccourci de démonstration",
-                emoji: DEFAULT_EMOJI,
+                emoji: DEFAULT_EMOJI(),
                 tags: ["démo"],
                 tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
                 tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
@@ -1100,7 +1140,7 @@ function displayShortcuts() {
         shortcutElement.style.touchAction = "";
     }, 1000);
 
-}, 700); // Long press duration
+}, 1000); // Long press duration
         });
 
 
@@ -1138,7 +1178,7 @@ shortcutElement.innerHTML = compactMode ? `
 
 
 ` : `
-  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 12epx;">
+  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
   <div
   class="emoji-display"
   onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
@@ -1421,7 +1461,7 @@ function confirmAdd() {
             tooltip: tooltipHtml,
             tooltipPlain: tooltipText,
             info,
-            emoji: DEFAULT_EMOJI
+            emoji: DEFAULT_EMOJI()
             
         };
         // Add to shortcuts

@@ -27,6 +27,15 @@ if (event.code === "F2") {
   return;
 }
 
+
+// F3 → open visible
+if (event.code === "F3") {
+  event.preventDefault();
+  openVisibleShortcutsInTabs();
+  showShortcutFeedback("Ouvrir raccourcis (F3)");
+  return;
+}
+
 // F4 → Toggle Option
 if (event.code === "F4") {
   event.preventDefault();

@@ -1,0 +1,18 @@
+const EDIT_MODE_PASSWORD = "111"; // 🔐 Customize this securely
+
+function toggleEditMode() {
+    const editToggle = document.getElementById("editToggle");
+
+    if (editToggle.checked) {
+        const input = prompt("Mot de passe requis pour activer le mode édition :");
+        if (input !== EDIT_MODE_PASSWORD) {
+            alert("Mot de passe incorrect.");
+            editToggle.checked = false;
+            return;
+        }
+    }
+
+    editMode = editToggle.checked;
+    document.getElementById("editStatus").textContent = `Mode édition: ${editMode ? 'Oui' : 'Non'}`;
+    displayShortcuts();
+}

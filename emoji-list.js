@@ -1,17 +1,24 @@
 const EMOJI_CHOICES = [
-  "🔗", // Link
-  "📁", // Folder
-  "📚", // Books / Library
-  "📆", // Calendar / Date
+  "🔗", // premier de la liste emoji par defaut
   "✉️", // Email / Message
+  "⭐", // Star / Favorite
+  "📝", // Memo / Writing
+  "📁", // Folder
+  "📆", // Calendar / Date
+  "📚", // Books / Library
   "📖", // Open Book / Read
-  "💻", // Computer / Tech
-  "🔬", // Microscope / Science
-  "👨‍⚕️", // Doctor / Healthcare
-  "🚑", // Ambulance / Emergency
-  "🔒", // Lock / Security
-  "💡", // Idea / Lightbulb
-  "🖼️", // Picture / Image
+  "📈", // Chart Increasing / Growth
   "📷", // Camera / Photography
-  "⭐"  // Star / Favorite
+  "🖼️", // Picture / Image
+  "💡", // Idea / Lightbulb
+  "💼", // Briefcase / Business
+  "💻", // Computer / Tech
+  "🔒", // Lock / Security
+  "🔬", // Microscope / Science
+  "⚙️", // Gear / Settings
+  "⏰", // Alarm Clock / Time
+  "🧑‍💻", // Technologist / Coding
+  "👨‍⚕️", // Doctor / Healthcare
+  "🚑"  // Ambulance / Emergency
 ];
+
