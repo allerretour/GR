@@ -22,6 +22,7 @@ body {
   max-height: 38px;
   line-height: 1.3;
   margin-bottom: 2px;
+  color: orange;
   cursor: pointer;
   display: flex;
   align-items: center;

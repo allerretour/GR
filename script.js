@@ -1690,13 +1690,13 @@ dropZone.addEventListener("dragover", (e) => {
 });
 
 dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#fff";
+    dropZone.style.borderColor = "#eee";
     dropZone.style.color = "#ddd";
 });
 
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = "#fff";
+    dropZone.style.borderColor = "#eee";
     dropZone.style.color = "#ddd";
 
     const file = e.dataTransfer.files[0];
