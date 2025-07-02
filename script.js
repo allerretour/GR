@@ -686,7 +686,7 @@ function exportVisibleShortcuts(format) {
   if (format === "txt" || format === "both") {
     const textLines = visibleShortcuts.map(sc => {
       const name = sc.name || "Sans nom";
-      const url = sc.url?.trim() === "?" ? "[ INFORMATIONS SEULEMENT ]" : sc.url || "";
+      const url = sc.url?.trim() === "?" ? "[ (i) INFORMATIONS SEULEMENT ]" : sc.url || "";
       return `${name}\n${url}\n---`;
     });
 
