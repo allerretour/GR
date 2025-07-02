@@ -1190,13 +1190,13 @@ shortcutElement.innerHTML = compactMode ? `
   <i class="fas fa-arrows-alt" style="${editMode ? '' : 'visibility:hidden'}"></i>
 </span>
   <div style="text-align: left; flex-grow: 1;">
-    <div style="display: flex; align-items: center; font-weight: bold; gap: 6px; color: ${nameColor};">
+    <div style="display: flex; align-items: center; font-weight: bold; gap: 14px; color: ${nameColor};">
       ${namePrefix}${escapeHTML(shortcut.name)}
     </div>
     <div class="info">${escapeHTML(shortcut.info || "")}</div>
     <div class="tags">${tagsHTML}</div>
   </div>
-  <div class="icons" style="display: flex; flex-direction: column; gap: 14px; ${editMode ? '' : 'visibility:hidden'}">
+  <div class="icons" style="display: flex; flex-direction: column; gap: 24px; ${editMode ? '' : 'visibility:hidden'}">
   <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
     <i class="fas fa-edit"></i>
   </span>
