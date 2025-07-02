@@ -1190,7 +1190,7 @@ shortcutElement.innerHTML = compactMode ? `
   <i class="fas fa-arrows-alt" style="${editMode ? '' : 'visibility:hidden'}"></i>
 </span>
   <div style="text-align: left; flex-grow: 1;">
-    <div style="display: flex; align-items: center; font-weight: bold; gap: 14px; color: ${nameColor};">
+    <div style="display: flex; align-items: center; font-weight: bold; gap: 4px; color: ${nameColor};">
       ${namePrefix}${escapeHTML(shortcut.name)}
     </div>
     <div class="info">${escapeHTML(shortcut.info || "")}</div>
