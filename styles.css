@@ -15,9 +15,12 @@ body {
   border-radius: 12px;
 }
 
+
+
 .emoji-display {
   font-size: 1.6rem;
   font-weight: bold;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   min-width: 32px;
   max-width: 38px;
   max-height: 38px;
