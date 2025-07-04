@@ -1334,15 +1334,18 @@ function displayTagFilters() {
     // If a tag is selected, clear filter and show all
     activeTagFilter = [];
     showOnlyFavorites = false;
+    localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ save
     displayShortcuts();
     return;
   }
 
   // Rotate between: All → Favorites → All
   showOnlyFavorites = !showOnlyFavorites;
+  localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ save
   displayShortcuts();
   showToast(showOnlyFavorites ? "⭐ Mode favoris uniquement" : "📁 Tous les raccourcis");
 };
+
 
 
 
@@ -1636,13 +1639,14 @@ function exportShortcuts() {
     const lstFilename = `${baseFilename}.lst`;
 
     const data = {
-        title: title,
-        shortcuts: shortcuts,
-        tagOrder: tagOrder,
-        uiToggleState: uiToggleState,     // ✅ Save UI toggle states
-        compactMode: compactMode,          // ✅ Save compact mode state
-        activeTagFilter: activeTagFilter        // ✅ Save selected tag filters
-    };
+    title: title,
+    shortcuts: shortcuts,
+    tagOrder: tagOrder,
+    uiToggleState: uiToggleState,
+    compactMode: compactMode,
+    activeTagFilter: activeTagFilter,
+    showOnlyFavorites: showOnlyFavorites // ✅ NEW: include favorite mode flag
+};
     const dataStr = JSON.stringify(data, null, 4);
 
     const blob = new Blob([dataStr], {
@@ -1727,10 +1731,21 @@ function importShortcuts(event) {
                     compactMode = importedData.compactMode;
                     localStorage.setItem("compactMode", compactMode);
                 }
+
+                // ✅ Restore favorite mode
+if (typeof importedData.showOnlyFavorites === "boolean") {
+    showOnlyFavorites = importedData.showOnlyFavorites;
+}
+
+
             } else {
                 alert("Format JSON invalide.");
                 return;
             }
+
+displayTagFilters(); // ✅ Ensures "⭐ Tous" is correct if favorites mode is active
+
+
 
             // ✅ Clear search input
             document.getElementById("searchInput").value = "";
