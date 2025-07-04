@@ -6,7 +6,8 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
-let showOnlyFavorites = false; // Global flag at the top of your script
+const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
+let showOnlyFavorites = storedFavoriteMode === "false"; // ✅ restore as boolean
 
 
 
@@ -1403,7 +1404,9 @@ function displayTagFilters() {
     // Left click: toggle
     btn.onclick = (e) => {
       if (e.button === 2) return; // skip right click
-      showOnlyFavorites = false; // ✅ disable favorite mode if tag filtering is active
+      showOnlyFavorites = false;
+      localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ Save it too
+
       if (activeTagFilter.includes(tag)) {
         activeTagFilter = activeTagFilter.filter(t => t !== tag);
       } else {
@@ -1416,6 +1419,7 @@ function displayTagFilters() {
     btn.oncontextmenu = (e) => {
       e.preventDefault();
       showOnlyFavorites = false;
+      localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ Save it
       activeTagFilter = [tag];
       displayShortcuts();
       showToast(`🔎 Filtré uniquement par "${tag}"`);
@@ -1939,6 +1943,9 @@ window.onload = function() {
 
     const savedCompact = localStorage.getItem("compactMode");  // ✅ Restore compact
     compactMode = savedCompact === "true";
+
+showOnlyFavorites = localStorage.getItem("showOnlyFavorites") === "true";
+
 
 const savedFilter = localStorage.getItem("activeTagFilter");
 if (savedFilter) {
