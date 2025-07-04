@@ -356,9 +356,32 @@
           <div id="editTooltip" style="height: 150px; background: white;"></div>
         </div>
         <div style="text-align: right;">
-          <button id="confirmBtn" type="button">✅ Ajouter</button>
-          <button type="button" onclick="closeEditModal()">❌ Annuler</button>
-        </div>
+  <button id="confirmBtn" type="button" style="
+    padding: 4px 10px;
+    font-size: 13px;
+    background: rgba(0, 128, 0, 0.05);
+    color: #0a0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 6px;
+    backdrop-filter: blur(2px);
+    transition: background 0.2s ease;
+  ">✅ Ajouter</button>
+
+  <button type="button" onclick="closeEditModal()" style="
+    padding: 4px 10px;
+    font-size: 13px;
+    background: rgba(128, 0, 0, 0.05);
+    color: #a00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+    transition: background 0.2s ease;
+  ">❌ Annuler</button>
+</div>
+
       </div>
     </div>
     <div
@@ -405,8 +428,19 @@
         ></div>
 
         <div style="text-align:right;">
-          <button onclick="closeTooltipModal()">Fermer</button>
-        </div>
+  <button onclick="closeTooltipModal()" style="
+    padding: 4px 10px;
+    font-size: 14px;
+    background: rgba(0,0,0,0.05);
+    color: #444;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+    transition: background 0.2s ease;
+  ">Fermer</button>
+</div>
+
       </div>
     </div>
 
