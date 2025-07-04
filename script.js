@@ -969,8 +969,8 @@ function displayShortcuts() {
     let list = [...shortcuts];
     
     if (showOnlyFavorites) {
-  list = list.filter(sc => sc.favorite);
-}
+      list = list.filter(sc => sc.favorite);
+    }
 
 
     if (alphabeticalSorting) {
@@ -1325,22 +1325,27 @@ function displayTagFilters() {
 
   clearBtn.title = showOnlyFavorites
   ? "Cliquez pour quitter le mode favoris"
-  : "Cliquez pour afficher tous les raccourcis\nCliquez-droit pour voir les favoris";
+  : "Cliquez pour alterner entre tous les raccourcis et les favoris";
+
 
 
   clearBtn.onclick = () => {
-    showOnlyFavorites = false; // ✅ reset favorite-only view
+  if (activeTagFilter.length > 0) {
+    // If a tag is selected, clear filter and show all
     activeTagFilter = [];
+    showOnlyFavorites = false;
     displayShortcuts();
-  };
+    return;
+  }
 
-  clearBtn.oncontextmenu = (e) => {
-    e.preventDefault();
-    showOnlyFavorites = true;
-    activeTagFilter = [];
-    displayShortcuts();
-    showToast("⭐ Mode favoris uniquement");
-  };
+  // Rotate between: All → Favorites → All
+  showOnlyFavorites = !showOnlyFavorites;
+  displayShortcuts();
+  showToast(showOnlyFavorites ? "⭐ Mode favoris uniquement" : "📁 Tous les raccourcis");
+};
+
+
+
 
   tagContainer.appendChild(clearBtn);
 
