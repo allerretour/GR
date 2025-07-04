@@ -16,6 +16,10 @@ body {
 }
 
 
+.editmode .favorite-toggle {
+  display: none !important;
+}
+
 
 .emoji-display {
   font-size: 1.6rem;

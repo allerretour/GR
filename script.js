@@ -6,7 +6,7 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
-
+let showOnlyFavorites = false; // Global flag at the top of your script
 
 
 
@@ -536,6 +536,7 @@ function ensureDefaultShortcut() {
                 url: "https://google.com",
                 info: "Clic de DROIT pour plus d'infos",
                 emoji: DEFAULT_EMOJI(),
+                favorite: false,
                 tags: ["instruction"],
                 tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
                 tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
@@ -545,6 +546,7 @@ function ensureDefaultShortcut() {
                 url: "https://example.com",
                 info: "Second raccourci de démonstration",
                 emoji: DEFAULT_EMOJI(),
+                favorite: false,
                 tags: ["démo"],
                 tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
                 tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
@@ -815,6 +817,8 @@ function toggleButtonGroup() {
     group.classList.toggle("hidden");
     group.classList.toggle("visible");
 
+    
+
     if (group.classList.contains("hidden")) {
         toggleBtn.innerHTML = '<i class="fas fa-cog"></i>';
     } else {
@@ -848,7 +852,10 @@ function loadShortcuts() {
     sc.tooltipPlain = temp.textContent.trim();
     updated = true;
   }
-
+  if (sc.favorite === undefined) {
+    sc.favorite = false;
+    updated = true;
+  }
   // ✅ Add emoji if missing
   if (!sc.emoji) {
     sc.emoji = DEFAULT_EMOJI;
@@ -905,6 +912,9 @@ function toggleSorting() {
 }
 
 function toggleEditMode() {
+
+       
+
     editMode = document.getElementById("editToggle").checked;
     document.getElementById("editStatus").textContent = `Mode édition: ${editMode ? 'Oui' : 'Non'}`;
     displayShortcuts();
@@ -957,6 +967,11 @@ function displayShortcuts() {
     container.innerHTML = "";
     const searchTerm = document.getElementById("searchInput")?.value?.toLowerCase() || "";
     let list = [...shortcuts];
+    
+    if (showOnlyFavorites) {
+  list = list.filter(sc => sc.favorite);
+}
+
 
     if (alphabeticalSorting) {
         list.sort((a, b) => a.name.localeCompare(b.name));
@@ -996,6 +1011,7 @@ function displayShortcuts() {
             .map(tag => `<span class="tag" style="background-color:${getTagColor(tag)}">${escapeHTML(tag)}</span>`).join(" ");
 
         const shortcutElement = document.createElement("div");
+        shortcutElement.style.position = "relative";
         
         const trimmedUrl = shortcut.url.trim();
         const isInfoOnly = trimmedUrl === "?";
@@ -1073,6 +1089,8 @@ function displayShortcuts() {
             shortcutElement.classList.remove("hold-pop");
 
             if (e.button !== 0 || heldTriggered || editMode) return;
+            if (e.target.classList.contains("favorite-toggle")) return;
+
 
             let url = shortcut.url.trim();
 
@@ -1145,12 +1163,16 @@ function displayShortcuts() {
 
 
         shortcutElement.addEventListener("touchend", () => {
-            clearTimeout(touchHoldTimer);
+            
+        clearTimeout(touchHoldTimer);
+          if (e.target.classList.contains("favorite-toggle")) return;
         });
 
         shortcutElement.addEventListener("touchcancel", () => {
             clearTimeout(touchHoldTimer);
         });
+
+
 
 
 
@@ -1196,6 +1218,15 @@ shortcutElement.innerHTML = compactMode ? `
     <div class="info">${escapeHTML(shortcut.info || "")}</div>
     <div class="tags">${tagsHTML}</div>
   </div>
+
+<div class="favorite-toggle" style="position: absolute; top: 6px; right: 8px; font-size: 20px; cursor: pointer;" 
+     onclick="toggleFavorite(${trueIndex}); event.stopPropagation();" 
+     title="${shortcut.favorite ? 'Favori' : 'Marquer comme favori'}">
+  ${shortcut.favorite ? "⭐" : "☆"}
+</div>
+
+
+
   <div class="icons" style="display: flex; flex-direction: column; gap: 24px; ${editMode ? '' : 'visibility:hidden'}">
   <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
     <i class="fas fa-edit"></i>
@@ -1206,6 +1237,30 @@ shortcutElement.innerHTML = compactMode ? `
 </div>
 
 `;
+
+if (!editMode) {
+  const favBtn = document.createElement("div");
+  favBtn.className = "favorite-toggle";
+  favBtn.innerHTML = shortcut.favorite ? "⭐" : "☆";
+  favBtn.title = shortcut.favorite ? "Favori" : "Marquer comme favori";
+
+  favBtn.style.position = "absolute";
+  favBtn.style.top = "6px";
+  favBtn.style.right = "8px";
+  favBtn.style.fontSize = "20px";
+  favBtn.style.cursor = "pointer";
+  favBtn.style.zIndex = "2";
+  favBtn.style.color = shortcut.favorite ? "gold" : "#aaa";  // ✅ Gold or grey
+  favBtn.style.textShadow = "none";                          // ✅ No glow
+
+  favBtn.onclick = (e) => {
+    e.stopPropagation(); // ✅ prevent opening the URL
+    toggleFavorite(trueIndex);
+  };
+
+  shortcutElement.appendChild(favBtn);
+}
+
 
 
         container.appendChild(shortcutElement);
@@ -1245,6 +1300,8 @@ function saveTagOrder(order) {
     setExportNeeded(true);
 }
 
+
+
 function displayTagFilters() {
   const tagContainer = document.getElementById("tagFilters");
   tagContainer.innerHTML = "";
@@ -1260,43 +1317,53 @@ function displayTagFilters() {
     allTags.filter(t => !tagOrder.includes(t))
   );
 
-  // "Tous" (All) clear button
+  // "Tous" (All) button
   const clearBtn = document.createElement("span");
-  clearBtn.className = "tag-filter" + (activeTagFilter.length === 0 ? " active" : "");
-  clearBtn.textContent = "Tous";
+  clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 || showOnlyFavorites) ? " active" : "");
+
+  clearBtn.textContent = showOnlyFavorites ? "⭐ Tous" : "Tous";
+
+  clearBtn.title = showOnlyFavorites
+  ? "Cliquez pour quitter le mode favoris"
+  : "Cliquez pour afficher tous les raccourcis\nCliquez-droit pour voir les favoris";
+
+
   clearBtn.onclick = () => {
-  activeTagFilter = [];
-  
-  displayShortcuts();
-};
+    showOnlyFavorites = false; // ✅ reset favorite-only view
+    activeTagFilter = [];
+    displayShortcuts();
+  };
+
+  clearBtn.oncontextmenu = (e) => {
+    e.preventDefault();
+    showOnlyFavorites = true;
+    activeTagFilter = [];
+    displayShortcuts();
+    showToast("⭐ Mode favoris uniquement");
+  };
 
   tagContainer.appendChild(clearBtn);
 
+  // Render each tag button
   tagOrder.forEach(tag => {
-  const btn = document.createElement("span");
-  btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
-  btn.textContent = tag;
-  btn.style.display = "inline-flex";
-  btn.style.alignItems = "center";
-  btn.style.gap = "6px";
+    const btn = document.createElement("span");
+    btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
+    btn.textContent = tag;
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.gap = "6px";
 
-  // ✅ Tooltip ici
-  btn.title = activeTagFilter.includes(tag)
-  ? `Filtre déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
-  : `Cliquez 👈 pour filtrer par « ${tag} »\nCliquez 👉 pour filtre unique`;
+    btn.title = activeTagFilter.includes(tag)
+      ? `Filtre déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
+      : `Cliquez 👈 pour filtrer par « ${tag} »\nCliquez 👉 pour filtre unique`;
 
-
-
-
-
-    // Move icon
     const moveIcon = document.createElement("i");
     moveIcon.className = "fas fa-arrows-alt";
     moveIcon.style.color = "#999";
     moveIcon.style.cursor = "grab";
     moveIcon.style.display = editMode ? "inline-block" : "none";
 
-    // Drag-and-drop behavior in edit mode
+    // Drag-and-drop behavior
     if (editMode) {
       btn.draggable = true;
       btn.ondragstart = e => {
@@ -1325,36 +1392,46 @@ function displayTagFilters() {
 
     btn.insertBefore(moveIcon, btn.firstChild);
 
+    // Left click: toggle
     btn.onclick = (e) => {
-  if (e.button === 2) return; // prevent default right click behavior here
-  if (activeTagFilter.includes(tag)) {
-    activeTagFilter = activeTagFilter.filter(t => t !== tag);
-  } else {
-    activeTagFilter.push(tag);
-  }
-  displayShortcuts();
-};
+      if (e.button === 2) return; // skip right click
+      showOnlyFavorites = false; // ✅ disable favorite mode if tag filtering is active
+      if (activeTagFilter.includes(tag)) {
+        activeTagFilter = activeTagFilter.filter(t => t !== tag);
+      } else {
+        activeTagFilter.push(tag);
+      }
+      displayShortcuts();
+    };
 
-// Add right-click behavior (contextmenu)
-btn.oncontextmenu = (e) => {
-  e.preventDefault();
-  activeTagFilter = [tag]; // Only keep the right-clicked tag
-  displayShortcuts();
-  showToast(`🔎 Filtré uniquement par "${tag}"`);
-};
-
-
+    // Right click: single filter
+    btn.oncontextmenu = (e) => {
+      e.preventDefault();
+      showOnlyFavorites = false;
+      activeTagFilter = [tag];
+      displayShortcuts();
+      showToast(`🔎 Filtré uniquement par "${tag}"`);
+    };
 
     tagContainer.appendChild(btn);
   });
 
-  // Apply AND/OR mode class
+  // Apply AND/OR mode classes
   const isAndMode = document.getElementById("tagFilterModeToggle").checked;
   document.querySelectorAll(".tag-filter").forEach(el => {
     el.classList.remove("and-mode", "or-mode");
     el.classList.add(isAndMode ? "and-mode" : "or-mode");
   });
 }
+
+
+function toggleFavorite(index) {
+  shortcuts[index].favorite = !shortcuts[index].favorite;
+  saveShortcuts();
+  displayShortcuts();
+}
+
+
 
 
 function deleteShortcut(index) {
@@ -1426,6 +1503,9 @@ function closeTooltipModal() {
 }
 
 function openAddModal() {
+     
+    
+
     document.getElementById("editName").value = "";
     document.getElementById("editUrl").value = "";
     document.getElementById("editTags").value = "";
@@ -1461,7 +1541,8 @@ function confirmAdd() {
             tooltip: tooltipHtml,
             tooltipPlain: tooltipText,
             info,
-            emoji: DEFAULT_EMOJI()
+            emoji: DEFAULT_EMOJI(),
+            favorite: false  // ✅ default to false
             
         };
         // Add to shortcuts
@@ -1520,7 +1601,8 @@ function confirmEdit() {
             tooltip: tooltipHtml,
             tooltipPlain: tooltipText,
             info,
-            emoji: shortcuts[editIndex].emoji || DEFAULT_EMOJI
+            emoji: shortcuts[editIndex].emoji || DEFAULT_EMOJI,
+            favorite: shortcuts[editIndex].favorite || false  // ✅ preserve or fallback
         };
         saveShortcuts();
         displayShortcuts();

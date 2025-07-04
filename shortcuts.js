@@ -11,6 +11,7 @@ function showShortcutFeedback(keyLabel) {
 }
 
 
+
 document.addEventListener("keydown", function(event) {
   
 
@@ -20,6 +21,7 @@ document.addEventListener("keydown", function(event) {
   // F2 → Toggle Search Bar
 if (event.code === "F2") {
   event.preventDefault();
+  
   toggleSearchBar();
   saveUIState();                        // ✅ Persist
   setExportNeeded(true);               // ✅ Export tracking
@@ -39,6 +41,7 @@ if (event.code === "F3") {
 // F4 → Toggle Option
 if (event.code === "F4") {
   event.preventDefault();
+  
   toggleButtonGroup();
   importBtn.focus();
   showShortcutFeedback("Options (F4)");
@@ -167,5 +170,6 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
     return;
   }
 
-  
+
+
 });
