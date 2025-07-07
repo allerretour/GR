@@ -663,12 +663,16 @@ input[type="text"] {
 .tag {
   background-color: #007bff;
   color: white;
-  padding: 2px 6px;
+  padding: 4px 8px;                /* ↑ more vertical padding */
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold; /* makes white text crisper */
-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* makes white readable on bright backgrounds */
+  font-size: 13px;                 /* slightly larger for emoji */
+  font-weight: bold;
+  line-height: 1.2;                /* ensures taller line box */
+  display: inline-flex;            /* aligns emoji/text better */
+  align-items: center;            /* vertical center alignment */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
+
 
 .tag-filter-container {
   margin: 15px 0;
@@ -684,14 +688,17 @@ text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* makes white readable on bright bac
 
 .tag-filter {
   background-color: #e0e0e0;
-  padding: 4px 10px;
+  padding: 5px 12px;               /* ↑ more vertical space */
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.25s ease, transform 0.2s ease;
   font-size: 14px;
-  color: #999;
   font-weight: normal;
+  color: #999;
   text-shadow: none;
+  display: inline-flex;            /* ensures emoji aligns well */
+  align-items: center;
+  line-height: 1.2;
 }
 
 .tag-filter:hover {

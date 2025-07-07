@@ -1322,7 +1322,7 @@ function displayTagFilters() {
   const clearBtn = document.createElement("span");
   clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 || showOnlyFavorites) ? " active" : "");
 
-  clearBtn.textContent = showOnlyFavorites ? "*Fav" : "Tous";
+  clearBtn.textContent = showOnlyFavorites ? "⭐ Tous" : "Tous";
 
   clearBtn.title = showOnlyFavorites
   ? "Cliquez pour quitter le mode favoris"
