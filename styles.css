@@ -231,7 +231,7 @@ color: #025ba8;
 }
 
 .app-title {
-  font-size: 1.8em;
+  font-size: 1.9em;
   font-weight: 600;
   color: #f0f0f0;
   text-shadow: 1px 1px 2px #000;
@@ -413,16 +413,16 @@ color: #000;
 
 .labels h2 {
   margin: 0 auto;
-  font-size: clamp(32px, 5vw, 76px);
+  font-size: clamp(36px, 5vw, 90px);
   font-weight: 600;
   text-align: center;
   color: #8678CC;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.7px;
   line-height: 1.2;
   position: relative;
   width: fit-content;
   
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 

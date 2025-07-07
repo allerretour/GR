@@ -1444,8 +1444,6 @@ function toggleFavorite(index) {
 }
 
 
-
-
 function deleteShortcut(index) {
     const shortcut = shortcuts[index];
     const confirmMsg = `Supprimer le raccourci "${shortcut.name}" ?`;
