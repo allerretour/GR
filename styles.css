@@ -663,9 +663,9 @@ input[type="text"] {
 .tag {
   background-color: #007bff;
   color: white;
-  padding: 4px 8px;                /* ↑ more vertical padding */
+  padding: 2px 4px;                /* ↑ more vertical padding */
   border-radius: 4px;
-  font-size: 13px;                 /* slightly larger for emoji */
+  font-size: 12px;                 /* slightly larger for emoji */
   font-weight: bold;
   line-height: 1.2;                /* ensures taller line box */
   display: inline-flex;            /* aligns emoji/text better */
@@ -688,7 +688,7 @@ input[type="text"] {
 
 .tag-filter {
   background-color: #e0e0e0;
-  padding: 5px 12px;               /* ↑ more vertical space */
+  padding: 4px 10px;               /* ↑ more vertical space */
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.25s ease, transform 0.2s ease;
