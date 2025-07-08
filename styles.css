@@ -535,7 +535,7 @@ input[type="text"] {
   text-align: center;
 
   /* Font */
-  font-size: 1.4em;
+  font-size: 1.5em;
   font-family: "Segoe UI", "Poppins", sans-serif;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -623,7 +623,7 @@ input[type="text"] {
   font-size: 0.75em;
   color: #888;  /* soft gray */
   margin-top: 2px;
-  font-style: normal;
+  font-style: italic;
   font-weight: normal;
   user-select: text; /* allow selecting/copying */
   line-height: 1.2;
