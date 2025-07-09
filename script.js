@@ -964,6 +964,14 @@ function getTooltipText(text) {
 }
 
 function displayShortcuts() {
+    
+    // ✅ Auto-switch off Favoris mode if needed
+    if (showOnlyFavorites && !shortcuts.some(s => s.favorite)) {
+    showOnlyFavorites = false;
+    localStorage.setItem("showOnlyFavorites", false);
+    showToast("🚫 Aucun favori — retour à Tous");
+    }
+
     const container = document.getElementById("shortcuts");
     container.innerHTML = "";
     const searchTerm = document.getElementById("searchInput")?.value?.toLowerCase() || "";
@@ -1319,21 +1327,27 @@ function displayTagFilters() {
   );
 
 
-// "Favoris" button
-const favBtn = document.createElement("span");
-favBtn.className = "tag-filter" + (showOnlyFavorites ? " active" : "");
-favBtn.textContent = "⭐";
-favBtn.title = "Afficher uniquement les raccourcis favoris";
+// Check if any favorites exist
+const hasFavorites = shortcuts.some(s => s.favorite);
 
-favBtn.onclick = () => {
-  activeTagFilter = []; // uncheck all other tags
-  showOnlyFavorites = true;
-  localStorage.setItem("showOnlyFavorites", true);
-  displayShortcuts(); // rerenders tags with updated state
-  showToast("⭐ Mode favoris uniquement");
-};
+if (hasFavorites) {
+  // "Favoris" button
+  const favBtn = document.createElement("span");
+  favBtn.className = "tag-filter" + (showOnlyFavorites ? " active" : "");
+  favBtn.textContent = "⭐";
+  favBtn.title = "Afficher uniquement les raccourcis favoris";
 
-tagContainer.appendChild(favBtn);
+  favBtn.onclick = () => {
+    activeTagFilter = [];
+    showOnlyFavorites = true;
+    localStorage.setItem("showOnlyFavorites", true);
+    displayShortcuts();
+    showToast("⭐ Mode favoris uniquement");
+  };
+
+  tagContainer.appendChild(favBtn);
+}
+
 
 
 
