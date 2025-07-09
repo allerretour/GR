@@ -1334,7 +1334,7 @@ if (hasFavorites) {
   // "Favoris" button
   const favBtn = document.createElement("span");
   favBtn.className = "tag-filter" + (showOnlyFavorites ? " active" : "");
-  favBtn.textContent = "⭐";
+  favBtn.textContent = "⭐ Favoris";
   favBtn.title = "Afficher uniquement les raccourcis favoris";
 
   favBtn.onclick = () => {
@@ -1354,7 +1354,7 @@ if (hasFavorites) {
 // "Tous" (All) button
 const clearBtn = document.createElement("span");
 clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 && !showOnlyFavorites) ? " active" : "");
-clearBtn.textContent = "Tous";
+clearBtn.textContent = "📁 Tous";
 clearBtn.title = "Afficher tous les raccourcis";
 
 clearBtn.onclick = () => {
