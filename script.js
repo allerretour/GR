@@ -1318,40 +1318,46 @@ function displayTagFilters() {
     allTags.filter(t => !tagOrder.includes(t))
   );
 
-  // "Tous" (All) button
-  const clearBtn = document.createElement("span");
-  clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 || showOnlyFavorites) ? " active" : "");
 
-  clearBtn.textContent = showOnlyFavorites ? "⭐ Tous" : "Tous";
+// "Favoris" button
+const favBtn = document.createElement("span");
+favBtn.className = "tag-filter" + (showOnlyFavorites ? " active" : "");
+favBtn.textContent = "⭐";
+favBtn.title = "Afficher uniquement les raccourcis favoris";
 
-  clearBtn.title = showOnlyFavorites
-  ? "Cliquez pour quitter le mode favoris"
-  : "Cliquez pour alterner entre tous les raccourcis et les favoris";
-
-
-
-  clearBtn.onclick = () => {
-  if (activeTagFilter.length > 0) {
-    // If a tag is selected, clear filter and show all
-    activeTagFilter = [];
-    showOnlyFavorites = false;
-    localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ save
-    displayShortcuts();
-    return;
-  }
-
-  // Rotate between: All → Favorites → All
-  showOnlyFavorites = !showOnlyFavorites;
-  localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ save
-  displayShortcuts();
-  showToast(showOnlyFavorites ? "⭐ Mode favoris uniquement" : "📁 Tous les raccourcis");
+favBtn.onclick = () => {
+  activeTagFilter = []; // uncheck all other tags
+  showOnlyFavorites = true;
+  localStorage.setItem("showOnlyFavorites", true);
+  displayShortcuts(); // rerenders tags with updated state
+  showToast("⭐ Mode favoris uniquement");
 };
 
+tagContainer.appendChild(favBtn);
+
+
+
+// "Tous" (All) button
+const clearBtn = document.createElement("span");
+clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 && !showOnlyFavorites) ? " active" : "");
+clearBtn.textContent = "Tous";
+clearBtn.title = "Afficher tous les raccourcis";
+
+clearBtn.onclick = () => {
+  activeTagFilter = [];
+  showOnlyFavorites = false;
+  localStorage.setItem("showOnlyFavorites", false); // ✅ Save
+  displayShortcuts();
+  showToast("📁 Tous les raccourcis");
+};
+
+tagContainer.appendChild(clearBtn);
 
 
 
 
-  tagContainer.appendChild(clearBtn);
+
+
 
   // Render each tag button
   tagOrder.forEach(tag => {
