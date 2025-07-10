@@ -621,9 +621,9 @@ input[type="text"] {
 
 .info {
   font-size: 0.75em;
-  color: #888;  /* soft gray */
+  color: #999;  /* soft gray */
   margin-top: 2px;
-  font-style: italic;
+  font-style: normal;
   font-weight: normal;
   user-select: text; /* allow selecting/copying */
   line-height: 1.2;
