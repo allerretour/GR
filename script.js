@@ -1508,10 +1508,9 @@ function showTooltipModal(text, isHtml = false, shortcutName = "") {
     let finalContent = safeText;
 
     if (shortcutName) {
-       const titleHtml = `<div style="color: #333; text-align: center;">💡 Info du raccourci : <strong>${escapeHTML(shortcutName)}</strong>
-</div>
-<hr style="border: none; border-top: 1px solid #ccc; " />
-`;
+       const titleHtml = `<div style="color: #222; text-align: center; font-size: 1.3rem;">💡 Info du raccourci : <strong>${escapeHTML(shortcutName)}</strong></div>
+<hr style="border: none; border-top: 1px solid #ccc;" />`;
+
         finalContent = titleHtml + finalContent;
     }
 
