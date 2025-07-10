@@ -1009,6 +1009,29 @@ function displayShortcuts() {
     const isAndMode = document.getElementById("tagFilterModeToggle").checked;
     document.getElementById("filterModeLabel").textContent = isAndMode ? "ET" : "OU";
 
+if (list.length === 0) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.textContent = "😢 Aucun raccourci à afficher.";
+
+    Object.assign(emptyMessage.style, {
+        gridColumn: "1 / -1",          // spans full row
+        justifySelf: "center",         // center in grid
+        textAlign: "center",
+        padding: "20px",
+        color: "#666",
+        fontSize: "1.5rem"
+    });
+
+    container.appendChild(emptyMessage);
+
+    document.getElementById("shortcutCount").textContent = `Affichés: 0 / Total: ${shortcuts.length}`;
+    saveActiveTagFilter();
+    displayTagFilters();
+    return;
+}
+
+
+
     document.querySelectorAll(".tag-filter").forEach(el => {
         el.classList.remove("and-mode", "or-mode");
         el.classList.add(isAndMode ? "and-mode" : "or-mode");
