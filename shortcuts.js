@@ -15,6 +15,17 @@ function showShortcutFeedback(keyLabel) {
 document.addEventListener("keydown", function(event) {
   
 
+if (event.key === "F1" && event.shiftKey) {
+    event.preventDefault(); // prevent browser help
+    const colorInput = document.getElementById("appTitleColorPicker");
+    const titleEl = document.getElementById("appTitle");
+    if (!colorInput || !titleEl) return;
+
+    // Set current color as default
+    const computedColor = getComputedStyle(titleEl).color;
+    colorInput.value = rgbToHex(computedColor);
+    colorInput.click(); // open color picker
+  }
 
 
 

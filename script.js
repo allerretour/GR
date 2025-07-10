@@ -57,6 +57,46 @@ function placeCaretAtEnd(el) {
 }
 
 
+function changeAppTitleColor() {
+  const title = document.getElementById("appTitle");
+  if (!title) return;
+
+  const colors = ["#FF6B6B", "#4ECDC4", "#FFD93D", "#6A4C93", "#007BFF"];
+  const current = localStorage.getItem("appTitleColor") || "";
+  const next = colors[(colors.indexOf(current) + 1) % colors.length];
+
+  title.style.color = next;
+  localStorage.setItem("appTitleColor", next);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("appTitleColor");
+  if (saved) document.getElementById("appTitle").style.color = saved;
+});
+
+
+
+// Convert rgb to hex
+function rgbToHex(rgb) {
+  const parts = rgb.match(/\d+/g);
+  if (!parts) return "#000000";
+  return "#" + parts.map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+}
+
+// When user selects a color
+document.getElementById("appTitleColorPicker").addEventListener("input", function () {
+  const selectedColor = this.value;
+  const titleEl = document.getElementById("appTitle");
+  if (titleEl) {
+    titleEl.style.color = selectedColor;
+    localStorage.setItem("appTitleColor", selectedColor);
+  }
+});
+
+
+
+
+
 function promptEmojiChange(index) {
   function saveRecentEmoji(emoji) {
     let recent = JSON.parse(localStorage.getItem("recentEmojis") || "[]");
@@ -1703,6 +1743,7 @@ function exportShortcuts() {
     uiToggleState: uiToggleState,
     compactMode: compactMode,
     activeTagFilter: activeTagFilter,
+    appTitleColor: localStorage.getItem("appTitleColor") || null, // ✅ save color
     showOnlyFavorites: showOnlyFavorites // ✅ NEW: include favorite mode flag
 };
     const dataStr = JSON.stringify(data, null, 4);
@@ -1763,6 +1804,13 @@ function importShortcuts(event) {
                     document.getElementById("appTitle").textContent = importedData.title;
                     localStorage.setItem("appTitle", importedData.title);
                 }
+
+
+                if (importedData.appTitleColor) {
+                   localStorage.setItem("appTitleColor", importedData.appTitleColor);
+                   document.getElementById("appTitle").style.color = importedData.appTitleColor;
+                }
+
 
                 // Restore tag order
                 if (Array.isArray(importedData.tagOrder)) {
@@ -1985,6 +2033,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Tag Filters
     document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
+
 
 
 });
