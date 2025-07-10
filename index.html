@@ -280,7 +280,7 @@
     <!-- Modal for editing -->
     <div
       id="editModal"
-      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;"
+      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;"
     >
       <div
         style="background:white; padding:20px; border-radius:8px; max-width:700px; width:90%;"
@@ -398,7 +398,7 @@
     background:rgba(0,0,0,0.5);
     z-index:2000;
     align-items:center;
-    justify-content:center;
+    justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;
 "
     >
       <div
@@ -448,7 +448,7 @@
     <div
       id="infoModal"
       onclick="closeInfoModal()"
-      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;"
+      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;"
     >
       <div onclick="event.stopPropagation()" class="info-modal-content">
         <button class="close-btn" onclick="closeInfoModal()" title="Fermer">
@@ -501,7 +501,7 @@
 
 
 <!-- Export Format Modal -->
-<div id="exportFormatModal" class="modal-overlay">
+<div id="exportFormatModal" class="modal-overlay" style="backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
   <div class="modal-content export-modal">
     <h3>📤 Exportation de raccourcis visibles</h3>
     <p>
