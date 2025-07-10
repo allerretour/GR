@@ -2013,13 +2013,13 @@ const BlockEmbed = Quill.import('blots/block/embed');
     modules: {
   toolbar: {
   container: [
-    ['bold', 'italic', 'underline', 'strike', 'code'],
+    ['bold', 'italic', 'underline'],
     [{ 'header': [1, 2, 3, false] }],
     [{ 'size': ['small', false, 'large', 'huge'] }],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'list': 'bullet' }],
     [{ 'align': [] }],
     [{ 'color': [] }, { 'background': [] }],
-    ['link', 'blockquote'],
+    ['link'],
     ['hr'],
     ['clean']
   ],
