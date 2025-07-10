@@ -1211,24 +1211,38 @@ if (list.length === 0) {
 
         // --- HTML CONTENT ---
 shortcutElement.innerHTML = compactMode ? `
-  <div style="display: flex; align-items: center; gap: 6px;">
-    <span class="emoji-display" style="
-      font-size: 2rem;
-      width: 38px;
-      height: 38px;
-      
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      flex-shrink: 0;
-    ">
-      ${escapeHTML(shortcut.emoji || DEFAULT_EMOJI)}
-    </span>
-    <div style="font-weight: bold; color: ${nameColor};">
-      ${namePrefix}${escapeHTML(shortcut.name)}
-    </div>
+  <div style="display: flex; align-items: center; width: 100%;">
+  <!-- Emoji pinned 4px from the left -->
+  <span class="emoji-display" style="
+    font-size: 2.3rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 4px;
+    margin-right: 4px
+  ">
+    ${escapeHTML(shortcut.emoji || DEFAULT_EMOJI)}
+  </span>
+
+  <!-- Centered name -->
+  <div style="
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    color: ${nameColor};
+    font-size: 1.5rem;
+    line-height: 1.2;
+    word-break: break-word;
+    margin-right: 15px; /* space to balance emoji width */
+    
+  ">
+    ${namePrefix}${escapeHTML(shortcut.name)}
   </div>
+</div>
+
 
 
 ` : `

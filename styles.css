@@ -530,16 +530,16 @@ input[type="text"] {
   justify-content: center;
 
   /* Sizing & spacing */
-  padding: 14px;
+  padding: 12px;
   min-height: 120px;
   text-align: center;
 
   /* Font */
-  font-size: 1.6em;
+  font-size: 1.5em;
   
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: #025ba8;
+  color: #111;
 
   /* Text effect */
   text-shadow:
