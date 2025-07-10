@@ -1814,14 +1814,14 @@ dropZone.addEventListener("dragover", (e) => {
 });
 
 dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#eee";
-    dropZone.style.color = "#ddd";
+    dropZone.style.borderColor = "#f5f5f5";
+    dropZone.style.color = "#f5f5f5";
 });
 
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = "#eee";
-    dropZone.style.color = "#ddd";
+    dropZone.style.borderColor = "#f5f5f5";
+    dropZone.style.color = "#f5f5f5";
 
     const file = e.dataTransfer.files[0];
     if (!file) return;
