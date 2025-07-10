@@ -688,17 +688,17 @@ input[type="text"] {
 
 .tag-filter {
   background-color: #e0e0e0;
-  padding: 4px 10px;               /* ↑ more vertical space */
-  border-radius: 8px;
+  padding: 4px 8px;               /* ↑ more vertical space */
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.25s ease, transform 0.2s ease;
   font-size: 14px;
   font-weight: normal;
-  color: #999;
+  color: #aaa;
   text-shadow: none;
   display: inline-flex;            /* ensures emoji aligns well */
   align-items: center;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .tag-filter:hover {
