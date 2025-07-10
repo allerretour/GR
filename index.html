@@ -287,7 +287,10 @@
       >
         <h3>Modifier le raccourci</h3>
         <div style="margin-bottom: 6px;">
-          <label for="editName" class="form-label">Nom :</label>
+          <label for="editName" class="form-label" style="display: block; margin-bottom: 2px; font-weight: bold;">
+  Nom :
+</label>
+
           <input
             type="text"
             id="editName"
@@ -307,34 +310,29 @@
           />
         </div>
         
-<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-  <label for="editUrl" class="form-label" style="flex-shrink: 0;">
-    URL : (Pour faire afficher le contenu de 💡 inscrire ?)
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+  <label for="editUrl" class="form-label" style="white-space: nowrap;">
+    URL : (mettre ? pour 💡)
   </label>
-</div>
-<div style="display: flex; align-items: center; gap: 2px;">
-<button
-    onclick="pasteFromClipboard('editUrl')"
-    title="Coller depuis le presse-papiers"
-    style="background: none; border: none; cursor: pointer; font-size: 1.4em; color: #555;"
-  ><i class="fa-solid fa-paste"></i>
-  </button>  
 
-<button
-    onclick="document.getElementById('editUrl').value = '?'"
-    title="Insérer ?"
-    style="background: none; border: none; cursor: pointer; font-size: 1.4em; color: #555;"
-  ><i class="fa-solid fa-circle-info"></i>
-  </button>
-
-<input
+  <input
     type="text"
     id="editUrl"
     placeholder="URL ou ?"
-    style="width: 78%;"
+    style="flex: 1;"
   />
+
+  <button
+    onclick="pasteFromClipboard('editUrl')"
+    title="Coller depuis le presse-papiers"
+    style="background: none; border: none; cursor: pointer; font-size: 1.3em; color: #555;"
+  >
+    <i class="fa-solid fa-paste"></i>
+  </button>
+
   
 </div>
+
         <div style="margin-bottom: 6px;">
           <label for="editTags" class="form-label">🏷️ Étiquettes :</label>
           <input

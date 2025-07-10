@@ -1582,7 +1582,7 @@ function openAddModal() {
     populateTagSuggestions();
     renderSelectedTags();
     editIndex = null;
-    document.querySelector("#editModal h3").textContent = "Ajouter un nouveau raccourci";
+    document.querySelector("#editModal h3").textContent = "➕Ajouter un nouveau raccourci";
     const confirmBtn = document.getElementById("confirmBtn");
     confirmBtn.textContent = "✅ Ajouter";
     confirmBtn.onclick = confirmAdd;
@@ -1643,7 +1643,7 @@ function editShortcut(index) {
     // Set index
     editIndex = index;
     // Set up modal title and confirm button
-    document.querySelector("#editModal h3").textContent = "Modifier le raccourci";
+    document.querySelector("#editModal h3").textContent = "✏️Modifier le raccourci";
     const confirmBtn = document.getElementById("confirmBtn");
     confirmBtn.textContent = "✅ Sauvegarder";
     confirmBtn.onclick = confirmEdit;
