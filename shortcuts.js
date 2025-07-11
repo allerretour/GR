@@ -25,20 +25,27 @@ if (event.key === "F1" && event.shiftKey) {
     const computedColor = getComputedStyle(titleEl).color;
     colorInput.value = rgbToHex(computedColor);
     colorInput.click(); // open color picker
+    showShortcutFeedback("Couleur de titre (Maj+F1)");
   }
 
 
+// 🎨 Shift + F2 → open background color picker
+  if (event.code === "F2" && event.shiftKey) {
+    event.preventDefault();
+    openBackgroundColorPicker();
+    showShortcutFeedback("Couleur de fond (Maj+F2)");
+    return; // ⛔ prevent also triggering plain F2
+  }
 
-  // F2 → Toggle Search Bar
-if (event.code === "F2") {
-  event.preventDefault();
-  
-  toggleSearchBar();
-  saveUIState();                        // ✅ Persist
-  setExportNeeded(true);               // ✅ Export tracking
-  showShortcutFeedback("Bar recherche (F2)");
-  return;
-}
+  // 🔍 F2 → toggle search bar (only if Shift is NOT pressed)
+  if (event.code === "F2" && !event.shiftKey) {
+    event.preventDefault();
+    toggleSearchBar();
+    saveUIState();
+    setExportNeeded(true);
+    showShortcutFeedback("Bar recherche (F2)");
+    return;
+  }
 
 
 // F3 → open visible

@@ -57,17 +57,7 @@ function placeCaretAtEnd(el) {
 }
 
 
-function changeAppTitleColor() {
-  const title = document.getElementById("appTitle");
-  if (!title) return;
 
-  const colors = ["#FF6B6B", "#4ECDC4", "#FFD93D", "#6A4C93", "#007BFF"];
-  const current = localStorage.getItem("appTitleColor") || "";
-  const next = colors[(colors.indexOf(current) + 1) % colors.length];
-
-  title.style.color = next;
-  localStorage.setItem("appTitleColor", next);
-}
 
 window.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("appTitleColor");
@@ -93,7 +83,18 @@ document.getElementById("appTitleColorPicker").addEventListener("input", functio
   }
 });
 
+function openBackgroundColorPicker() {
+  const picker = document.getElementById("backgroundColorPicker");
+  const current = getComputedStyle(document.body).backgroundColor;
+  picker.value = rgbToHex(current);
+  picker.click();
+}
 
+document.getElementById("backgroundColorPicker").addEventListener("input", function () {
+  const newColor = this.value;
+  document.body.style.backgroundColor = newColor;
+  localStorage.setItem("appBackgroundColor", newColor);
+});
 
 
 
@@ -570,45 +571,62 @@ function loadUIState() {
 }
 
 function ensureDefaultShortcut() {
-    if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
-        shortcuts.push(
-            {
-                name: "Exemple",
-                url: "https://google.com",
-                info: "Clic de DROIT pour plus d'infos",
-                emoji: DEFAULT_EMOJI(),
-                favorite: false,
-                tags: ["instruction"],
-                tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
-                tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
-            },
-            {
-                name: "Site de test",
-                url: "https://example.com",
-                info: "Second raccourci de démonstration",
-                emoji: DEFAULT_EMOJI(),
-                favorite: false,
-                tags: ["démo"],
-                tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
-                tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
-            }
-        );
-        if (!uiToggleState) {
-            uiToggleState = {
-                searchBar: true,
-                tagFilters: true
-            };
-            saveUIState();
-        }
+  if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
+    shortcuts.push(
+      {
+        name: "Exemple",
+        url: "https://google.com",
+        info: "Clic de DROIT pour plus d'infos",
+        emoji: DEFAULT_EMOJI(),
+        favorite: false,
+        tags: ["instruction"],
+        tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
+        tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
+      },
+      {
+        name: "Site de test",
+        url: "https://example.com",
+        info: "Second raccourci de démonstration",
+        emoji: DEFAULT_EMOJI(),
+        favorite: false,
+        tags: ["démo"],
+        tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
+        tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
+      }
+    );
 
-        compactMode = false;
-        localStorage.setItem("compactMode", "false");
-
-        activeTagFilter = [];
-        saveActiveTagFilter();
-
-        saveShortcuts();
+    if (!uiToggleState) {
+      uiToggleState = {
+        searchBar: true,
+        tagFilters: true
+      };
+      saveUIState();
     }
+
+    compactMode = false;
+    localStorage.setItem("compactMode", "false");
+
+    activeTagFilter = [];
+    saveActiveTagFilter();
+
+    saveShortcuts();
+  }
+
+  // ✅ Set default title color if not already set
+  if (!localStorage.getItem("appTitleColor")) {
+    localStorage.setItem("appTitleColor", "#000000");
+    const titleEl = document.getElementById("appTitle");
+    if (titleEl) {
+      titleEl.style.color = "#000000";
+    }
+  }
+
+  // 🖼️ Ensure default background color
+  if (!localStorage.getItem("appBackgroundColor")) {
+    const defaultBg = "#f9f9f9";
+    localStorage.setItem("appBackgroundColor", defaultBg);
+    document.body.style.backgroundColor = defaultBg;
+  }
 }
 
 
@@ -1744,6 +1762,7 @@ function exportShortcuts() {
     compactMode: compactMode,
     activeTagFilter: activeTagFilter,
     appTitleColor: localStorage.getItem("appTitleColor") || null, // ✅ save color
+    appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
     showOnlyFavorites: showOnlyFavorites // ✅ NEW: include favorite mode flag
 };
     const dataStr = JSON.stringify(data, null, 4);
@@ -1805,6 +1824,10 @@ function importShortcuts(event) {
                     localStorage.setItem("appTitle", importedData.title);
                 }
 
+                if (importedData.appBackgroundColor) {
+                   localStorage.setItem("appBackgroundColor", importedData.appBackgroundColor);
+                   document.body.style.backgroundColor = importedData.appBackgroundColor;
+                }
 
                 if (importedData.appTitleColor) {
                    localStorage.setItem("appTitleColor", importedData.appTitleColor);
@@ -1935,19 +1958,52 @@ function closeInfoModal() {
 }
 
 function clearShortcuts() {
-    if (confirm("Voulez vous réinitialiser la liste?")) {
-        shortcuts = [];
-        ensureDefaultShortcut();  // ✅ add fallback
-        saveShortcuts();
-        localStorage.removeItem("manualOrder");
-        // Reset the title
-        const defaultTitle = "nouvelle liste";
-        document.getElementById("appTitle").textContent = defaultTitle;
-        localStorage.setItem("appTitle", defaultTitle);
-        setExportNeeded(true);
-        displayShortcuts();
-    }
+  if (confirm("Voulez-vous réinitialiser la liste ?")) {
+    // 🧹 Reset shortcuts
+    shortcuts = [];
+    ensureDefaultShortcut(); // ✅ Add fallback examples
+    saveShortcuts();
+    localStorage.removeItem("manualOrder");
+
+    // 🧹 Reset title
+    const defaultTitle = "nouvelle liste";
+    document.getElementById("appTitle").textContent = defaultTitle;
+    localStorage.setItem("appTitle", defaultTitle);
+
+    // 🎨 Reset title color to black
+    localStorage.setItem("appTitleColor", "#000000");
+    document.getElementById("appTitle").style.color = "#000000";
+
+    // 🧼 Reset tag order
+    localStorage.removeItem("tagOrder");
+    tagOrder = [];
+
+    // 🔁 Reset UI state
+    uiToggleState = {
+      searchBar: true,
+      tagFilters: true
+    };
+    saveUIState();
+
+    // 📦 Reset view mode and filters
+    compactMode = false;
+    localStorage.setItem("compactMode", "false");
+
+    activeTagFilter = [];
+    saveActiveTagFilter();
+
+    showOnlyFavorites = false;
+    localStorage.setItem("showOnlyFavorites", "false");
+
+    // 📝 Update display
+    setExportNeeded(true);
+    displayShortcuts();
+
+    // ✅ Optional feedback
+    showToast("🔄 Liste réinitialisée");
+  }
 }
+
 let draggedElement = null;
 
 function drag(event) {
@@ -2033,6 +2089,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Tag Filters
     document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
+
+const savedBg = localStorage.getItem("appBackgroundColor");
+if (savedBg) {
+  document.body.style.backgroundColor = savedBg;
+}
 
 
 
