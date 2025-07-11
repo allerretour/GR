@@ -90,11 +90,42 @@ function openBackgroundColorPicker() {
   picker.click();
 }
 
-document.getElementById("backgroundColorPicker").addEventListener("input", function () {
-  const newColor = this.value;
-  document.body.style.backgroundColor = newColor;
-  localStorage.setItem("appBackgroundColor", newColor);
+document.getElementById("backgroundColorPicker").addEventListener("input", (e) => {
+  const hex = e.target.value;
+  localStorage.setItem("appBackgroundColor", hex);
+  applyGradientBackground(hex);
 });
+
+function applyGradientBackground(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return;
+
+  const lighten = (v, amt) => Math.min(255, Math.round(v + amt));
+  const darken = (v, amt) => Math.max(0, Math.round(v - amt));
+
+  const lightRGB = `rgb(${lighten(rgb.r, 60)}, ${lighten(rgb.g, 60)}, ${lighten(rgb.b, 60)})`;
+  const darkRGB = `rgb(${darken(rgb.r, 40)}, ${darken(rgb.g, 40)}, ${darken(rgb.b, 40)})`;
+
+  // 🔽 Vertical gradient: dark (top) → base (middle) → light (bottom)
+  document.body.style.background = `linear-gradient(to bottom, ${darkRGB}, ${hex}, ${lightRGB})`;
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.backgroundAttachment = "fixed";
+  document.body.style.backgroundSize = "cover";
+  document.body.style.height = "100vh";
+}
+
+
+
+function hexToRgb(hex) {
+  const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+  if (!match) return null;
+  return {
+    r: parseInt(match[1], 16),
+    g: parseInt(match[2], 16),
+    b: parseInt(match[3], 16)
+  };
+}
+
 
 
 function openAppTitleColorPicker() {
@@ -586,7 +617,10 @@ function loadUIState() {
 }
 
 function ensureDefaultShortcut() {
-  if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
+  const isFreshInstall = !Array.isArray(shortcuts) || shortcuts.length === 0;
+
+  if (isFreshInstall) {
+    // 🟢 Insert default shortcuts
     shortcuts.push(
       {
         name: "Exemple",
@@ -610,13 +644,13 @@ function ensureDefaultShortcut() {
       }
     );
 
-    if (!uiToggleState) {
-      uiToggleState = {
-        searchBar: true,
-        tagFilters: true
-      };
-      saveUIState();
-    }
+    saveShortcuts();
+    manualOrder = [...shortcuts];
+    localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
+
+    // 🟢 Set default UI states
+    uiToggleState = { searchBar: true, tagFilters: true };
+    saveUIState();
 
     compactMode = false;
     localStorage.setItem("compactMode", "false");
@@ -624,25 +658,24 @@ function ensureDefaultShortcut() {
     activeTagFilter = [];
     saveActiveTagFilter();
 
-    saveShortcuts();
-  }
+    // ✅ Set and apply default colors only on first-time setup
+    const defaultTitleColor = "#000000";
+    const defaultBgColor = "#f9f9f9";
 
-  // ✅ Set default title color if not already set
-  if (!localStorage.getItem("appTitleColor")) {
-    localStorage.setItem("appTitleColor", "#000000");
+    localStorage.setItem("appTitleColor", defaultTitleColor);
+    localStorage.setItem("appBackgroundColor", defaultBgColor);
+
     const titleEl = document.getElementById("appTitle");
     if (titleEl) {
-      titleEl.style.color = "#000000";
+      titleEl.style.color = defaultTitleColor;
     }
-  }
 
-  // 🖼️ Ensure default background color
-  if (!localStorage.getItem("appBackgroundColor")) {
-    const defaultBg = "#f9f9f9";
-    localStorage.setItem("appBackgroundColor", defaultBg);
-    document.body.style.backgroundColor = defaultBg;
+    applyGradientBackground(defaultBgColor); // ✅ Use gradient here
+  } else {
+    // 🟡 Not fresh install → do not change colors
   }
 }
+
 
 
 
@@ -1841,7 +1874,7 @@ function importShortcuts(event) {
 
                 if (importedData.appBackgroundColor) {
                    localStorage.setItem("appBackgroundColor", importedData.appBackgroundColor);
-                   document.body.style.backgroundColor = importedData.appBackgroundColor;
+                   applyGradientBackground(importedData.appBackgroundColor || "#f9f9f9");
                 }
 
                 if (importedData.appTitleColor) {
@@ -2105,10 +2138,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tag Filters
     document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
 
-const savedBg = localStorage.getItem("appBackgroundColor");
-if (savedBg) {
-  document.body.style.backgroundColor = savedBg;
+const savedColor = localStorage.getItem("appBackgroundColor");
+if (savedColor) {
+  applyGradientBackground(savedColor);
 }
+
 
 
 

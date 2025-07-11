@@ -45,15 +45,15 @@ document.addEventListener("keydown", function(event) {
     return;
   }
 
-  // 🎨 Alt + F2 → reset background color
-  if (event.code === "F2" && event.altKey) {
-    event.preventDefault();
-    const defaultBg = "#f9f9f9";
-    document.body.style.backgroundColor = defaultBg;
-    localStorage.setItem("appBackgroundColor", defaultBg);
-    showToast("🖼️ Fond réinitialisé");
-    return;
-  }
+  if ((event.code === "F2" || event.key === "F2") && event.altKey) {
+  event.preventDefault();
+  const defaultBg = "#f9f9f9";
+  localStorage.setItem("appBackgroundColor", defaultBg);
+  applyGradientBackground(defaultBg); // 🔁 regenerate the gradient
+  showToast("🖼️ Fond réinitialisé");
+  return;
+}
+
 
   // 🔍 F2 → toggle search bar (only if no modifier key)
   if (event.code === "F2" && !event.shiftKey && !event.altKey) {
