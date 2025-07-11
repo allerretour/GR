@@ -15,30 +15,48 @@ function showShortcutFeedback(keyLabel) {
 document.addEventListener("keydown", function(event) {
   
 
-if (event.key === "F1" && event.shiftKey) {
-    event.preventDefault(); // prevent browser help
-    const colorInput = document.getElementById("appTitleColorPicker");
-    const titleEl = document.getElementById("appTitle");
-    if (!colorInput || !titleEl) return;
-
-    // Set current color as default
-    const computedColor = getComputedStyle(titleEl).color;
-    colorInput.value = rgbToHex(computedColor);
-    colorInput.click(); // open color picker
+// 🎨 Shift + F1 → pick title color
+  if (event.code === "F1" && event.shiftKey) {
+    event.preventDefault();
+    hideOptionsAndScrollTop();
+    openAppTitleColorPicker();
     showShortcutFeedback("Couleur de titre (Maj+F1)");
+    return;
   }
 
+  // 🎨 Alt + F1 → reset title color
+  if (event.code === "F1" && event.altKey) {
+    event.preventDefault();
+    const titleEl = document.getElementById("appTitle");
+    if (titleEl) {
+      titleEl.style.color = "#000000";
+      localStorage.setItem("appTitleColor", "#000000");
+      showToast("🎨 Titre réinitialisé en noir");
+    }
+    return;
+  }
 
-// 🎨 Shift + F2 → open background color picker
+  // 🎨 Shift + F2 → pick background color
   if (event.code === "F2" && event.shiftKey) {
     event.preventDefault();
+    hideOptionsAndScrollTop();
     openBackgroundColorPicker();
     showShortcutFeedback("Couleur de fond (Maj+F2)");
-    return; // ⛔ prevent also triggering plain F2
+    return;
   }
 
-  // 🔍 F2 → toggle search bar (only if Shift is NOT pressed)
-  if (event.code === "F2" && !event.shiftKey) {
+  // 🎨 Alt + F2 → reset background color
+  if (event.code === "F2" && event.altKey) {
+    event.preventDefault();
+    const defaultBg = "#f9f9f9";
+    document.body.style.backgroundColor = defaultBg;
+    localStorage.setItem("appBackgroundColor", defaultBg);
+    showToast("🖼️ Fond réinitialisé");
+    return;
+  }
+
+  // 🔍 F2 → toggle search bar (only if no modifier key)
+  if (event.code === "F2" && !event.shiftKey && !event.altKey) {
     event.preventDefault();
     toggleSearchBar();
     saveUIState();

@@ -97,6 +97,21 @@ document.getElementById("backgroundColorPicker").addEventListener("input", funct
 });
 
 
+function openAppTitleColorPicker() {
+  const colorInput = document.getElementById("appTitleColorPicker");
+  const titleEl = document.getElementById("appTitle");
+
+  if (!colorInput || !titleEl) return;
+
+  // Get current color as hex
+  const computedColor = getComputedStyle(titleEl).color;
+  colorInput.value = rgbToHex(computedColor);
+
+  colorInput.click(); // open native color picker
+}
+
+
+
 
 function promptEmojiChange(index) {
   function saveRecentEmoji(emoji) {
