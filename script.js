@@ -1319,7 +1319,7 @@ shortcutElement.innerHTML = compactMode ? `
 
 
 ` : `
-  <span class="move-handle" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+  <span class="move-handle" title="Déplacer raccourci" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
   <div
   class="emoji-display"
   onclick="${editMode ? `promptEmojiChange(${trueIndex})` : ''}"
@@ -1347,10 +1347,10 @@ shortcutElement.innerHTML = compactMode ? `
 
 
   <div class="icons" style="display: flex; flex-direction: column; gap: 24px; ${editMode ? '' : 'visibility:hidden'}">
-  <span class="icon" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
+  <span class="icon" title="✏️ Modifier" onclick="editShortcut(${trueIndex}); event.stopPropagation();">
     <i class="fas fa-edit"></i>
   </span>
-  <span class="icon" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
+  <span class="icon" title="🗑️ Supprimer" onclick="deleteShortcut(${trueIndex}); event.stopPropagation();">
     <i class="fas fa-trash-alt"></i>
   </span>
 </div>
