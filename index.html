@@ -591,45 +591,55 @@
   justify-content: center;
 ">
   <div style="
-    background: white;
-    padding: 16px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 320px;
+  text-align: center;
+  font-family: sans-serif;
+">
+  <h3 style="margin-top: 0;">🎨 Couleur personnalisée</h3>
+  
+  <input id="hexColorInput" type="text" placeholder="#ff8800 ou red" style="
     width: 90%;
-    max-width: 300px;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     text-align: center;
-    font-family: sans-serif;
-  ">
-    <h3 style="margin-top: 0;">🎨 Couleur personnalisée</h3>
-    <input id="hexColorInput" type="text" placeholder="#ff8800 ou red" style="
-      width: 80%;
+    margin-bottom: 10px;
+  " />
+
+  <div id="colorSuggestions" style="
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  "></div>
+
+  <div style="display: flex; gap: 10px;">
+    <button onclick="applyHexColor()" style="
+      flex: 1;
       padding: 8px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
+      background: #007bff;
+      color: white;
+      border: none;
       border-radius: 6px;
-      text-align: center;
-      margin: 12px 0;
-    " />
-    <div style="display: flex; gap: 10px;">
-      <button onclick="applyHexColor()" style="
-        flex: 1;
-        padding: 8px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      ">✅ Appliquer</button>
-      <button onclick="closeHexColorModal()" style="
-        flex: 1;
-        padding: 8px;
-        background: #eee;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      ">❌ Annuler</button>
-    </div>
+      cursor: pointer;
+    ">✅ Appliquer</button>
+    <button onclick="closeHexColorModal()" style="
+      flex: 1;
+      padding: 8px;
+      background: #eee;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    ">❌ Annuler</button>
   </div>
+</div>
+
 </div>
 
 

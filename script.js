@@ -72,6 +72,48 @@ window.addEventListener("DOMContentLoaded", () => {
   if (saved) document.getElementById("appTitle").style.color = saved;
 });
 
+const colorNames = [
+  "red", "orange", "gold", "yellow", "lime",
+  "green", "teal", "cyan", "skyblue", "blue",
+  "indigo", "purple", "violet", "pink", "brown",
+  "gray", "lightgray", "black", "white"
+];
+
+function populateColorSuggestions() {
+  const container = document.getElementById("colorSuggestions");
+  container.innerHTML = "";
+
+  colorNames.forEach(name => {
+    const btn = document.createElement("button");
+    btn.textContent = " ";
+    btn.title = name;
+    btn.style.background = name;
+    btn.style.width = "100%";
+    btn.style.aspectRatio = "1";
+    btn.style.border = "1px solid #ccc";
+    btn.style.borderRadius = "4px";
+    btn.style.cursor = "pointer";
+
+    btn.onclick = () => {
+      document.getElementById("hexColorInput").value = name;
+      applyHexColor(); // auto apply
+    };
+
+    container.appendChild(btn);
+  });
+}
+
+// Call it once when modal opens
+function openHexColorModal(target, currentColor = "") {
+  hexTarget = target;
+  const modal = document.getElementById("hexColorModal");
+  const input = document.getElementById("hexColorInput");
+  input.value = currentColor;
+  modal.style.display = "flex";
+
+  populateColorSuggestions();
+  setTimeout(() => input.focus(), 50);
+}
 
 
 // Convert rgb to hex
