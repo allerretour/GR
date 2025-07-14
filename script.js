@@ -160,8 +160,6 @@ document.getElementById("backgroundColorHex").addEventListener("change", functio
 
 
 
-
-
 function openBackgroundColorPicker() {
   const current = getComputedStyle(document.body).backgroundColor;
   if (isIOSDevice()) {
@@ -2293,7 +2291,7 @@ if (savedColor) {
 }
 
 
-
+populateColorSuggestions(); // optional pre-fill
 
 });
 
