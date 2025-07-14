@@ -11,8 +11,6 @@ const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
 const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
 let showOnlyFavorites = storedFavoriteMode === "false"; // ✅ restore as boolean
 
-
-
 const icons = Quill.import('ui/icons');
 icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
 
@@ -20,7 +18,6 @@ icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid
 function isIOSDevice() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
-
 
 
 function escapeHTML(str) {
@@ -73,11 +70,28 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 const colorNames = [
-  "red", "orange", "gold", "yellow", "lime",
-  "green", "teal", "cyan", "skyblue", "blue",
-  "indigo", "purple", "violet", "pink", "brown",
-  "gray", "lightgray", "black", "white"
+  "black",
+  "white",
+  "gray",
+  "lightgray",
+  "red",
+  "orange",
+  "yellow",
+  "gold",
+  "green",
+  "limegreen",
+  "teal",
+  "cyan",
+  "blue",
+  "skyblue",
+  "navy",
+  "indigo",
+  "purple",
+  "violet",
+  "pink",
+  "brown"
 ];
+
 
 function populateColorSuggestions() {
   const container = document.getElementById("colorSuggestions");
