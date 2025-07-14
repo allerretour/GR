@@ -576,6 +576,63 @@
   style="position: fixed; top: 100px; left: 100px; visibility: hidden; z-index: 2000;"
 />
 
+<!-- Color Input Modal (hex or color name) -->
+<div id="hexColorModal" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+">
+  <div style="
+    background: white;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 300px;
+    text-align: center;
+    font-family: sans-serif;
+  ">
+    <h3 style="margin-top: 0;">🎨 Couleur personnalisée</h3>
+    <input id="hexColorInput" type="text" placeholder="#ff8800 ou red" style="
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      margin: 12px 0;
+    " />
+    <div style="display: flex; gap: 10px;">
+      <button onclick="applyHexColor()" style="
+        flex: 1;
+        padding: 8px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      ">✅ Appliquer</button>
+      <button onclick="closeHexColorModal()" style="
+        flex: 1;
+        padding: 8px;
+        background: #eee;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      ">❌ Annuler</button>
+    </div>
+  </div>
+</div>
+
+
 
     <script src="script.js" defer></script>
     <script src="shortcuts.js" defer></script>

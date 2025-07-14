@@ -5,6 +5,8 @@ let alphabeticalSorting = false;
 let manualOrder = [];
 let editMode = false;
 let compactMode = false;
+let hexTarget = null;
+
 const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
 const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
 let showOnlyFavorites = storedFavoriteMode === "false"; // ✅ restore as boolean
@@ -119,18 +121,12 @@ document.getElementById("backgroundColorHex").addEventListener("change", functio
 
 
 function openBackgroundColorPicker() {
-  const picker = document.getElementById("backgroundColorPicker");
-  const hexInput = document.getElementById("backgroundColorHex");
-  const current = rgbToHex(getComputedStyle(document.body).backgroundColor);
-
+  const current = getComputedStyle(document.body).backgroundColor;
   if (isIOSDevice()) {
-    hexInput.value = current;
-    hexInput.style.visibility = "visible";
-    hexInput.focus();
-
-    hexInput.onblur = () => hexInput.style.visibility = "hidden";
+    openHexColorModal("background", rgbToHex(current));
   } else {
-    picker.value = current;
+    const picker = document.getElementById("backgroundColorPicker");
+    picker.value = rgbToHex(current);
     picker.click();
   }
 }
@@ -183,23 +179,53 @@ function hexToRgb(hex) {
 
 
 function openAppTitleColorPicker() {
-  const colorInput = document.getElementById("appTitleColorPicker");
-  const hexInput = document.getElementById("appTitleColorHex");
-  const titleEl = document.getElementById("appTitle");
-  const current = rgbToHex(getComputedStyle(titleEl).color);
-
+  const current = getComputedStyle(document.getElementById("appTitle")).color;
   if (isIOSDevice()) {
-    hexInput.value = current;
-    hexInput.style.visibility = "visible";
-    hexInput.focus();
-
-    hexInput.onblur = () => hexInput.style.visibility = "hidden";
+    openHexColorModal("title", rgbToHex(current));
   } else {
-    colorInput.value = current;
-    colorInput.click();
+    const picker = document.getElementById("appTitleColorPicker");
+    picker.value = rgbToHex(current);
+    picker.click();
   }
 }
 
+function openHexColorModal(target, currentColor = "") {
+  hexTarget = target;
+  const modal = document.getElementById("hexColorModal");
+  const input = document.getElementById("hexColorInput");
+  input.value = currentColor;
+  modal.style.display = "flex";
+  setTimeout(() => input.focus(), 50);
+}
+
+function closeHexColorModal() {
+  document.getElementById("hexColorModal").style.display = "none";
+  hexTarget = null;
+}
+
+function applyHexColor() {
+  const input = document.getElementById("hexColorInput");
+  const color = input.value.trim();
+
+  // Test if it's a valid CSS color (browser validation)
+  const testEl = document.createElement("div");
+  testEl.style.color = "";
+  testEl.style.color = color;
+  if (testEl.style.color === "") {
+    alert("Couleur invalide. Essayez un nom de couleur ou un hex (#ff8800).");
+    return;
+  }
+
+  if (hexTarget === "title") {
+    document.getElementById("appTitle").style.color = color;
+    localStorage.setItem("appTitleColor", color);
+  } else if (hexTarget === "background") {
+    applyGradientBackground(color);
+    localStorage.setItem("appBackgroundColor", color);
+  }
+
+  closeHexColorModal();
+}
 
 
 
