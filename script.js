@@ -148,10 +148,9 @@ document.getElementById("backgroundColorHex").addEventListener("change", functio
 });
 
 
-
 function openBackgroundColorPicker() {
-  const current = getComputedStyle(document.body).backgroundColor;
-  openHexColorModal("background", rgbToHex(current)); // 💡 Always open modal
+  const savedColor = localStorage.getItem("appBackgroundColor") || "#ffffff";
+  openHexColorModal("background", savedColor);
 }
 
 
@@ -215,9 +214,10 @@ function hexToRgb(hex) {
 
 
 function openAppTitleColorPicker() {
-  const current = getComputedStyle(document.getElementById("appTitle")).color;
-  openHexColorModal("title", rgbToHex(current)); // 💡 Always open modal
+  const savedColor = localStorage.getItem("appTitleColor") || "#000000"; // fallback black
+  openHexColorModal("title", savedColor);
 }
+
 
 
 function openHexColorModal(target, currentColor = "") {
@@ -2103,14 +2103,14 @@ dropZone.addEventListener("dragover", (e) => {
 });
 
 dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#f5f5f5";
-    dropZone.style.color = "#f5f5f5";
+    dropZone.style.borderColor = "#eee";
+    dropZone.style.color = "#eee";
 });
 
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = "#f5f5f5";
-    dropZone.style.color = "#f5f5f5";
+    dropZone.style.borderColor = "#eee";
+    dropZone.style.color = "#eee";
 
     const file = e.dataTransfer.files[0];
     if (!file) return;
