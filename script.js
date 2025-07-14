@@ -15,6 +15,12 @@ const icons = Quill.import('ui/icons');
 icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
 
 
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+
+
 function escapeHTML(str) {
     return str.replace(/[&<>"']/g, (m) => ({
         '&': '&amp;',
@@ -83,18 +89,66 @@ document.getElementById("appTitleColorPicker").addEventListener("input", functio
   }
 });
 
+// Manual hex input for title color
+document.getElementById("appTitleColorHex").addEventListener("change", function () {
+  const hex = this.value.trim();
+  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    const titleEl = document.getElementById("appTitle");
+    titleEl.style.color = hex;
+    localStorage.setItem("appTitleColor", hex);
+  } else {
+    alert("Hex invalide. Ex: #ff8800");
+  }
+  this.style.visibility = "hidden";
+});
+
+// Manual hex input for background color
+document.getElementById("backgroundColorHex").addEventListener("change", function () {
+  const hex = this.value.trim();
+  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    applyGradientBackground(hex);
+    localStorage.setItem("appBackgroundColor", hex);
+  } else {
+    alert("Hex invalide. Ex: #f0f0f0");
+  }
+  this.style.visibility = "hidden";
+});
+
+
+
+
+
 function openBackgroundColorPicker() {
   const picker = document.getElementById("backgroundColorPicker");
-  const current = getComputedStyle(document.body).backgroundColor;
-  picker.value = rgbToHex(current);
-  picker.click();
+  const hexInput = document.getElementById("backgroundColorHex");
+  const current = rgbToHex(getComputedStyle(document.body).backgroundColor);
+
+  if (isIOSDevice()) {
+    hexInput.value = current;
+    hexInput.style.visibility = "visible";
+    hexInput.focus();
+
+    hexInput.onblur = () => hexInput.style.visibility = "hidden";
+  } else {
+    picker.value = current;
+    picker.click();
+  }
 }
+
 
 document.getElementById("backgroundColorPicker").addEventListener("input", (e) => {
   const hex = e.target.value;
   localStorage.setItem("appBackgroundColor", hex);
   applyGradientBackground(hex);
 });
+
+
+
+
+
+
+
+
 
 function applyGradientBackground(hex) {
   const rgb = hexToRgb(hex);
@@ -130,16 +184,22 @@ function hexToRgb(hex) {
 
 function openAppTitleColorPicker() {
   const colorInput = document.getElementById("appTitleColorPicker");
+  const hexInput = document.getElementById("appTitleColorHex");
   const titleEl = document.getElementById("appTitle");
+  const current = rgbToHex(getComputedStyle(titleEl).color);
 
-  if (!colorInput || !titleEl) return;
+  if (isIOSDevice()) {
+    hexInput.value = current;
+    hexInput.style.visibility = "visible";
+    hexInput.focus();
 
-  // Get current color as hex
-  const computedColor = getComputedStyle(titleEl).color;
-  colorInput.value = rgbToHex(computedColor);
-
-  colorInput.click(); // open native color picker
+    hexInput.onblur = () => hexInput.style.visibility = "hidden";
+  } else {
+    colorInput.value = current;
+    colorInput.click();
+  }
 }
+
 
 
 
