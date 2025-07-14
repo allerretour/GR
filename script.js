@@ -207,12 +207,13 @@ function applyHexColor() {
   const input = document.getElementById("hexColorInput");
   const color = input.value.trim();
 
-  // Test if it's a valid CSS color (browser validation)
+  // Validate CSS color (accepts hex or named colors)
   const testEl = document.createElement("div");
   testEl.style.color = "";
   testEl.style.color = color;
+
   if (testEl.style.color === "") {
-    alert("Couleur invalide. Essayez un nom de couleur ou un hex (#ff8800).");
+    alert("Couleur invalide. Essayez un nom de couleur ou un code hex (#ff8800).");
     return;
   }
 
@@ -220,12 +221,13 @@ function applyHexColor() {
     document.getElementById("appTitle").style.color = color;
     localStorage.setItem("appTitleColor", color);
   } else if (hexTarget === "background") {
-    applyGradientBackground(color);
+    applyGradientBackground(color); // ✅ handles both hex and named colors
     localStorage.setItem("appBackgroundColor", color);
   }
 
   closeHexColorModal();
 }
+
 
 
 
