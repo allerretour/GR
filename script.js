@@ -103,17 +103,6 @@ function populateColorSuggestions() {
   });
 }
 
-// Call it once when modal opens
-function openHexColorModal(target, currentColor = "") {
-  hexTarget = target;
-  const modal = document.getElementById("hexColorModal");
-  const input = document.getElementById("hexColorInput");
-  input.value = currentColor;
-  modal.style.display = "flex";
-
-  populateColorSuggestions();
-  setTimeout(() => input.focus(), 50);
-}
 
 
 // Convert rgb to hex
@@ -233,12 +222,27 @@ function openAppTitleColorPicker() {
 
 function openHexColorModal(target, currentColor = "") {
   hexTarget = target;
+
   const modal = document.getElementById("hexColorModal");
   const input = document.getElementById("hexColorInput");
+  const title = document.getElementById("hexColorModalTitle");
+
   input.value = currentColor;
+
+  // ✅ Update title
+  if (target === "title") {
+    title.textContent = "🎨 Couleur TITRE";
+  } else if (target === "background") {
+    title.textContent = "🎨 Couleur FOND";
+  } else {
+    title.textContent = "🎨 Couleur";
+  }
+
+  populateColorSuggestions();
   modal.style.display = "flex";
   setTimeout(() => input.focus(), 50);
 }
+
 
 function closeHexColorModal() {
   document.getElementById("hexColorModal").style.display = "none";
