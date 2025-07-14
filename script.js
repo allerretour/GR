@@ -1290,7 +1290,7 @@ if (list.length === 0) {
         const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
         
         const nameColor = isInfoOnly ? "#0079fa" : "inherit";
-        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-circle-info" style="font-size: 0.80em; margin-right: 2px;color: #0079fa;"></i>' : "";
+        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-lightbulb" style=" margin-right: 2px;color: FFD43B;"></i>' : "";
 
 
 
