@@ -146,8 +146,8 @@ document.getElementById("backgroundColorPicker").addEventListener("input", (e) =
 
 
 
-function applyGradientBackground(hex) {
-  const rgb = hexToRgb(hex);
+function applyGradientBackground(colorInput) {
+  const rgb = parseAnyColorToRGB(colorInput);
   if (!rgb) return;
 
   const lighten = (v, amt) => Math.min(255, Math.round(v + amt));
@@ -156,12 +156,31 @@ function applyGradientBackground(hex) {
   const lightRGB = `rgb(${lighten(rgb.r, 60)}, ${lighten(rgb.g, 60)}, ${lighten(rgb.b, 60)})`;
   const darkRGB = `rgb(${darken(rgb.r, 40)}, ${darken(rgb.g, 40)}, ${darken(rgb.b, 40)})`;
 
-  // 🔽 Vertical gradient: dark (top) → base (middle) → light (bottom)
-  document.body.style.background = `linear-gradient(to bottom, ${darkRGB}, ${hex}, ${lightRGB})`;
+  const baseRGB = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+
+  document.body.style.background = `linear-gradient(to bottom, ${darkRGB}, ${baseRGB}, ${lightRGB})`;
   document.body.style.backgroundRepeat = "no-repeat";
   document.body.style.backgroundAttachment = "fixed";
   document.body.style.backgroundSize = "cover";
   document.body.style.height = "100vh";
+}
+
+function parseAnyColorToRGB(colorStr) {
+  const temp = document.createElement("div");
+  temp.style.color = colorStr;
+  document.body.appendChild(temp);
+
+  const computed = getComputedStyle(temp).color;
+  document.body.removeChild(temp);
+
+  const rgbMatch = computed.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (!rgbMatch) return null;
+
+  return {
+    r: parseInt(rgbMatch[1]),
+    g: parseInt(rgbMatch[2]),
+    b: parseInt(rgbMatch[3])
+  };
 }
 
 
