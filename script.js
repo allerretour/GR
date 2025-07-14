@@ -162,13 +162,7 @@ document.getElementById("backgroundColorHex").addEventListener("change", functio
 
 function openBackgroundColorPicker() {
   const current = getComputedStyle(document.body).backgroundColor;
-  if (isIOSDevice()) {
-    openHexColorModal("background", rgbToHex(current));
-  } else {
-    const picker = document.getElementById("backgroundColorPicker");
-    picker.value = rgbToHex(current);
-    picker.click();
-  }
+  openHexColorModal("background", rgbToHex(current)); // 💡 Always open modal
 }
 
 
@@ -177,12 +171,6 @@ document.getElementById("backgroundColorPicker").addEventListener("input", (e) =
   localStorage.setItem("appBackgroundColor", hex);
   applyGradientBackground(hex);
 });
-
-
-
-
-
-
 
 
 
@@ -239,14 +227,9 @@ function hexToRgb(hex) {
 
 function openAppTitleColorPicker() {
   const current = getComputedStyle(document.getElementById("appTitle")).color;
-  if (isIOSDevice()) {
-    openHexColorModal("title", rgbToHex(current));
-  } else {
-    const picker = document.getElementById("appTitleColorPicker");
-    picker.value = rgbToHex(current);
-    picker.click();
-  }
+  openHexColorModal("title", rgbToHex(current)); // 💡 Always open modal
 }
+
 
 function openHexColorModal(target, currentColor = "") {
   hexTarget = target;
