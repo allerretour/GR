@@ -23,7 +23,20 @@
     <div class="container">
       <div class="labels" style="position: relative;">
         
-
+<!-- Fixed logo on the left edge -->
+  <img
+  src="gllogo.png"
+  alt="LLogo"
+  onerror="this.style.display='none';"
+  style="
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(50px, 5vw, 100px);
+    height: clamp(50px, 5vw, 100px);
+    object-fit: contain;
+  "
+/>
 
         <div
   class="title-container"
@@ -33,6 +46,9 @@
     class="title-inner"
     style="display: flex; align-items: center; gap: 14px;"
   >
+    
+  
+
     <!-- Title -->
     <h2
       id="appTitle"
@@ -44,10 +60,14 @@
       Gestionnaire de raccourcis
     </h2>
 
-    <!-- Fixed logo on the right edge -->
+    
+</div>
+
+ <!-- Fixed logo on the right edge -->
   <img
   src="grlogo.png"
-  alt="Logo"
+  alt="RLogo"
+  onerror="this.style.display='none';"
   style="
     position: absolute;
     top: 0;
@@ -57,10 +77,8 @@
     object-fit: contain;
   "
 />
-</div>
-</div>
 
-  
+</div>
 
 </div>
 
