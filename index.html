@@ -24,19 +24,7 @@
       <div class="labels" style="position: relative;">
         
 <!-- Fixed logo on the left edge -->
-  <img
-  src="Llogo.png"
-  alt="LLogo"
-  onerror="this.style.display='none';"
-  style="
-    position: absolute;
-    top: 0;
-    left: 0;
-    
-    height: clamp(50px, 5vw, 100px);
-    object-fit: contain;
-  "
-/>
+  <img id="leftLogo" src="" alt="LLogo" style="position: absolute; top: 0; left: 0; height: clamp(50px, 5vw, 100px); object-fit: contain;" />
 
         <div
   class="title-container"
@@ -63,20 +51,7 @@
     
 </div>
 
- <!-- Fixed logo on the right edge -->
-  <img
-  src="Rlogo.png"
-  alt="RLogo"
-  onerror="this.style.display='none';"
-  style="
-    position: absolute;
-    top: 0;
-    right: 0;
-    
-    height: clamp(50px, 5vw, 100px);
-    object-fit: contain;
-  "
-/>
+ <img id="rightLogo" src="" alt="RLogo" style="position: absolute; top: 0; right: 0; height: clamp(50px, 5vw, 100px); object-fit: contain;" />
 
 </div>
 
@@ -245,6 +220,15 @@
           <i class="fas fa-f"></i>
         </button>
 
+<!-- Left Logo Upload (IL) -->
+<button title="Logo gauche (Lg)" onclick="document.getElementById('leftLogoInput').click()">Lg</button>
+<input type="file" id="leftLogoInput" accept="image/*" style="display: none"  />
+
+<!-- Right Logo Upload (IR) -->
+<button title="Logo droit (Ld)" onclick="document.getElementById('rightLogoInput').click()">Ld</button>
+<input type="file" id="rightLogoInput" accept="image/*" style="display: none"  />
+
+<button title="Réinitialiser les logos (Lr)" onclick="resetLogos()">Lr</button>
         
           <span style="font-size: 14px;">Édition</span>
           <label class="switch" title="Mode édition">

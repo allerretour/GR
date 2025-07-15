@@ -824,6 +824,19 @@ function ensureDefaultShortcut() {
   }
 }
 
+function resetLogos() {
+  localStorage.removeItem("leftLogo");
+  localStorage.removeItem("rightLogo");
+
+  const leftImg = document.getElementById("leftLogo");
+  const rightImg = document.getElementById("rightLogo");
+
+  if (leftImg) leftImg.style.display = "none";
+  if (rightImg) rightImg.style.display = "none";
+
+  setExportNeeded(true); // Mark state as changed
+  showToast("🧹 Logos supprimés");
+}
 
 
 
@@ -1932,6 +1945,64 @@ function confirmEdit() {
     }
 }
 
+
+function handleLogoUpload(event, side) {
+  const file = event.target.files[0];
+  if (!file || !file.type.startsWith("image/")) return;
+
+  const MAX_SIZE = 300 * 1024; // 300 KB
+
+  if (file.size > MAX_SIZE) {
+    alert("❌ L’image dépasse 300 Ko. Veuillez en choisir une plus petite.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const base64 = e.target.result;
+
+    if (side === "left") {
+      localStorage.setItem("leftLogo", base64);
+      const img = document.getElementById("leftLogo");
+      if (img) {
+        img.src = base64;
+        img.style.display = "block";
+      }
+    } else if (side === "right") {
+      localStorage.setItem("rightLogo", base64);
+      const img = document.getElementById("rightLogo");
+      if (img) {
+        img.src = base64;
+        img.style.display = "block";
+      }
+    }
+
+    setExportNeeded(true); // Mark change
+  };
+
+  reader.readAsDataURL(file);
+}
+
+
+
+function loadLogos() {
+  const left = localStorage.getItem("leftLogo");
+  const right = localStorage.getItem("rightLogo");
+
+  const leftImg = document.getElementById("leftLogo");
+  const rightImg = document.getElementById("rightLogo");
+
+  if (left) leftImg.src = left;
+  else leftImg.style.display = "none";
+
+  if (right) rightImg.src = right;
+  else rightImg.style.display = "none";
+}
+
+
+
+
+
 function saveShortcuts() {
     localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
     setExportNeeded(true);
@@ -1959,8 +2030,10 @@ function exportShortcuts() {
     activeTagFilter: activeTagFilter,
     appTitleColor: localStorage.getItem("appTitleColor") || null, // ✅ save color
     appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
-    showOnlyFavorites: showOnlyFavorites // ✅ NEW: include favorite mode flag
-};
+    showOnlyFavorites: showOnlyFavorites, // ✅ NEW: include favorite mode flag
+    leftLogo: localStorage.getItem("leftLogo") || null,
+    rightLogo: localStorage.getItem("rightLogo") || null
+    };
     const dataStr = JSON.stringify(data, null, 4);
 
     const blob = new Blob([dataStr], {
@@ -2051,6 +2124,30 @@ function importShortcuts(event) {
                     saveUIState();
                 }
 
+
+             if (importedData.leftLogo) {
+  localStorage.setItem("leftLogo", importedData.leftLogo);
+  document.getElementById("leftLogo").src = importedData.leftLogo;
+  document.getElementById("leftLogo").style.display = "block";
+} else {
+  localStorage.removeItem("leftLogo");
+  document.getElementById("leftLogo").style.display = "none";
+}
+
+if (importedData.rightLogo) {
+  localStorage.setItem("rightLogo", importedData.rightLogo);
+  document.getElementById("rightLogo").src = importedData.rightLogo;
+  document.getElementById("rightLogo").style.display = "block";
+} else {
+  localStorage.removeItem("rightLogo");
+  document.getElementById("rightLogo").style.display = "none";
+}
+
+
+
+
+
+
                 // ✅ Restore compact mode
                 if (typeof importedData.compactMode === "boolean") {
                     compactMode = importedData.compactMode;
@@ -2067,6 +2164,12 @@ if (typeof importedData.showOnlyFavorites === "boolean") {
                 alert("Format JSON invalide.");
                 return;
             }
+
+
+
+
+loadLogos(); // 🟢 Reload and update logos
+
 
 displayTagFilters(); // ✅ Ensures "⭐ Tous" is correct if favorites mode is active
 
@@ -2191,6 +2294,16 @@ function clearShortcuts() {
     showOnlyFavorites = false;
     localStorage.setItem("showOnlyFavorites", "false");
 
+    // 🖼️ Reset logos
+    localStorage.removeItem("leftLogo");
+    localStorage.removeItem("rightLogo");
+
+    const leftLogo = document.getElementById("leftLogo");
+    const rightLogo = document.getElementById("rightLogo");
+
+    if (leftLogo) leftLogo.style.display = "none";
+    if (rightLogo) rightLogo.style.display = "none";
+
     // 📝 Update display
     setExportNeeded(true);
     displayShortcuts();
@@ -2199,6 +2312,7 @@ function clearShortcuts() {
     showToast("🔄 Liste réinitialisée");
   }
 }
+
 
 let draggedElement = null;
 
@@ -2278,6 +2392,10 @@ document.getElementById("backToTopBtn").addEventListener("click", () => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    
+    document.getElementById("leftLogoInput").addEventListener("change", e => handleLogoUpload(e, "left"));
+    document.getElementById("rightLogoInput").addEventListener("change", e => handleLogoUpload(e, "right"));
+
     loadUIState();
 
     // Search Bar
@@ -2291,6 +2409,7 @@ if (savedColor) {
   applyGradientBackground(savedColor);
 }
 
+loadLogos();
 
 populateColorSuggestions(); // optional pre-fill
 
