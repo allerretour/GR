@@ -1976,7 +1976,8 @@ function handleLogoUpload(event, side) {
         img.style.display = "block";
       }
     }
-
+    hideOptionsAndScrollTop();
+    showToast("Logo chargé !");
     setExportNeeded(true); // Mark change
   };
 

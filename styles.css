@@ -39,7 +39,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .emoji-display:not([onclick]) {
@@ -417,7 +417,7 @@ color: #000;
 
 .labels h2 {
   margin: 0 auto;
-  font-size: clamp(36px, 5vw, 90px);
+  font-size: clamp(36px, 5vw, 100px);
   font-weight: 600;
   text-align: center;
   color: #8678CC;
