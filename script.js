@@ -6,6 +6,7 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 let hexTarget = null;
+const GLOBAL_PASSWORD = ""; // Change this to your real password If no password is set, always allow
 
 const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
 const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
@@ -13,6 +14,27 @@ let showOnlyFavorites = storedFavoriteMode === "false"; // ✅ restore as boolea
 
 const icons = Quill.import('ui/icons');
 icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
+
+
+function ensureAuthenticated() {
+  // If no password is set, always allow
+  if (!GLOBAL_PASSWORD) {
+    return true;
+  }
+
+  const ok = sessionStorage.getItem("authenticated") === "true";
+  if (ok) return true;
+
+  const input = prompt("🔒 Entrez le mot de passe pour accéder à cette fonction :");
+  if (input === GLOBAL_PASSWORD) {
+    sessionStorage.setItem("authenticated", "true");
+    return true;
+  } else {
+    alert("❌ Mot de passe incorrect.");
+    return false;
+  }
+}
+
 
 
 function isIOSDevice() {
@@ -280,9 +302,11 @@ function applyHexColor() {
   if (hexTarget === "title") {
     document.getElementById("appTitle").style.color = color;
     localStorage.setItem("appTitleColor", color);
+    showToast("Couleur du titre modifiée !");
   } else if (hexTarget === "background") {
     applyGradientBackground(color); // ✅ handles both hex and named colors
     localStorage.setItem("appBackgroundColor", color);
+    showToast("Couleur du fond modifiée !");
   }
 
   closeHexColorModal();
@@ -1079,6 +1103,9 @@ function renderSelectedTags() {
 }
 
 function toggleButtonGroup() {
+    
+if (!ensureAuthenticated()) return;
+
     const group = document.getElementById("buttonGroupWrapper");
     const toggleBtn = document.getElementById("toggleBtnGroup");
 
@@ -1100,6 +1127,8 @@ function toggleButtonGroup() {
             });
         }, 100);
     }
+
+
 }
 
 
@@ -1967,6 +1996,7 @@ function handleLogoUpload(event, side) {
       if (img) {
         img.src = base64;
         img.style.display = "block";
+        showToast("Logo gauche modifié !");
       }
     } else if (side === "right") {
       localStorage.setItem("rightLogo", base64);
@@ -1974,10 +2004,11 @@ function handleLogoUpload(event, side) {
       if (img) {
         img.src = base64;
         img.style.display = "block";
+        showToast("Logo droit modifié !");
       }
     }
     hideOptionsAndScrollTop();
-    showToast("Logo chargé !");
+    
     setExportNeeded(true); // Mark change
   };
 

@@ -535,6 +535,7 @@ input[type="text"] {
 
   /* Sizing & spacing */
   padding: 12px;
+  
   min-height: 120px;
   text-align: center;
 
@@ -551,9 +552,10 @@ input[type="text"] {
     0 0 1px rgba(255, 255, 255, 0.8);
 
   /* Background & border */
-  background:
-  linear-gradient(135deg, #f8f1ff 20%, #ece9f6 90%),
-  radial-gradient(circle at top right, rgba(216, 199, 249, 0.6), transparent 50%);
+background:
+  linear-gradient(135deg, #f5f5f5 20%, #dcdcdc 90%),
+  radial-gradient(circle at top right, rgba(120, 120, 120, 0.3), transparent 50%);
+
 
 
   /* Box shadow */

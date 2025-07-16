@@ -13,10 +13,12 @@ function showShortcutFeedback(keyLabel) {
 
 
 document.addEventListener("keydown", function(event) {
-  
+
 
 // 🎨 Shift + F1 → pick title color
   if (event.code === "F1" && event.shiftKey) {
+if (!ensureAuthenticated()) return;  
+
     event.preventDefault();
     hideOptionsAndScrollTop();
     openAppTitleColorPicker();
@@ -26,6 +28,8 @@ document.addEventListener("keydown", function(event) {
 
   // 🎨 Alt + F1 → reset title color
   if (event.code === "F1" && event.altKey) {
+if (!ensureAuthenticated()) return;  
+
     event.preventDefault();
     const titleEl = document.getElementById("appTitle");
     if (titleEl) {
@@ -38,6 +42,8 @@ document.addEventListener("keydown", function(event) {
 
   // 🎨 Shift + F2 → pick background color
   if (event.code === "F2" && event.shiftKey) {
+if (!ensureAuthenticated()) return;  
+
     event.preventDefault();
     hideOptionsAndScrollTop();
     openBackgroundColorPicker();
@@ -46,6 +52,8 @@ document.addEventListener("keydown", function(event) {
   }
 
   if ((event.code === "F2" || event.key === "F2") && event.altKey) {
+if (!ensureAuthenticated()) return;  
+
   event.preventDefault();
   const defaultBg = "#f9f9f9";
   localStorage.setItem("appBackgroundColor", defaultBg);
@@ -57,6 +65,8 @@ document.addEventListener("keydown", function(event) {
 
   // 🔍 F2 → toggle search bar (only if no modifier key)
   if (event.code === "F2" && !event.shiftKey && !event.altKey) {
+if (!ensureAuthenticated()) return;  
+
     event.preventDefault();
     toggleSearchBar();
     saveUIState();
@@ -68,6 +78,8 @@ document.addEventListener("keydown", function(event) {
 
 // F3 → open visible
 if (event.code === "F3") {
+if (!ensureAuthenticated()) return;  
+
   event.preventDefault();
   openVisibleShortcutsInTabs();
   showShortcutFeedback("Ouvrir raccourcis (F3)");
@@ -76,6 +88,8 @@ if (event.code === "F3") {
 
 // F4 → Toggle Option
 if (event.code === "F4") {
+if (!ensureAuthenticated()) return;  
+
   event.preventDefault();
   
   toggleButtonGroup();
@@ -86,6 +100,8 @@ if (event.code === "F4") {
 
 // F8 → Toggle Tags
 if (event.code === "F8") {
+if (!ensureAuthenticated()) return;  
+
   event.preventDefault();
   toggleTags();
   saveUIState();                        // ✅ Persist
@@ -97,6 +113,8 @@ if (event.code === "F8") {
 
 // F9 → Toggle Compact Mode
 if (event.code === "F9") {
+if (!ensureAuthenticated()) return;  
+
   event.preventDefault();
   compactMode = !compactMode;
   localStorage.setItem("compactMode", compactMode); // ✅ Persist
@@ -115,6 +133,8 @@ if (event.code === "F9") {
 
 
 if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
+if (!ensureAuthenticated()) return;  
+
     event.preventDefault();
     if (confirm("Voulez vous vraiment réinitialiser la page ?")) {
         localStorage.clear();
@@ -128,6 +148,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // E → Toggle Edit Mode
   if (event.key.toLowerCase() === "e") {
+if (!ensureAuthenticated()) return;  
+
     const editToggle = document.getElementById("editToggle");
     if (editToggle) {
       editToggle.checked = !editToggle.checked;
@@ -139,6 +161,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // I → Toggle Info Modal
   if (event.key.toLowerCase() === "i") {
+if (!ensureAuthenticated()) return;  
+
     const modal = document.getElementById("infoModal");
     if (modal.style.display === "none" || modal.style.display === "") {
       showInfoModal();
@@ -151,6 +175,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // M → Toggle Tag Filter Mode
   if (event.key.toLowerCase() === "m") {
+if (!ensureAuthenticated()) return;  
+
     const toggle = document.getElementById("tagFilterModeToggle");
     if (toggle) {
       toggle.checked = !toggle.checked;
@@ -163,6 +189,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // L → Import File Dialog
   if (event.key.toLowerCase() === "l") {
+if (!ensureAuthenticated()) return;  
+
     document.getElementById('importFile').click();
     showShortcutFeedback("Charger liste (L)");
     return;
@@ -170,6 +198,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // S → Export Shortcuts
   if (event.key.toLowerCase() === "s") {
+if (!ensureAuthenticated()) return;  
+
     exportShortcuts();
     showShortcutFeedback("Sauvegarder liste (S)");
     return;
@@ -177,6 +207,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
 // V → Export Shortcuts visible
   if (event.key.toLowerCase() === "v") {
+if (!ensureAuthenticated()) return;  
+
     openExportFormatModal();
     showShortcutFeedback("Exporter raccourcis visibles (V)");
     return;
@@ -185,6 +217,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // N → New List
   if (event.key.toLowerCase() === "n") {
+if (!ensureAuthenticated()) return;  
+
     clearShortcuts();
     showShortcutFeedback("Nouvelle liste (N)");
     return;
@@ -192,6 +226,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // A → Add Item
   if (event.key.toLowerCase() === "a") {
+if (!ensureAuthenticated()) return;  
+
     openAddModal();
     showShortcutFeedback("Ajouter (A)");
     return;
@@ -199,6 +235,8 @@ if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "r") {
 
   // T → Toggle Sorting
   if (event.key.toLowerCase() === "t") {
+if (!ensureAuthenticated()) return;  
+
     toggleSorting();
 
     showShortcutFeedback("Mode tri (T)");
