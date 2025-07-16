@@ -6,7 +6,7 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 let hexTarget = null;
-const GLOBAL_PASSWORD = ""; // Change this to your real password If no password is set, always allow
+let GLOBAL_PASSWORD = ""; // Change this to your real password If no password is set, always allow
 
 const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
 const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
@@ -2053,19 +2053,32 @@ function exportShortcuts() {
     const baseFilename = `GDR_${sanitizedTitle || "shortcuts"}_${timestamp}`;
     const lstFilename = `${baseFilename}.lst`;
 
+    // 🔐 Ask user for password before export
+    let password = prompt("Entrez un mot de passe pour protéger l'export (laisser vide pour aucun mot de passe) :");
+    if (password === null) {
+        // Cancelled by user
+        showToast("Export annulé.");
+        return;
+    }
+    password = password.trim();
+    GLOBAL_PASSWORD = password || ""; // Update current in-app password
+    if (password === "") password = null; // Store null in the export
+
     const data = {
-    title: title,
-    shortcuts: shortcuts,
-    tagOrder: tagOrder,
-    uiToggleState: uiToggleState,
-    compactMode: compactMode,
-    activeTagFilter: activeTagFilter,
-    appTitleColor: localStorage.getItem("appTitleColor") || null, // ✅ save color
-    appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
-    showOnlyFavorites: showOnlyFavorites, // ✅ NEW: include favorite mode flag
-    leftLogo: localStorage.getItem("leftLogo") || null,
-    rightLogo: localStorage.getItem("rightLogo") || null
+        title: title,
+        shortcuts: shortcuts,
+        tagOrder: tagOrder,
+        uiToggleState: uiToggleState,
+        compactMode: compactMode,
+        activeTagFilter: activeTagFilter,
+        appTitleColor: localStorage.getItem("appTitleColor") || null,
+        appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
+        showOnlyFavorites: showOnlyFavorites,
+        leftLogo: localStorage.getItem("leftLogo") || null,
+        rightLogo: localStorage.getItem("rightLogo") || null,
+        password: password // ✅ include the password (or null)
     };
+
     const dataStr = JSON.stringify(data, null, 4);
 
     const blob = new Blob([dataStr], {
@@ -2090,7 +2103,6 @@ function exportShortcuts() {
     updateLastExportDisplay();
     hideOptionsAndScrollTop();
     showToast("Exportation réussie !");
-
 }
 
 
@@ -2176,7 +2188,10 @@ if (importedData.rightLogo) {
 }
 
 
-
+// ✅ Set GLOBAL_PASSWORD if present
+      if (importedData.password !== undefined) {
+        GLOBAL_PASSWORD = importedData.password;
+      }
 
 
 
