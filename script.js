@@ -6,9 +6,8 @@ let manualOrder = [];
 let editMode = false;
 let compactMode = false;
 let hexTarget = null;
-const GLOBAL_PASSWORD = ""; // Change this to your real password If no password is set, always allow
 
-const DEFAULT_EMOJI = () => EMOJI_CHOICES?.[0] || "🔗";
+
 const storedFavoriteMode = localStorage.getItem("showOnlyFavorites");
 let showOnlyFavorites = storedFavoriteMode === "false"; // ✅ restore as boolean
 
@@ -17,10 +16,7 @@ icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid
 
 
 function ensureAuthenticated() {
-  // If no password is set, always allow
-  if (!GLOBAL_PASSWORD) {
-    return true;
-  }
+  if (!GLOBAL_PASSWORD) return true;
 
   const ok = sessionStorage.getItem("authenticated") === "true";
   if (ok) return true;
@@ -30,10 +26,12 @@ function ensureAuthenticated() {
     sessionStorage.setItem("authenticated", "true");
     return true;
   } else {
-    alert("❌ Mot de passe incorrect.");
+    showToast("❌ Mot de passe incorrect.");
+    
     return false;
   }
 }
+
 
 
 
@@ -91,28 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (saved) document.getElementById("appTitle").style.color = saved;
 });
 
-const colorNames = [
-  "black",
-  "white",
-  "gray",
-  "lightgray",
-  "red",
-  "orange",
-  "yellow",
-  "gold",
-  "green",
-  "limegreen",
-  "teal",
-  "cyan",
-  "blue",
-  "skyblue",
-  "navy",
-  "indigo",
-  "purple",
-  "violet",
-  "pink",
-  "brown"
-];
+
 
 
 function populateColorSuggestions() {
@@ -2053,19 +2030,33 @@ function exportShortcuts() {
     const baseFilename = `GDR_${sanitizedTitle || "shortcuts"}_${timestamp}`;
     const lstFilename = `${baseFilename}.lst`;
 
+    // 🔐 Ask user for a password
+    let password = prompt("Entrez un mot de passe pour l'export (laisser vide pour aucun mot de passe) :");
+    if (password === null) {
+        showToast("Export annulé.");
+        return;
+    }
+
+    password = password.trim();
+    if (password === "") {
+        password = null;
+    }
+
     const data = {
-    title: title,
-    shortcuts: shortcuts,
-    tagOrder: tagOrder,
-    uiToggleState: uiToggleState,
-    compactMode: compactMode,
-    activeTagFilter: activeTagFilter,
-    appTitleColor: localStorage.getItem("appTitleColor") || null, // ✅ save color
-    appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
-    showOnlyFavorites: showOnlyFavorites, // ✅ NEW: include favorite mode flag
-    leftLogo: localStorage.getItem("leftLogo") || null,
-    rightLogo: localStorage.getItem("rightLogo") || null
+        title,
+        shortcuts,
+        tagOrder,
+        uiToggleState,
+        compactMode,
+        activeTagFilter,
+        appTitleColor: localStorage.getItem("appTitleColor") || null,
+        appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
+        showOnlyFavorites,
+        leftLogo: localStorage.getItem("leftLogo") || null,
+        rightLogo: localStorage.getItem("rightLogo") || null,
+        password  // ✅ include password (null or string)
     };
+
     const dataStr = JSON.stringify(data, null, 4);
 
     const blob = new Blob([dataStr], {
@@ -2090,8 +2081,8 @@ function exportShortcuts() {
     updateLastExportDisplay();
     hideOptionsAndScrollTop();
     showToast("Exportation réussie !");
-
 }
+
 
 
 
@@ -2176,6 +2167,15 @@ if (importedData.rightLogo) {
 }
 
 
+
+if (importedData.password !== undefined) {
+  GLOBAL_PASSWORD = importedData.password || "";
+  localStorage.setItem("globalPassword", GLOBAL_PASSWORD);
+
+  if (GLOBAL_PASSWORD) {
+    sessionStorage.removeItem("authenticated"); // Require login next time
+  }
+}
 
 
 

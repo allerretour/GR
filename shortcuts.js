@@ -78,8 +78,6 @@ if (!ensureAuthenticated()) return;
 
 // F3 → open visible
 if (event.code === "F3") {
-if (!ensureAuthenticated()) return;  
-
   event.preventDefault();
   openVisibleShortcutsInTabs();
   showShortcutFeedback("Ouvrir raccourcis (F3)");
