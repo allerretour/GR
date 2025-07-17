@@ -15,23 +15,49 @@ const icons = Quill.import('ui/icons');
 icons['hr'] = '<span style="display:inline-block;width:100%;border-top:1px solid #888;margin-top:2px;"></span>';
 
 
+function updateAuthStatusIcon() {
+  const icon = document.querySelector("#authStatusIcon i");
+  const container = document.getElementById("authStatusIcon");
+  if (!icon || !container) return;
+
+  if (!GLOBAL_PASSWORD) {
+    icon.className = "fas fa-unlock";
+    container.title = "🔓 Accès libre (non sécurisé)";
+  } else if (sessionStorage.getItem("authenticated") === "true") {
+    icon.className = "fas fa-lock-open";
+    container.title = "🔓 Authentifié (sécurisé)";
+  } else {
+    icon.className = "fas fa-lock";
+    container.title = "🔒 Protégé par mot de passe (non authentifié)";
+  }
+}
+
+
+
+
 function ensureAuthenticated() {
-  if (!GLOBAL_PASSWORD) return true;
+  if (!GLOBAL_PASSWORD) {
+    updateAuthStatusIcon();
+    return true;
+  }
 
   const ok = sessionStorage.getItem("authenticated") === "true";
-  if (ok) return true;
+  if (ok) {
+    updateAuthStatusIcon();
+    return true;
+  }
 
   const input = prompt("🔒 Entrez le mot de passe pour accéder à cette fonction :");
   if (input === GLOBAL_PASSWORD) {
     sessionStorage.setItem("authenticated", "true");
+    updateAuthStatusIcon();
     return true;
   } else {
     showToast("❌ Mot de passe incorrect.");
-    
+    updateAuthStatusIcon();
     return false;
   }
 }
-
 
 
 
@@ -85,10 +111,12 @@ function placeCaretAtEnd(el) {
 
 
 window.addEventListener("DOMContentLoaded", () => {
+  GLOBAL_PASSWORD = localStorage.getItem("globalPassword") || "";
+  updateAuthStatusIcon();
+
   const saved = localStorage.getItem("appTitleColor");
   if (saved) document.getElementById("appTitle").style.color = saved;
 });
-
 
 
 
@@ -2175,6 +2203,7 @@ if (importedData.password !== undefined) {
   if (GLOBAL_PASSWORD) {
     sessionStorage.removeItem("authenticated"); // Require login next time
   }
+updateAuthStatusIcon(); // 🔐 Refresh the icon based on new password/auth state
 }
 
 
