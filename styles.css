@@ -10,11 +10,11 @@ body {
   position: fixed;
   top: 6px;
   left: 8px;
-  font-size: 20px;
+  font-size: clamp(12px, 4vw, 32px);
   color: rgba(128, 128, 128, 0.7); /* medium gray, 70% opacity */
   z-index: 9999;
-  pointer-events: auto; /* allow hover for tooltip */
-  cursor: default;
+  pointer-events: auto;  /* ✅ allow hover and click */
+  cursor: pointer;        /* show clickable cursor */
 }
 
 

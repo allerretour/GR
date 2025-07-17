@@ -32,6 +32,30 @@ function updateAuthStatusIcon() {
   }
 }
 
+document.getElementById("authStatusIcon").addEventListener("click", () => {
+  if (!GLOBAL_PASSWORD) return; // No password, nothing to do
+
+  const isAuthenticated = sessionStorage.getItem("authenticated") === "true";
+
+  if (isAuthenticated) {
+    // 🔒 Authenticated → clicking will lock
+    if (confirm("🔒 Voulez-vous verrouiller l'accès ?")) {
+      sessionStorage.removeItem("authenticated");
+      showToast("🔒 Accès verrouillé.");
+      updateAuthStatusIcon();
+    }
+  } else {
+    // 🔓 Not authenticated → ask for password
+    const input = prompt("🔐 Entrez le mot de passe pour déverrouiller :");
+    if (input === GLOBAL_PASSWORD) {
+      sessionStorage.setItem("authenticated", "true");
+      showToast("🔓 Accès déverrouillé.");
+      updateAuthStatusIcon();
+    } else if (input !== null) {
+      showToast("❌ Mot de passe incorrect.");
+    }
+  }
+});
 
 
 
