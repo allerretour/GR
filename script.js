@@ -220,6 +220,14 @@ function applyGradientBackground(colorInput) {
   document.body.style.backgroundAttachment = "fixed";
   document.body.style.backgroundSize = "cover";
   document.body.style.height = "100vh";
+
+// Apply lightRGB color to #authStatusIcon text/icon color
+  const authIcon = document.getElementById("authStatusIcon");
+  if (authIcon) {
+    authIcon.style.color = lightRGB.replace('rgb(', 'rgba(').replace(')', ', 0.5)');
+
+  }
+
 }
 
 function parseAnyColorToRGB(colorStr) {

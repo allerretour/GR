@@ -10,7 +10,7 @@ body {
   position: fixed;
   top: 6px;
   left: 8px;
-  font-size: 18px;
+  font-size: 20px;
   color: rgba(128, 128, 128, 0.7); /* medium gray, 70% opacity */
   z-index: 9999;
   pointer-events: auto; /* allow hover for tooltip */
