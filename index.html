@@ -91,34 +91,42 @@
 
 
       <!-- Search Bar (initially visible) -->
-      <div
-        id="searchContainer"
-        style="display: none; position: relative; margin-top: 5px; justify-content: center;"
-      >
-        <div style="position: relative; width: 100%; max-width: 300px;">
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="🔍 Rechercher un raccourci..."
-            oninput="handleSearchInput()"
-            style="width: 100%; padding: 6px 28px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;"
-          />
-          <i
-            id="clearSearchBtn"
-            class="fas fa-times-circle"
-            onclick="clearSearch()"
-            title="Effacer la recherche"
-            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2; pointer-events: auto;"
-          ></i>
-        </div>
-      </div>
+<div
+  id="searchContainer"
+  style="display: none; position: relative; margin-top: 5px; justify-content: center;"
+>
+  <div style="position: relative; width: 100%; max-width: 300px;">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="🔍 Rechercher un raccourci..."
+      oninput="handleSearchInput()"
+      style="width: 100%; padding: 6px 48px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;"
+    />
+    <i
+      id="clearSearchBtn"
+      class="fas fa-times-circle"
+      onclick="clearSearch()"
+      title="Effacer la recherche"
+      style="position: absolute; right: 28px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2;"
+    ></i>
+    <i
+      id="voiceSearchBtn"
+      class="fas fa-microphone"
+      title="Rechercher par la voix"
+      onclick="startVoiceSearch()"
+      style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #666; cursor: pointer; z-index: 2;"
+    ></i>
+  </div>
+</div>
+
+
+
+
+
       <div id="shortcuts" class="shortcut-grid"></div>
 
-  
-
-
-   
-
+ 
 
 
 <div style="text-align: left; display: flex; gap: 10px;margin-top: 15px;">

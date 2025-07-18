@@ -84,6 +84,45 @@ function ensureAuthenticated() {
 }
 
 
+function startVoiceSearch() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("❌ La reconnaissance vocale n'est pas supportée dans ce navigateur.");
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = "fr-FR";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const mic = document.getElementById("voiceSearchBtn");
+
+  recognition.onstart = () => {
+    mic.style.color = "#d9534f"; // red mic while listening
+    mic.title = "🎤 Écoute...";
+  };
+
+  recognition.onresult = event => {
+  const transcript = event.results[0][0].transcript.trim().replace(/[.?!]$/, "");
+  const input = document.getElementById("searchInput");
+  input.value = transcript;
+  handleSearchInput();
+};
+
+
+  recognition.onerror = event => {
+    alert("Erreur de reconnaissance vocale : " + event.error);
+  };
+
+  recognition.onend = () => {
+    mic.style.color = "#666"; // reset to default gray
+    mic.title = "Rechercher par la voix";
+  };
+
+  recognition.start();
+}
+
+
 
 function isIOSDevice() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
