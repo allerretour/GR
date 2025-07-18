@@ -55,7 +55,7 @@ function mergeShortcuts(event) {
             displayShortcuts();
 
             // ✅ Show confirmation toast
-            showToast(`✅ ${addedCount} raccourci${addedCount > 1 ? 's' : ''} ajouté${addedCount > 1 ? 's' : ''} à la liste`);
+            showToast(`${addedCount} raccourci${addedCount > 1 ? 's' : ''} ajouté${addedCount > 1 ? 's' : ''} à la liste ✅ `);
 
         } catch (err) {
             alert("Erreur lors de la fusion : " + err.message);

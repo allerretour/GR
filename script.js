@@ -41,7 +41,7 @@ document.getElementById("authStatusIcon").addEventListener("click", () => {
     // 🔒 Authenticated → clicking will lock
     if (confirm("🔒 Voulez-vous verrouiller l'accès ?")) {
       sessionStorage.removeItem("authenticated");
-      showToast("🔒 Accès verrouillé.", "info");
+      showToast("Accès verrouillé.🔒", "info");
       updateAuthStatusIcon();
     }
   } else {
@@ -49,10 +49,10 @@ document.getElementById("authStatusIcon").addEventListener("click", () => {
     const input = prompt("🔐 Entrez le mot de passe pour déverrouiller :");
     if (input === GLOBAL_PASSWORD) {
       sessionStorage.setItem("authenticated", "true");
-      showToast("🔓 Accès déverrouillé.", "success");
+      showToast("Accès déverrouillé.🔓", "success");
       updateAuthStatusIcon();
     } else if (input !== null) {
-      showToast("❌ Mot de passe incorrect.", "error");
+      showToast("Mot de passe incorrect.", "error");
     }
   }
 });
@@ -77,7 +77,7 @@ function ensureAuthenticated() {
     updateAuthStatusIcon();
     return true;
   } else {
-    showToast("❌ Mot de passe incorrect.", "error");
+    showToast("Mot de passe incorrect.", "error");
     updateAuthStatusIcon();
     return false;
   }
@@ -565,7 +565,7 @@ function resetLogos() {
   if (rightImg) rightImg.style.display = "none";
 
   setExportNeeded(true); // Mark state as changed
-  showToast("🧹 Logos supprimés", "success");
+  showToast("Logos supprimés🧹", "success");
 }
 
 
@@ -575,7 +575,7 @@ function saveTitle() {
     if (newTitle) {
         localStorage.setItem("appTitle", newTitle); // Save to localStorage
         setExportNeeded(true);
-        showToast("✅ Titre modifié !", "success");
+        showToast("Titre modifié !", "success");
     }
 }
 let isExportNeeded = false;
@@ -740,16 +740,19 @@ function toggleEditMode() {
 function showToast(message, type = "default", duration = 3000) {
   const container = document.getElementById("toastContainer");
 
-  // Fallback for old browsers or missing container
   if (!container) {
     alert(message);
     return;
   }
 
-  const toast = document.createElement("div");
-  toast.textContent = message;
+  // Icon map per type
+  const icons = {
+    success: "✔️",
+    error: "❗",
+    info: "ℹ️",
+    default: "🔔"
+  };
 
-  // Style mapping by type
   const bgColors = {
     success: "#28a745",
     error: "#dc3545",
@@ -757,8 +760,11 @@ function showToast(message, type = "default", duration = 3000) {
     default: "rgba(0, 0, 0, 0.8)"
   };
 
+  const icon = icons[type] || icons.default;
   const bgColor = bgColors[type] || bgColors.default;
 
+  const toast = document.createElement("div");
+  toast.innerHTML = `<span style="margin-right: 8px;">${icon}</span>${message}`;
   toast.style.cssText = `
     background: ${bgColor};
     color: white;
@@ -767,6 +773,8 @@ function showToast(message, type = "default", duration = 3000) {
     border-radius: 6px;
     font-size: 20px;
     max-width: 80vw;
+    display: flex;
+    align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     animation: fadeInOut ${duration + 1000}ms forwards;
     opacity: 0;
@@ -775,12 +783,11 @@ function showToast(message, type = "default", duration = 3000) {
 
   container.appendChild(toast);
 
-  // Fade in
+  // Force reflow to trigger transition
   requestAnimationFrame(() => {
     toast.style.opacity = 1;
   });
 
-  // Auto-remove
   setTimeout(() => {
     toast.style.opacity = 0;
     toast.addEventListener("transitionend", () => toast.remove());
@@ -797,7 +804,7 @@ function displayShortcuts() {
     if (showOnlyFavorites && !shortcuts.some(s => s.favorite)) {
     showOnlyFavorites = false;
     localStorage.setItem("showOnlyFavorites", false);
-    showToast("🚫 Aucun favori — retour à Tous");
+    showToast("Aucun favori — retour à Tous");
     }
 
     const container = document.getElementById("shortcuts");
@@ -1508,7 +1515,7 @@ function clearShortcuts() {
     displayShortcuts();
 
     // ✅ Optional feedback
-    showToast("🔄 Liste réinitialisée");
+    showToast("Liste réinitialisée 🔄");
   }
 }
 
