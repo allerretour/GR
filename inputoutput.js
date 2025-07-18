@@ -83,7 +83,7 @@ function exportVisibleShortcuts(format) {
 
   const count = visibleShortcuts.length;
   if (count === 0) {
-    showToast("Aucun raccourci à exporter.");
+    showToast("Aucun raccourci à exporter.", "info");
     return;
   }
 
@@ -137,7 +137,7 @@ function exportVisibleShortcuts(format) {
   }
 
   hideOptionsAndScrollTop();
-  showToast("Exportation réussie !");
+  showToast("Exportation réussie !", "success");
 }
 
 function openExportFormatModal() {
@@ -201,7 +201,7 @@ function exportShortcuts() {
     // 🔐 Ask user for a password
     let password = prompt("Entrez un mot de passe pour l'export (laisser vide pour aucun mot de passe) :");
     if (password === null) {
-        showToast("Export annulé.");
+        showToast("Export annulé.", "error");
         return;
     }
 
@@ -248,7 +248,7 @@ function exportShortcuts() {
     setExportNeeded(false);
     updateLastExportDisplay();
     hideOptionsAndScrollTop();
-    showToast("Exportation réussie !");
+    showToast("Exportation réussie !", "success");
 }
 
 
@@ -398,7 +398,7 @@ displayTagFilters(); // ✅ Ensures "⭐ Tous" is correct if favorites mode is a
 event.target.value = "";
 
 // ✅ Affiche une confirmation
-showToast("Importation réussie !");
+showToast("Importation réussie !", "success");
 
 
 

@@ -41,7 +41,7 @@ document.getElementById("authStatusIcon").addEventListener("click", () => {
     // 🔒 Authenticated → clicking will lock
     if (confirm("🔒 Voulez-vous verrouiller l'accès ?")) {
       sessionStorage.removeItem("authenticated");
-      showToast("🔒 Accès verrouillé.");
+      showToast("🔒 Accès verrouillé.", "info");
       updateAuthStatusIcon();
     }
   } else {
@@ -49,10 +49,10 @@ document.getElementById("authStatusIcon").addEventListener("click", () => {
     const input = prompt("🔐 Entrez le mot de passe pour déverrouiller :");
     if (input === GLOBAL_PASSWORD) {
       sessionStorage.setItem("authenticated", "true");
-      showToast("🔓 Accès déverrouillé.");
+      showToast("🔓 Accès déverrouillé.", "success");
       updateAuthStatusIcon();
     } else if (input !== null) {
-      showToast("❌ Mot de passe incorrect.");
+      showToast("❌ Mot de passe incorrect.", "error");
     }
   }
 });
@@ -77,7 +77,7 @@ function ensureAuthenticated() {
     updateAuthStatusIcon();
     return true;
   } else {
-    showToast("❌ Mot de passe incorrect.");
+    showToast("❌ Mot de passe incorrect.", "error");
     updateAuthStatusIcon();
     return false;
   }
@@ -565,7 +565,7 @@ function resetLogos() {
   if (rightImg) rightImg.style.display = "none";
 
   setExportNeeded(true); // Mark state as changed
-  showToast("🧹 Logos supprimés");
+  showToast("🧹 Logos supprimés", "success");
 }
 
 
@@ -575,7 +575,7 @@ function saveTitle() {
     if (newTitle) {
         localStorage.setItem("appTitle", newTitle); // Save to localStorage
         setExportNeeded(true);
-        showToast("✅ Titre modifié !");
+        showToast("✅ Titre modifié !", "success");
     }
 }
 let isExportNeeded = false;
@@ -737,19 +737,55 @@ function toggleEditMode() {
     displayShortcuts();
 }
 
+function showToast(message, type = "default", duration = 3000) {
+  const container = document.getElementById("toastContainer");
 
+  // Fallback for old browsers or missing container
+  if (!container) {
+    alert(message);
+    return;
+  }
 
+  const toast = document.createElement("div");
+  toast.textContent = message;
 
+  // Style mapping by type
+  const bgColors = {
+    success: "#28a745",
+    error: "#dc3545",
+    info: "#17a2b8",
+    default: "rgba(0, 0, 0, 0.8)"
+  };
 
-function showToast(message) {
-    const toast = document.getElementById("copyToast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 1500);
+  const bgColor = bgColors[type] || bgColors.default;
+
+  toast.style.cssText = `
+    background: ${bgColor};
+    color: white;
+    padding: 10px 16px;
+    margin-top: 8px;
+    border-radius: 6px;
+    font-size: 20px;
+    max-width: 80vw;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: fadeInOut ${duration + 1000}ms forwards;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+
+  container.appendChild(toast);
+
+  // Fade in
+  requestAnimationFrame(() => {
+    toast.style.opacity = 1;
+  });
+
+  // Auto-remove
+  setTimeout(() => {
+    toast.style.opacity = 0;
+    toast.addEventListener("transitionend", () => toast.remove());
+  }, duration);
 }
-
 
 function getTooltipText(text) {
     return text && text.trim() !== "" ? text.trim() : "Aucune info disponible.";
@@ -902,7 +938,7 @@ if (list.length === 0) {
                             shortcutElement.style.backgroundColor = originalBg || "";
                         }, 800);
                         if (navigator.vibrate) navigator.vibrate(50);
-                        showToast("Lien copié!");
+                        showToast("Lien copié!", "success");
                     });
                 }, 1000); // hold for 1s to trigger copy
             }
@@ -1186,7 +1222,7 @@ function showTooltipModal(text, isHtml = false, shortcutName = "") {
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(url).then(() => {
                 copyBtn.textContent = "✅";
-                showToast("Lien copié !");
+                showToast("Lien copié !", "success");
                 setTimeout(() => {
                     copyBtn.textContent = "📋";
                 }, 1500);
@@ -1341,7 +1377,7 @@ function handleLogoUpload(event, side) {
     if (img) {
       img.src = base64;
       img.style.display = "block";
-      showToast(toastMessage);
+      showToast(toastMessage, "success");
     }
 
     hideOptionsAndScrollTop();

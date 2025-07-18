@@ -195,11 +195,11 @@ function applyHexColor() {
   if (hexTarget === "title") {
     document.getElementById("appTitle").style.color = color;
     localStorage.setItem("appTitleColor", color);
-    showToast("Couleur du titre modifiée !");
+    showToast("Couleur du titre modifiée !", "success");
   } else if (hexTarget === "background") {
     applyGradientBackground(color); // ✅ handles both hex and named colors
     localStorage.setItem("appBackgroundColor", color);
-    showToast("Couleur du fond modifiée !");
+    showToast("Couleur du fond modifiée !", "success");
   }
 
   closeHexColorModal();
