@@ -137,7 +137,7 @@ if (hasFavorites) {
     showOnlyFavorites = true;
     localStorage.setItem("showOnlyFavorites", true);
     displayShortcuts();
-    showToast("⭐ Mode favoris uniquement");
+    showToast("Mode favoris uniquement ⭐");
   };
 
   tagContainer.appendChild(favBtn);
@@ -157,14 +157,10 @@ clearBtn.onclick = () => {
   showOnlyFavorites = false;
   localStorage.setItem("showOnlyFavorites", false); // ✅ Save
   displayShortcuts();
-  showToast("📁 Tous les raccourcis");
+  showToast("Tous les raccourcis 📁");
 };
 
 tagContainer.appendChild(clearBtn);
-
-
-
-
 
 
 
@@ -237,7 +233,7 @@ tagContainer.appendChild(clearBtn);
       localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ Save it
       activeTagFilter = [tag];
       displayShortcuts();
-      showToast(`🔎 Filtré uniquement par "${tag}"`);
+      showToast(`Filtré uniquement par "${tag}"🔎`);
     };
 
     tagContainer.appendChild(btn);
