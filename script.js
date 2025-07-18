@@ -21,7 +21,7 @@ function updateAuthStatusIcon() {
   if (!icon || !container) return;
 
   if (!GLOBAL_PASSWORD) {
-    icon.className = "fas fa-unlock";
+    icon.className = "fas fa-expand";
     container.title = "🔓 Accès libre (non sécurisé)";
   } else if (sessionStorage.getItem("authenticated") === "true") {
     icon.className = "fas fa-lock-open";
@@ -132,8 +132,6 @@ function placeCaretAtEnd(el) {
 }
 
 
-
-
 window.addEventListener("DOMContentLoaded", () => {
   GLOBAL_PASSWORD = localStorage.getItem("globalPassword") || "";
   updateAuthStatusIcon();
@@ -141,216 +139,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("appTitleColor");
   if (saved) document.getElementById("appTitle").style.color = saved;
 });
-
-
-
-function populateColorSuggestions() {
-  const container = document.getElementById("colorSuggestions");
-  container.innerHTML = "";
-
-  colorNames.forEach(name => {
-    const btn = document.createElement("button");
-    btn.textContent = " ";
-    btn.title = name;
-    btn.style.background = name;
-    btn.style.width = "100%";
-    btn.style.aspectRatio = "1";
-    btn.style.border = "1px solid #ccc";
-    btn.style.borderRadius = "4px";
-    btn.style.cursor = "pointer";
-
-    btn.onclick = () => {
-      document.getElementById("hexColorInput").value = name;
-      applyHexColor(); // auto apply
-    };
-
-    container.appendChild(btn);
-  });
-}
-
-
-
-// Convert rgb to hex
-function rgbToHex(rgb) {
-  const parts = rgb.match(/\d+/g);
-  if (!parts) return "#000000";
-  return "#" + parts.map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
-}
-
-// When user selects a color
-document.getElementById("appTitleColorPicker").addEventListener("input", function () {
-  const selectedColor = this.value;
-  const titleEl = document.getElementById("appTitle");
-  if (titleEl) {
-    titleEl.style.color = selectedColor;
-    localStorage.setItem("appTitleColor", selectedColor);
-  }
-});
-
-// Manual hex input for title color
-document.getElementById("appTitleColorHex").addEventListener("change", function () {
-  const hex = this.value.trim();
-  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-    const titleEl = document.getElementById("appTitle");
-    titleEl.style.color = hex;
-    localStorage.setItem("appTitleColor", hex);
-  } else {
-    alert("Hex invalide. Ex: #ff8800");
-  }
-  this.style.visibility = "hidden";
-});
-
-// Manual hex input for background color
-document.getElementById("backgroundColorHex").addEventListener("change", function () {
-  const hex = this.value.trim();
-  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-    applyGradientBackground(hex);
-    localStorage.setItem("appBackgroundColor", hex);
-  } else {
-    alert("Hex invalide. Ex: #f0f0f0");
-  }
-  this.style.visibility = "hidden";
-});
-
-
-function openBackgroundColorPicker() {
-  const savedColor = localStorage.getItem("appBackgroundColor") || "#ffffff";
-  openHexColorModal("background", savedColor);
-}
-
-
-document.getElementById("backgroundColorPicker").addEventListener("input", (e) => {
-  const hex = e.target.value;
-  localStorage.setItem("appBackgroundColor", hex);
-  applyGradientBackground(hex);
-});
-
-
-
-function applyGradientBackground(colorInput) {
-  const rgb = parseAnyColorToRGB(colorInput);
-  if (!rgb) return;
-
-  const lighten = (v, amt) => Math.min(255, Math.round(v + amt));
-  const darken = (v, amt) => Math.max(0, Math.round(v - amt));
-
-  const lightRGB = `rgb(${lighten(rgb.r, 60)}, ${lighten(rgb.g, 60)}, ${lighten(rgb.b, 60)})`;
-  const darkRGB = `rgb(${darken(rgb.r, 40)}, ${darken(rgb.g, 40)}, ${darken(rgb.b, 40)})`;
-
-  const baseRGB = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-
-  document.body.style.background = `linear-gradient(to bottom, ${darkRGB}, ${baseRGB}, ${lightRGB})`;
-  document.body.style.backgroundRepeat = "no-repeat";
-  document.body.style.backgroundAttachment = "fixed";
-  document.body.style.backgroundSize = "cover";
-  document.body.style.height = "100vh";
-
-// Apply lightRGB color to #authStatusIcon text/icon color
-  const authIcon = document.getElementById("authStatusIcon");
-  if (authIcon) {
-    authIcon.style.color = lightRGB.replace('rgb(', 'rgba(').replace(')', ', 0.5)');
-
-  }
-
-}
-
-function parseAnyColorToRGB(colorStr) {
-  const temp = document.createElement("div");
-  temp.style.color = colorStr;
-  document.body.appendChild(temp);
-
-  const computed = getComputedStyle(temp).color;
-  document.body.removeChild(temp);
-
-  const rgbMatch = computed.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-  if (!rgbMatch) return null;
-
-  return {
-    r: parseInt(rgbMatch[1]),
-    g: parseInt(rgbMatch[2]),
-    b: parseInt(rgbMatch[3])
-  };
-}
-
-
-
-function hexToRgb(hex) {
-  const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-  if (!match) return null;
-  return {
-    r: parseInt(match[1], 16),
-    g: parseInt(match[2], 16),
-    b: parseInt(match[3], 16)
-  };
-}
-
-
-
-function openAppTitleColorPicker() {
-  const savedColor = localStorage.getItem("appTitleColor") || "#000000"; // fallback black
-  openHexColorModal("title", savedColor);
-}
-
-
-
-function openHexColorModal(target, currentColor = "") {
-  hexTarget = target;
-
-  const modal = document.getElementById("hexColorModal");
-  const input = document.getElementById("hexColorInput");
-  const title = document.getElementById("hexColorModalTitle");
-
-  input.value = currentColor;
-
-  // ✅ Update title
-  if (target === "title") {
-    title.textContent = "🎨 Couleur TITRE";
-  } else if (target === "background") {
-    title.textContent = "🎨 Couleur FOND";
-  } else {
-    title.textContent = "🎨 Couleur";
-  }
-
-  populateColorSuggestions();
-  modal.style.display = "flex";
-  setTimeout(() => input.focus(), 50);
-}
-
-
-function closeHexColorModal() {
-  document.getElementById("hexColorModal").style.display = "none";
-  hexTarget = null;
-}
-
-function applyHexColor() {
-  const input = document.getElementById("hexColorInput");
-  const color = input.value.trim();
-
-  // Validate CSS color (accepts hex or named colors)
-  const testEl = document.createElement("div");
-  testEl.style.color = "";
-  testEl.style.color = color;
-
-  if (testEl.style.color === "") {
-    alert("Couleur invalide. Essayez un nom de couleur ou un code hex (#ff8800).");
-    return;
-  }
-
-  if (hexTarget === "title") {
-    document.getElementById("appTitle").style.color = color;
-    localStorage.setItem("appTitleColor", color);
-    showToast("Couleur du titre modifiée !");
-  } else if (hexTarget === "background") {
-    applyGradientBackground(color); // ✅ handles both hex and named colors
-    localStorage.setItem("appBackgroundColor", color);
-    showToast("Couleur du fond modifiée !");
-  }
-
-  closeHexColorModal();
-}
-
-
-
 
 
 function promptEmojiChange(index) {
@@ -631,7 +419,6 @@ function promptEmojiChange(index) {
 }
 
 
-
 function saveRecentEmoji(emoji) {
   let recent = JSON.parse(localStorage.getItem("recentEmojis") || "[]");
   // Supprimer doublons + remettre en haut
@@ -654,72 +441,6 @@ async function pasteFromClipboard(targetId) {
     alert("⚠️ Autorisation refusée. Utilisez Ctrl+V pour coller manuellement.");
     console.warn("Clipboard paste failed:", err);
   }
-}
-
-
-function mergeShortcuts(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!confirm("Souhaitez-vous fusionner cette liste avec la liste actuelle ?")) {
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedData = JSON.parse(e.target.result);
-
-            if (!Array.isArray(importedData.shortcuts)) {
-                alert("Le fichier ne contient pas de raccourcis valides.");
-                return;
-            }
-
-            const existingKeys = new Set(shortcuts.map(s => `${s.name}|||${s.url}`));
-            let addedCount = 0;
-
-            importedData.shortcuts.forEach(s => {
-                const key = `${s.name}|||${s.url}`;
-                if (!existingKeys.has(key)) {
-                    shortcuts.push(s);
-                    existingKeys.add(key);
-                    addedCount++;
-                }
-            });
-
-            // Merge tagOrder
-            if (Array.isArray(importedData.tagOrder)) {
-                tagOrder = Array.from(new Set([...tagOrder, ...importedData.tagOrder]));
-            }
-
-            
-
-            if (importedData.uiToggleState) {
-                uiToggleState = {
-                    ...uiToggleState,
-                    ...importedData.uiToggleState
-                };
-                saveUIState();
-            }
-
-            if (importedData.appTitle) {
-                document.getElementById("appTitle").textContent = importedData.appTitle;
-                localStorage.setItem("appTitle", importedData.appTitle);
-            }
-
-            setExportNeeded(true);
-            saveShortcuts();
-            displayShortcuts();
-
-            // ✅ Show confirmation toast
-            showToast(`✅ ${addedCount} raccourci${addedCount > 1 ? 's' : ''} ajouté${addedCount > 1 ? 's' : ''} à la liste`);
-
-        } catch (err) {
-            alert("Erreur lors de la fusion : " + err.message);
-        }
-    };
-
-    reader.readAsText(file);
 }
 
 
@@ -759,29 +480,6 @@ function openVisibleShortcutsInTabs() {
   }
 
   slice.forEach(url => window.open(url, "_blank"));
-}
-
-
-
-
-function toggleTags() {
-    const tagContainer = document.getElementById("tagFilters");
-    tagContainer.classList.toggle("hidden");
-    const el = document.getElementById("tagFilters");
-    uiToggleState.tagFilters = !uiToggleState.tagFilters;
-    el.classList.toggle("hidden", !uiToggleState.tagFilters);
-    saveUIState();
-hideOptionsAndScrollTop()
-}
-
-function saveActiveTagFilter() {
-    const current = localStorage.getItem("activeTagFilter");
-    const serialized = JSON.stringify(activeTagFilter);
-
-    if (current !== serialized) {
-        localStorage.setItem("activeTagFilter", serialized);
-        setExportNeeded(true);
-    }
 }
 
 
@@ -829,36 +527,14 @@ function ensureDefaultShortcut() {
   const isFreshInstall = !Array.isArray(shortcuts) || shortcuts.length === 0;
 
   if (isFreshInstall) {
-    // 🟢 Insert default shortcuts
-    shortcuts.push(
-      {
-        name: "Exemple",
-        url: "https://google.com",
-        info: "Clic de DROIT pour plus d'infos",
-        emoji: DEFAULT_EMOJI(),
-        favorite: false,
-        tags: ["instruction"],
-        tooltip: `<p>vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +<br><br>pour charger une liste existante, utilisez le bouton avec la flèche vers le bas</p>`,
-        tooltipPlain: "vous pouvez ajouter des raccourcis en appuyant sur l'engrenage puis le bouton +\n\npour charger une liste existante, utilisez le bouton avec la flèche vers le bas"
-      },
-      {
-        name: "Site de test",
-        url: "https://example.com",
-        info: "Second raccourci de démonstration",
-        emoji: DEFAULT_EMOJI(),
-        favorite: false,
-        tags: ["démo"],
-        tooltip: `<p>Ceci est un deuxième raccourci pour tester le fonctionnement de l'application.</p>`,
-        tooltipPlain: "Ceci est un deuxième raccourci pour tester le fonctionnement de l'application."
-      }
-    );
-
+    // Insert defaults
+    shortcuts.push(...DEFAULT_SHORTCUTS);
     saveShortcuts();
+
     manualOrder = [...shortcuts];
     localStorage.setItem("manualOrder", JSON.stringify(manualOrder));
 
-    // 🟢 Set default UI states
-    uiToggleState = { searchBar: true, tagFilters: true };
+    uiToggleState = { ...DEFAULT_UI_TOGGLE_STATE };
     saveUIState();
 
     compactMode = false;
@@ -867,21 +543,15 @@ function ensureDefaultShortcut() {
     activeTagFilter = [];
     saveActiveTagFilter();
 
-    // ✅ Set and apply default colors only on first-time setup
-    const defaultTitleColor = "#000000";
-    const defaultBgColor = "#f9f9f9";
-
-    localStorage.setItem("appTitleColor", defaultTitleColor);
-    localStorage.setItem("appBackgroundColor", defaultBgColor);
+    localStorage.setItem("appTitleColor", DEFAULT_TITLE_COLOR);
+    localStorage.setItem("appBackgroundColor", DEFAULT_BG_COLOR);
 
     const titleEl = document.getElementById("appTitle");
     if (titleEl) {
-      titleEl.style.color = defaultTitleColor;
+      titleEl.style.color = DEFAULT_TITLE_COLOR;
     }
 
-    applyGradientBackground(defaultBgColor); // ✅ Use gradient here
-  } else {
-    // 🟡 Not fresh install → do not change colors
+    applyGradientBackground(DEFAULT_BG_COLOR);
   }
 }
 
@@ -952,192 +622,6 @@ function toggleSearchBar() {
 }
 
 
-let selectedTags = [];
-
-function getAllExistingTags() {
-    const tagSet = new Set();
-    shortcuts.forEach(sc => (sc.tags || []).forEach(t => tagSet.add(t)));
-    return Array.from(tagSet).sort();
-}
-
-function populateTagSuggestions() {
-    const datalist = document.getElementById("tagSuggestions");
-    datalist.innerHTML = "";
-    getAllExistingTags().forEach(tag => {
-        const option = document.createElement("option");
-        option.value = tag;
-        datalist.appendChild(option);
-    });
-}
-
-function handleTagInput(event) {
-    if (event.key === "Enter" || event.key === "," || event.key === "Tab") {
-        event.preventDefault();
-        const input = event.target;
-        let tag = input.value.trim().replace(/,$/, "");
-        if (tag && !selectedTags.includes(tag)) {
-            selectedTags.push(tag);
-            renderSelectedTags();
-        }
-        input.value = "";
-    }
-}
-
-
-function exportVisibleShortcuts(format) {
-  closeExportFormatModal();
-
-  const visibleShortcuts = [];
-  const shortcutElements = document.querySelectorAll("#shortcuts .shortcut");
-  const listTitle = document.getElementById("appTitle").textContent.trim() || "Sans titre";
-
-  shortcutElements.forEach(el => {
-    const index = parseInt(el.getAttribute("data-index"));
-    const shortcut = shortcuts[index];
-    if (shortcut) {
-      visibleShortcuts.push(shortcut);
-    }
-  });
-
-  const count = visibleShortcuts.length;
-  if (count === 0) {
-    showToast("Aucun raccourci à exporter.");
-    return;
-  }
-
-  const now = new Date();
-  const timestamp = now.toLocaleString('sv-SE', {
-    hour12: false,
-    timeZone: 'America/Toronto'
-  }).replace(' ', '_').replace(/:/g, '-');
-
-  const safeTitle = listTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-  const baseFilename = `raccourcis_visible_${safeTitle}_${timestamp}`;
-
-  if (format === "txt" || format === "both") {
-    const textLines = visibleShortcuts.map(sc => {
-      const name = sc.name || "Sans nom";
-      const url = sc.url?.trim() === "?" ? "[ (i) INFORMATIONS SEULEMENT ]" : sc.url || "";
-      return `${name}\n${url}\n---`;
-    });
-
-    const header = [
-      `Liste : ${listTitle}`,
-      `Nombre de raccourcis exportés : ${count}`,
-      `===============================`,
-      " "
-    ].join("\n");
-
-    const textContent = header + "\n" + textLines.join("\n\n");
-    const textBlob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
-
-    const textLink = document.createElement("a");
-    textLink.href = URL.createObjectURL(textBlob);
-    textLink.download = `${baseFilename}.txt`;
-    document.body.appendChild(textLink);
-    textLink.click();
-    document.body.removeChild(textLink);
-  }
-
-  if (format === "lst" || format === "both") {
-    const jsonData = {
-      title: listTitle,
-      shortcuts: visibleShortcuts
-    };
-    const jsonBlob = new Blob([JSON.stringify(jsonData, null, 4)], { type: "application/octet-stream" });
-
-    const jsonLink = document.createElement("a");
-    jsonLink.href = URL.createObjectURL(jsonBlob);
-    jsonLink.download = `${baseFilename}.lst`;
-    document.body.appendChild(jsonLink);
-    jsonLink.click();
-    document.body.removeChild(jsonLink);
-  }
-
-  hideOptionsAndScrollTop();
-  showToast("Exportation réussie !");
-}
-
-function openExportFormatModal() {
-  const shortcutsEls = [...document.querySelectorAll("#shortcuts .shortcut")];
-  let total = 0;
-  let infoOnly = 0;
-
-  shortcutsEls.forEach(el => {
-    const index = parseInt(el.getAttribute("data-index"));
-    const shortcut = shortcuts[index];
-    if (shortcut) {
-      total++;
-      if (shortcut.url.trim() === "?") {
-        infoOnly++;
-      }
-    }
-  });
-
-  let label = "";
-
-  if (total === 0) {
-    label = "Aucun raccourci à exporter.";
-  } else {
-    label = `${total} raccourci${total > 1 ? "s" : ""} seront exporté${total > 1 ? "s" : ""}`;
-    if (infoOnly > 0) {
-      label += `, dont ${infoOnly} "informations seulement"`;
-    }
-    label += ".";
-  }
-
-  document.getElementById("exportCount").textContent = label;
-  document.getElementById("exportFormatModal").classList.add("show");
-}
-
-
-
-
-function closeExportFormatModal() {
-  document.getElementById("exportFormatModal").classList.remove("show");
-}
-
-
-
-
-function renderSelectedTags() {
-    const container = document.getElementById("editTagsContainer");
-    container.innerHTML = "";
-    selectedTags.forEach((tag, index) => {
-        const span = document.createElement("span");
-        span.className = "tag";
-        span.style = `
-      background: #444;
-      color: white;
-      padding: 3px 8px;
-      border-radius: 12px;
-      margin: 2px;
-      cursor: default;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    `;
-        const tagText = document.createElement("span");
-        tagText.textContent = tag;
-        const closeBtn = document.createElement("span");
-        closeBtn.textContent = "×";
-        closeBtn.style = `
-      margin-left: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    `;
-        closeBtn.title = "Retirer ce tag";
-        closeBtn.onclick = () => {
-            selectedTags.splice(index, 1);
-            renderSelectedTags();
-        };
-        span.appendChild(tagText);
-        span.appendChild(closeBtn);
-        container.appendChild(span);
-    });
-    // Keep hidden input in sync
-    document.getElementById("editTags").value = selectedTags.join(",");
-}
 
 function toggleButtonGroup() {
     
@@ -1254,31 +738,7 @@ function toggleEditMode() {
     displayShortcuts();
 }
 
-function getTagColor(tag) {
-    const colors = [
-    "#d32f2f", // vivid red
-    "#1976d2", // bold blue
-    "#388e3c", // rich green
-    "#fbc02d", // vibrant yellow (on black text)
-    "#7b1fa2", // deep purple
-    "#f57c00", // bright orange
-    "#00796b", // teal green
-    "#c2185b", // raspberry
-    "#512da8", // indigo
-    "#0288d1", // sky blue
-    "#c62828", // crimson
-    "#2e7d32", // forest green
-    "#ff5722", // neon orange
-    "#5d4037", // chocolate
-    "#0097a7", // deep cyan
-    "#303f9f"  // dark indigo
-];
-    let hash = 0;
-    for (let i = 0; i < tag.length; i++) {
-        hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return colors[Math.abs(hash) % colors.length];
-}
+
 
 
 
@@ -1383,7 +843,7 @@ if (list.length === 0) {
         const isFileUrl = trimmedUrl.toLowerCase().startsWith("file://");
         
         const nameColor = isInfoOnly ? "#0079fa" : "inherit";
-        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-lightbulb" style=" margin-right: 2px;color: FFD43B;"></i>' : "";
+        const namePrefix = isInfoOnly ? '<i class="fa-solid fa-lightbulb" style=" margin-right: 2px;color: gold;"></i>' : "";
 
 
 
@@ -1680,160 +1140,6 @@ function saveTagOrder(order) {
 }
 
 
-
-function displayTagFilters() {
-  const tagContainer = document.getElementById("tagFilters");
-  tagContainer.innerHTML = "";
-
-  const tagSet = new Set();
-  shortcuts.forEach(s => (s.tags || []).forEach(t => tagSet.add(t)));
-  if (tagSet.size === 0) return;
-
-  const allTags = Array.from(tagSet);
-
-  // Maintain tag order with new/removed tags
-  tagOrder = tagOrder.filter(t => allTags.includes(t)).concat(
-    allTags.filter(t => !tagOrder.includes(t))
-  );
-
-
-// Check if any favorites exist
-const hasFavorites = shortcuts.some(s => s.favorite);
-
-if (hasFavorites) {
-  // "Favoris" button
-  const favBtn = document.createElement("span");
-  favBtn.className = "tag-filter" + (showOnlyFavorites ? " active" : "");
-  favBtn.textContent = "⭐ Favoris";
-  favBtn.title = "Afficher uniquement les raccourcis favoris";
-
-  favBtn.onclick = () => {
-    activeTagFilter = [];
-    showOnlyFavorites = true;
-    localStorage.setItem("showOnlyFavorites", true);
-    displayShortcuts();
-    showToast("⭐ Mode favoris uniquement");
-  };
-
-  tagContainer.appendChild(favBtn);
-}
-
-
-
-
-// "Tous" (All) button
-const clearBtn = document.createElement("span");
-clearBtn.className = "tag-filter" + ((activeTagFilter.length === 0 && !showOnlyFavorites) ? " active" : "");
-clearBtn.textContent = "📁 Tous";
-clearBtn.title = "Afficher tous les raccourcis";
-
-clearBtn.onclick = () => {
-  activeTagFilter = [];
-  showOnlyFavorites = false;
-  localStorage.setItem("showOnlyFavorites", false); // ✅ Save
-  displayShortcuts();
-  showToast("📁 Tous les raccourcis");
-};
-
-tagContainer.appendChild(clearBtn);
-
-
-
-
-
-
-
-  // Render each tag button
-  tagOrder.forEach(tag => {
-    const btn = document.createElement("span");
-    btn.className = "tag-filter" + (activeTagFilter.includes(tag) ? " active" : "");
-    btn.textContent = tag;
-    btn.style.display = "inline-flex";
-    btn.style.alignItems = "center";
-    btn.style.gap = "6px";
-
-    btn.title = activeTagFilter.includes(tag)
-      ? `Filtre déjà sélectionné\nCliquez 👈 pour le retirer\nCliquez 👉 pour filtre unique`
-      : `Cliquez 👈 pour filtrer par « ${tag} »\nCliquez 👉 pour filtre unique`;
-
-    const moveIcon = document.createElement("i");
-    moveIcon.className = "fas fa-arrows-alt";
-    moveIcon.style.color = "#999";
-    moveIcon.style.cursor = "grab";
-    moveIcon.style.display = editMode ? "inline-block" : "none";
-
-    // Drag-and-drop behavior
-    if (editMode) {
-      btn.draggable = true;
-      btn.ondragstart = e => {
-        e.dataTransfer.setData("text/plain", tag);
-        e.dataTransfer.effectAllowed = "move";
-      };
-      btn.ondragover = e => e.preventDefault();
-      btn.ondrop = e => {
-        e.preventDefault();
-        const fromTag = e.dataTransfer.getData("text/plain");
-        const toTag = tag;
-        const fromIndex = tagOrder.indexOf(fromTag);
-        const toIndex = tagOrder.indexOf(toTag);
-        if (fromIndex > -1 && toIndex > -1 && fromIndex !== toIndex) {
-          const reordered = [...tagOrder];
-          const [moved] = reordered.splice(fromIndex, 1);
-          reordered.splice(toIndex, 0, moved);
-          tagOrder = reordered;
-          saveTagOrder(tagOrder);
-          displayTagFilters();
-        }
-      };
-    } else {
-      btn.draggable = false;
-    }
-
-    btn.insertBefore(moveIcon, btn.firstChild);
-
-    // Left click: toggle
-    btn.onclick = (e) => {
-      if (e.button === 2) return; // skip right click
-      showOnlyFavorites = false;
-      localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ Save it too
-
-      if (activeTagFilter.includes(tag)) {
-        activeTagFilter = activeTagFilter.filter(t => t !== tag);
-      } else {
-        activeTagFilter.push(tag);
-      }
-      displayShortcuts();
-    };
-
-    // Right click: single filter
-    btn.oncontextmenu = (e) => {
-      e.preventDefault();
-      showOnlyFavorites = false;
-      localStorage.setItem("showOnlyFavorites", showOnlyFavorites); // ✅ Save it
-      activeTagFilter = [tag];
-      displayShortcuts();
-      showToast(`🔎 Filtré uniquement par "${tag}"`);
-    };
-
-    tagContainer.appendChild(btn);
-  });
-
-  // Apply AND/OR mode classes
-  const isAndMode = document.getElementById("tagFilterModeToggle").checked;
-  document.querySelectorAll(".tag-filter").forEach(el => {
-    el.classList.remove("and-mode", "or-mode");
-    el.classList.add(isAndMode ? "and-mode" : "or-mode");
-  });
-}
-
-
-function toggleFavorite(index) {
-  shortcuts[index].favorite = !shortcuts[index].favorite;
-  saveShortcuts();
-  displayShortcuts();
-}
-
-
 function deleteShortcut(index) {
     const shortcut = shortcuts[index];
     const confirmMsg = `Supprimer le raccourci "${shortcut.name}" ?`;
@@ -2017,7 +1323,6 @@ function handleLogoUpload(event, side) {
   if (!file || !file.type.startsWith("image/")) return;
 
   const MAX_SIZE = 300 * 1024; // 300 KB
-
   if (file.size > MAX_SIZE) {
     alert("❌ L’image dépasse 300 Ko. Veuillez en choisir une plus petite.");
     return;
@@ -2027,25 +1332,20 @@ function handleLogoUpload(event, side) {
   reader.onload = function (e) {
     const base64 = e.target.result;
 
-    if (side === "left") {
-      localStorage.setItem("leftLogo", base64);
-      const img = document.getElementById("leftLogo");
-      if (img) {
-        img.src = base64;
-        img.style.display = "block";
-        showToast("Logo gauche modifié !");
-      }
-    } else if (side === "right") {
-      localStorage.setItem("rightLogo", base64);
-      const img = document.getElementById("rightLogo");
-      if (img) {
-        img.src = base64;
-        img.style.display = "block";
-        showToast("Logo droit modifié !");
-      }
+    const key = side === "left" ? "leftLogo" : "rightLogo";
+    const imgId = side === "left" ? "leftLogo" : "rightLogo";
+    const toastMessage = side === "left" ? "Logo gauche modifié !" : "Logo droit modifié !";
+
+    localStorage.setItem(key, base64);
+
+    const img = document.getElementById(imgId);
+    if (img) {
+      img.src = base64;
+      img.style.display = "block";
+      showToast(toastMessage);
     }
+
     hideOptionsAndScrollTop();
-    
     setExportNeeded(true); // Mark change
   };
 
@@ -2072,235 +1372,6 @@ function loadLogos() {
 
 
 
-function saveShortcuts() {
-    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-    setExportNeeded(true);
-}
-
-function exportShortcuts() {
-    const title = document.getElementById("appTitle").textContent.trim();
-    const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-
-    const now = new Date();
-    const timestamp = now.toLocaleString('sv-SE', {
-        hour12: false,
-        timeZone: 'America/Toronto'
-    }).replace(' ', '_').replace(/:/g, '-');
-
-    const baseFilename = `GDR_${sanitizedTitle || "shortcuts"}_${timestamp}`;
-    const lstFilename = `${baseFilename}.lst`;
-
-    // 🔐 Ask user for a password
-    let password = prompt("Entrez un mot de passe pour l'export (laisser vide pour aucun mot de passe) :");
-    if (password === null) {
-        showToast("Export annulé.");
-        return;
-    }
-
-    password = password.trim();
-    if (password === "") {
-        password = null;
-    }
-
-    const data = {
-        title,
-        shortcuts,
-        tagOrder,
-        uiToggleState,
-        compactMode,
-        activeTagFilter,
-        appTitleColor: localStorage.getItem("appTitleColor") || null,
-        appBackgroundColor: localStorage.getItem("appBackgroundColor") || null,
-        showOnlyFavorites,
-        leftLogo: localStorage.getItem("leftLogo") || null,
-        rightLogo: localStorage.getItem("rightLogo") || null,
-        password  // ✅ include password (null or string)
-    };
-
-    const dataStr = JSON.stringify(data, null, 4);
-
-    const blob = new Blob([dataStr], {
-        type: "application/octet-stream"
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = lstFilename;
-
-    document.body.appendChild(a);
-    requestAnimationFrame(() => {
-        a.click();
-        setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 1000);
-    });
-
-    localStorage.setItem("lastExportFilename", lstFilename);
-    setExportNeeded(false);
-    updateLastExportDisplay();
-    hideOptionsAndScrollTop();
-    showToast("Exportation réussie !");
-}
-
-
-
-
-
-function importShortcuts(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // ✅ Only accept .lst files
-    if (!file.name.toLowerCase().endsWith(".lst")) {
-        alert("Seuls les fichiers .lst sont autorisés.");
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedData = JSON.parse(e.target.result);
-
-            // Reset defaults
-            activeTagFilter = [];
-
-            if (Array.isArray(importedData)) {
-                shortcuts = importedData;
-            } else if (importedData.shortcuts && Array.isArray(importedData.shortcuts)) {
-                shortcuts = importedData.shortcuts;
-
-                // Restore title
-                if (importedData.title) {
-                    document.getElementById("appTitle").textContent = importedData.title;
-                    localStorage.setItem("appTitle", importedData.title);
-                }
-
-                if (importedData.appBackgroundColor) {
-                   localStorage.setItem("appBackgroundColor", importedData.appBackgroundColor);
-                   applyGradientBackground(importedData.appBackgroundColor || "#f9f9f9");
-                }
-
-                if (importedData.appTitleColor) {
-                   localStorage.setItem("appTitleColor", importedData.appTitleColor);
-                   document.getElementById("appTitle").style.color = importedData.appTitleColor;
-                }
-
-
-                // Restore tag order
-                if (Array.isArray(importedData.tagOrder)) {
-                    tagOrder = importedData.tagOrder;
-                    localStorage.setItem("tagOrder", JSON.stringify(tagOrder));
-                }
-
-                // ✅ Restore selected tag filters
-                if (Array.isArray(importedData.activeTagFilter)) {
-                    activeTagFilter = importedData.activeTagFilter;
-                }
-
-                // ✅ Restore UI toggle state
-                if (importedData.uiToggleState) {
-                    uiToggleState = {
-                        ...uiToggleState,
-                        ...importedData.uiToggleState
-                    };
-                    saveUIState();
-                }
-
-
-             if (importedData.leftLogo) {
-  localStorage.setItem("leftLogo", importedData.leftLogo);
-  document.getElementById("leftLogo").src = importedData.leftLogo;
-  document.getElementById("leftLogo").style.display = "block";
-} else {
-  localStorage.removeItem("leftLogo");
-  document.getElementById("leftLogo").style.display = "none";
-}
-
-if (importedData.rightLogo) {
-  localStorage.setItem("rightLogo", importedData.rightLogo);
-  document.getElementById("rightLogo").src = importedData.rightLogo;
-  document.getElementById("rightLogo").style.display = "block";
-} else {
-  localStorage.removeItem("rightLogo");
-  document.getElementById("rightLogo").style.display = "none";
-}
-
-
-
-if (importedData.password !== undefined) {
-  GLOBAL_PASSWORD = importedData.password || "";
-  localStorage.setItem("globalPassword", GLOBAL_PASSWORD);
-
-  if (GLOBAL_PASSWORD) {
-    sessionStorage.removeItem("authenticated"); // Require login next time
-  }
-updateAuthStatusIcon(); // 🔐 Refresh the icon based on new password/auth state
-}
-
-
-
-
-                // ✅ Restore compact mode
-                if (typeof importedData.compactMode === "boolean") {
-                    compactMode = importedData.compactMode;
-                    localStorage.setItem("compactMode", compactMode);
-                }
-
-                // ✅ Restore favorite mode
-if (typeof importedData.showOnlyFavorites === "boolean") {
-    showOnlyFavorites = importedData.showOnlyFavorites;
-}
-
-
-            } else {
-                alert("Format JSON invalide.");
-                return;
-            }
-
-
-
-
-loadLogos(); // 🟢 Reload and update logos
-
-
-displayTagFilters(); // ✅ Ensures "⭐ Tous" is correct if favorites mode is active
-
-
-
-            // ✅ Clear search input
-            document.getElementById("searchInput").value = "";
-
-            // ✅ Apply UI state to DOM
-            document.getElementById("searchContainer").style.display = uiToggleState.searchBar ? "flex" : "none";
-            document.getElementById("tagFilters").classList.toggle("hidden", !uiToggleState.tagFilters);
-
-            // ✅ Save & re-render everything
-            saveShortcuts();
-            displayShortcuts();
-
-            // ✅ Reset export flag
-            setExportNeeded(false);
-            localStorage.setItem("lastExportFilename", "");
-            updateLastExportDisplay();
-
-            hideOptionsAndScrollTop(); 
-
-// ✅ Réinitialise le champ fichier pour permettre une nouvelle importation du même fichier
-event.target.value = "";
-
-// ✅ Affiche une confirmation
-showToast("Importation réussie !");
-
-
-
-        } catch {
-            alert("Erreur de lecture du fichier. Veuillez importer un fichier .lst valide.");
-        }
-    };
-
-    reader.readAsText(file);
-}
 
 
 
