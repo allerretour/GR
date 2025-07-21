@@ -172,7 +172,7 @@ format) {
     document.body.removeChild(jsonLink);
   }
   hideOptionsAndScrollTop();
-  showToast("Exportation réussie !",
+  showToast("⬆️ Exportation réussie !",
     "success");
 }
 
@@ -303,7 +303,7 @@ function exportShortcuts() {
   setExportNeeded(false);
   updateLastExportDisplay();
   hideOptionsAndScrollTop();
-  showToast("Exportation réussie !",
+  showToast("⬆️ Exportation réussie !",
     "success");
 }
 
@@ -497,11 +497,11 @@ function importShortcuts(event) {
       event.target.value = "";
       // ✅ Affiche une confirmation
       showToast(
-        "Importation réussie !",
+        "⬇️ Chargement de la liste réussie !",
         "success");
     } catch {
       alert(
-        "Erreur de lecture du fichier. Veuillez importer un fichier .lst valide."
+        "Erreur de lecture du fichier. Veuillez charger un fichier .lst valide."
         );
     }
   };

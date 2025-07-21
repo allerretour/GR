@@ -1728,9 +1728,9 @@ window.onload = function () {
     const file = input.files[0];
     if (!file) return;
 
-    const resizedBase64 = await resizeAndCompressImage(file, 100, 50 * 1024); // 100px, 50KB
+    const resizedBase64 = await resizeAndCompressImage(file, 150, 50 * 1024); // 150px, 50KB
     if (!resizedBase64) {
-      alert('❌ Image trop grande même après compression (max 100px et 50Ko).');
+      alert('❌ Image trop grande même après compression (max 150px et 50Ko).');
       return;
     }
 
