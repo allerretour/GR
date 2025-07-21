@@ -1713,10 +1713,32 @@ window.onload = function () {
             'background': []
           }],
           ['link'],
+          ['image'],
           ['hr'],
           ['clean']
         ],
         handlers: {
+          image: function () {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.setAttribute('accept', 'image/*');
+  input.click();
+
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const resizedBase64 = await resizeAndCompressImage(file, 100, 50 * 1024); // 100px, 50KB
+    if (!resizedBase64) {
+      alert('❌ Image trop grande même après compression (max 100px et 50Ko).');
+      return;
+    }
+
+    const range = this.quill.getSelection();
+    this.quill.insertEmbed(range.index, 'image', resizedBase64, Quill.sources.USER);
+  };
+},
+
           hr: function () {
             const range = this
               .quill
@@ -1742,3 +1764,43 @@ window.onload = function () {
     }
   });
 };
+
+
+async function resizeAndCompressImage(file, maxHeight, maxSize) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = () => {
+        const ratio = maxHeight / img.height;
+        const canvas = document.createElement('canvas');
+        canvas.height = maxHeight;
+        canvas.width = img.width * ratio;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Try multiple quality levels
+        let quality = 0.9;
+        function tryCompress() {
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          const size = atob(dataUrl.split(',')[1]).length;
+
+          if (size <= maxSize || quality < 0.3) {
+            resolve(size <= maxSize ? dataUrl : null);
+          } else {
+            quality -= 0.1;
+            tryCompress();
+          }
+        }
+        tryCompress();
+      };
+    };
+
+    reader.onerror = () => resolve(null);
+  });
+}
