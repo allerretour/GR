@@ -157,7 +157,7 @@ function displayTagFilters() {
         "showOnlyFavorites", true);
       displayShortcuts();
       showToast(
-        "Mode favoris uniquement ⭐");
+        "⭐ Mode favoris uniquement");
     };
     tagContainer.appendChild(favBtn);
   }
@@ -179,7 +179,7 @@ function displayTagFilters() {
       ); // ✅ Save
     displayShortcuts();
     showToast(
-      "Tous les raccourcis 📁");
+      "📁 Tous les raccourcis");
   };
   tagContainer.appendChild(clearBtn);
   // Render each tag button
@@ -279,7 +279,7 @@ function displayTagFilters() {
       activeTagFilter = [tag];
       displayShortcuts();
       showToast(
-        `Filtré uniquement par "${tag}"🔎`
+        `🔎 Filtré uniquement par "${tag}"`
         );
     };
     tagContainer.appendChild(btn);
