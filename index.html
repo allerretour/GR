@@ -3,225 +3,120 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png"
-    href="bookicontrans.png" />
-  <title>Gestionnaire de raccourcis
-  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="bookicontrans.png" />
+  <title>Gestionnaire de raccourcis </title>
   <!-- ✅ ADD this -->
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-  <link rel="stylesheet"
-    href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
   <!-- Quill stylesheet and script -->
-  <link
-    href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-    rel="stylesheet" />
-  <script
-    src="https://cdn.quilljs.com/1.3.6/quill.min.js">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js">
   </script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
   </script>
 </head>
 
 <body>
-  <div id="authStatusIcon"
-    title="Statut de sécurité">
+  <div id="authStatusIcon" title="Statut de sécurité">
     <i class="fas fa-lock"></i>
   </div>
   <div class="container">
-    <div class="labels"
-      style="position: relative;">
+    <div class="labels" style="position: relative;">
       <!-- Fixed logo on the left edge -->
-      <img id="leftLogo" src=""
-        alt="LLogo"
-        style="position: absolute; top: 0; left: 0; height: clamp(50px, 8vw, 120px); object-fit: contain;" />
-      <div class="title-container"
-        style="display: flex; justify-content: center; margin: 10px auto; max-width: 800px;">
-        <div class="title-inner"
-          style="display: flex; align-items: center; gap: 14px;">
+      <img id="leftLogo" src="" alt="LLogo" style="position: absolute; top: 0; left: 0; height: clamp(50px, 8vw, 120px); object-fit: contain;" />
+      <div class="title-container" style="display: flex; justify-content: center; margin: 10px auto; max-width: 800px;">
+        <div class="title-inner" style="display: flex; align-items: center; gap: 14px;">
           <!-- Title -->
-          <h2 id="appTitle"
-            class="app-title"
-            contenteditable="false"
-            onblur="saveTitle()"
-            style="margin: 0;">
-            Gestionnaire de raccourcis
-          </h2>
+          <h2 id="appTitle" class="app-title" contenteditable="false" onblur="saveTitle()" style="margin: 0;"> Gestionnaire de raccourcis </h2>
         </div>
-        <img id="rightLogo" src=""
-          alt="RLogo"
-          style="position: absolute; top: 0; right: 0; height: clamp(50px, 8vw, 120px); object-fit: contain;" />
+        <img id="rightLogo" src="" alt="RLogo" style="position: absolute; top: 0; right: 0; height: clamp(50px, 8vw, 120px); object-fit: contain;" />
       </div>
     </div>
-    <div
-      style="display: flex; align-items: center; margin-top: 5px; gap: 10px;">
+    <div style="display: flex; align-items: center; margin-top: 5px; gap: 10px;">
       <!-- Toggle Button -->
-      <button id="searchToggleBtn"
-        onclick="toggleSearchBar()"
-        title="Afficher/masquer la recherche (F2)">
-        <i id="searchToggleIcon"
-          class="fa-solid fa-magnifying-glass"></i>
+      <button id="searchToggleBtn" onclick="toggleSearchBar()" title="Afficher/masquer la recherche (F2)">
+        <i id="searchToggleIcon" class="fa-solid fa-magnifying-glass"></i>
       </button>
       <!-- Tag Filters -->
-      <div id="tagFilters"
-        class="tag-filter-container"
-        style="cursor: move; flex-grow: 1;">
+      <div id="tagFilters" class="tag-filter-container" style="cursor: move; flex-grow: 1;">
       </div>
     </div>
     <!-- Search Bar (initially visible) -->
-    <div id="searchContainer"
-      style="display: none; position: relative; margin-top: 5px; justify-content: center;">
-      <div
-        style="position: relative; width: 100%; max-width: 250px;">
-        <input type="text"
-          id="searchInput"
-          placeholder="🔍 Rechercher un raccourci..."
-          oninput="handleSearchInput()"
-          style="width: 100%; padding: 6px 48px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
-        <i id="clearSearchBtn"
-          class="fas fa-times-circle"
-          onclick="clearSearch()"
-          title="Effacer la recherche"
-          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2;"></i>
+    <div id="searchContainer" style="display: none; position: relative; margin-top: 5px; justify-content: center;">
+      <div style="position: relative; width: 100%; max-width: 250px;">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher un raccourci..." oninput="handleSearchInput()" style="width: 100%; padding: 6px 48px 6px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
+        <i id="clearSearchBtn" class="fas fa-times-circle" onclick="clearSearch()" title="Effacer la recherche" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #aaa; cursor: pointer; display: none; z-index: 2;"></i>
       </div>
     </div>
-    <div id="shortcuts"
-      class="shortcut-grid"></div>
-    <div
-      style="text-align: left; display: flex; gap: 10px;margin-top: 15px;">
+    <div id="shortcuts" class="shortcut-grid"></div>
+    <div style="text-align: left; display: flex; gap: 10px;margin-top: 15px;">
       <!-- Options button -->
-      <button
-        onclick="toggleButtonGroup()"
-        id="toggleBtnGroup"
-        class="left-button"
-        title="Options (F4)"
-        style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;">
-        <i class="fas fa-cog"
-          style="color: #888;"></i>
+      <button onclick="toggleButtonGroup()" id="toggleBtnGroup" class="left-button" title="Options (F4)" style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;">
+        <i class="fas fa-cog" style="color: #888;"></i>
       </button>
       <!-- Info button -->
-      <button id="searchToggleBtn"
-        onclick="showInfoModal()"
-        title="Afficher/masquer l'aide (I)"
-        style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;">
-        <i id="searchToggleIcon"
-          class="fa-solid fa-circle-info"
-          style="color: #777;;"></i>
+      <button id="searchToggleBtn" onclick="showInfoModal()" title="Afficher/masquer l'aide (I)" style="padding: 8px 12px; border: none; background: #f0f0f0; border-radius: 8px; cursor: pointer;">
+        <i id="searchToggleIcon" class="fa-solid fa-circle-info" style="color: #777;;"></i>
       </button>
     </div>
-    <div id="buttonGroupWrapper"
-      class="button-group"
-      style="margin-top: 15px;">
-      <button id="importBtn"
-        title="Importer (L)"
-        onclick="document.getElementById('importFile').click()">
+    <div id="buttonGroupWrapper" class="button-group" style="margin-top: 15px;">
+      <button id="importBtn" title="Importer (L)" onclick="document.getElementById('importFile').click()">
         <i class="fas fa-download"></i>
       </button>
-      <button title="Ajouter (A)"
-        onclick="openAddModal()">
+      <button title="Ajouter (A)" onclick="openAddModal()">
         <i class="fas fa-plus"></i>
       </button>
-      <button id="mergeBtn"
-        title="Fusionner une autre liste (.lst)"
-        onclick="document.getElementById('mergeFile').click()">
-        <i
-          class="fas fa-layer-group"></i>
+      <button id="mergeBtn" title="Fusionner une autre liste (.lst)" onclick="document.getElementById('mergeFile').click()">
+        <i class="fas fa-layer-group"></i>
       </button>
       <div class="filter-toggle">
-        <input type="checkbox"
-          id="tagFilterModeToggle"
-          onchange="displayShortcuts()" />
-        <label
-          for="tagFilterModeToggle">
-          Tags (Et/Ou): <strong><span
-              id="filterModeLabel">OU</span></strong>
+        <input type="checkbox" id="tagFilterModeToggle" onchange="displayShortcuts()" />
+        <label for="tagFilterModeToggle"> Tags (Et/Ou): <strong><span id="filterModeLabel">OU</span></strong>
         </label>
       </div>
-      <button id="sortButton"
-        title="Trier (T)"
-        onclick="toggleSorting();hideOptionsAndScrollTop();"
-        style="background-color: lightgray; color: gray;">
-        <i id="sortIcon"
-          class="fas fa-sort-alpha-down"
-          style="color: gray;"></i>
+      <button id="sortButton" title="Trier (T)" onclick="toggleSorting();hideOptionsAndScrollTop();" style="background-color: lightgray; color: gray;">
+        <i id="sortIcon" class="fas fa-sort-alpha-down" style="color: gray;"></i>
       </button>
-      <button id="toggleTagsBtn"
-        onclick="toggleTags();hideOptionsAndScrollTop();"
-        title="Afficher/masquer les étiquettes (F4)">
+      <button id="toggleTagsBtn" onclick="toggleTags();hideOptionsAndScrollTop();" title="Afficher/masquer les étiquettes (F4)">
         <i class="fas fa-tags"></i>
       </button>
-      <button
-        title="Afficher/masquer mode compact (F9)"
-        onclick="compactMode = !compactMode; displayShortcuts();hideOptionsAndScrollTop();">
-        <i
-          class="fas fa-compress-arrows-alt"></i>
+      <button title="Afficher/masquer mode compact (F9)" onclick="compactMode = !compactMode; displayShortcuts();hideOptionsAndScrollTop();">
+        <i class="fas fa-compress-arrows-alt"></i>
       </button>
       <!-- Lock Button -->
-      <button id="titleLockBtn"
-        title="Verrouiller/déverrouiller le titre">
+      <button id="titleLockBtn" title="Verrouiller/déverrouiller le titre">
         <i class="fa-solid fa-lock"></i>
       </button>
-      <button title="Couleur titre"
-        onclick="hideOptionsAndScrollTop();openAppTitleColorPicker();">Tc</i>
+      <button title="Couleur titre" onclick="hideOptionsAndScrollTop();openAppTitleColorPicker();">Tc</i>
       </button>
-      <button title="Couleur fond"
-        onclick="hideOptionsAndScrollTop();openBackgroundColorPicker();">Fc</i>
+      <button title="Couleur fond" onclick="hideOptionsAndScrollTop();openBackgroundColorPicker();">Fc</i>
       </button>
       <!-- Left Logo Upload (IL) -->
-      <button title="Logo gauche (Lg)"
-        onclick="document.getElementById('leftLogoInput').click()">Lg</button>
-      <input type="file"
-        id="leftLogoInput"
-        accept="image/*"
-        style="display: none" />
+      <button title="Logo gauche (Lg)" onclick="document.getElementById('leftLogoInput').click()">Lg</button>
+      <input type="file" id="leftLogoInput" accept="image/*" style="display: none" />
       <!-- Right Logo Upload (IR) -->
-      <button title="Logo droit (Ld)"
-        onclick="document.getElementById('rightLogoInput').click()">Ld</button>
-      <input type="file"
-        id="rightLogoInput"
-        accept="image/*"
-        style="display: none" />
-      <button
-        title="Réinitialiser les logos (Lr)"
-        onclick="resetLogos()">Lr</button>
-      <span
-        style="font-size: 14px;">Édition</span>
-      <label class="switch"
-        title="Mode édition">
-        <input type="checkbox"
-          id="editToggle"
-          onchange="toggleEditMode()" />
+      <button title="Logo droit (Ld)" onclick="document.getElementById('rightLogoInput').click()">Ld</button>
+      <input type="file" id="rightLogoInput" accept="image/*" style="display: none" />
+      <button title="Réinitialiser les logos (Lr)" onclick="resetLogos()">Lr</button>
+      <span style="font-size: 14px;">Édition</span>
+      <label class="switch" title="Mode édition">
+        <input type="checkbox" id="editToggle" onchange="toggleEditMode()" />
         <span class="slider"></span>
       </label>
-      <button title="Tout effacer (N)"
-        onclick="clearShortcuts()">
+      <button title="Tout effacer (N)" onclick="clearShortcuts()">
         <i class="fas fa-trash"></i>
       </button>
-      <button
-        title="Exporter raccourcis visibles (V)"
-        onclick="openExportFormatModal()">
-        <i
-          class="fa-solid fa-users-viewfinder"></i>
+      <button title="Exporter raccourcis visibles (V)" onclick="openExportFormatModal()">
+        <i class="fa-solid fa-users-viewfinder"></i>
       </button>
-      <input type="file" id="mergeFile"
-        accept=".lst"
-        style="display: none"
-        onchange="mergeShortcuts(event)" />
-      <input type="file" id="importFile"
-        style="display:none"
-        onchange="importShortcuts(event)" />
-      <button title="Exporter (S)"
-        onclick="exportShortcuts()">
-        <i
-          class="fas fa-floppy-disk"></i>
+      <input type="file" id="mergeFile" accept=".lst" style="display: none" onchange="mergeShortcuts(event)" />
+      <input type="file" id="importFile" style="display:none" onchange="importShortcuts(event)" />
+      <button title="Exporter (S)" onclick="exportShortcuts()">
+        <i class="fas fa-floppy-disk"></i>
       </button>
     </div>
-    <div id="dropZone"
-      onclick="document.getElementById('importFile').click()"
-      style="
+    <div id="dropZone" onclick="document.getElementById('importFile').click()" style="
   border: 2px dashed #eee;
   border-radius: 10px;
   padding: 40px;
@@ -232,92 +127,45 @@
   margin: 20px auto;
   
   cursor: pointer;
-"> ↓ Glissez-déposez un fichier .lst
-      ici pour charger une nouvelle
-      liste </div>
+"> ↓ Glissez-déposez un fichier .lst ici pour charger une nouvelle liste </div>
   </div>
   <div class="status-bar">
-    <span id="exportStatusDot"
-      class="status-dot"
-      style="margin-left: 8px; font-size: 10px;margin-bottom: 15px;">🔴</span>
-    | <span id="lastExport">Dernier
-      export : aucun</span> | <span
-      id="sortStatus">Tri: Manuel</span>
-    | <span id="editStatus">Mode
-      édition: Non</span> | <span
-      id="shortcutCount">Affichés: 0 /
-      Total: 0</span>
+    <span id="exportStatusDot" class="status-dot" style="margin-left: 8px; font-size: 10px;margin-bottom: 15px;">🔴</span> | <span id="lastExport">Dernier export : aucun</span> | <span id="sortStatus">Tri: Manuel</span> | <span id="editStatus">Mode édition: Non</span> | <span id="shortcutCount">Affichés: 0 / Total: 0</span>
   </div>
   <!-- Modal for editing -->
-  <div id="editModal"
-    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
-    <div
-      style="background:white; padding:20px; border-radius:8px; width: clamp(600px, 90%, 900px);">
+  <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
+    <div style="background:white; padding:20px; border-radius:8px; width: clamp(600px, 90%, 900px);">
       <h3>Modifier le raccourci</h3>
       <div style="margin-bottom: 6px;">
-        <label for="editName"
-          class="form-label"
-          style="display: block; margin-bottom: 2px; font-weight: bold;">
-          Nom : * </label>
-        <input type="text" id="editName"
-          placeholder="Nom"
-          style="width:90%;" />
+        <label for="editName" class="form-label" style="display: block; margin-bottom: 2px; font-weight: bold;"> Nom : * </label>
+        <input type="text" id="editName" placeholder="Nom" style="width:90%;" />
       </div>
       <div style="margin-bottom: 6px;">
-        <label for="editInfo"
-          class="form-label">Description
-          complémentaire :</label>
-        <input type="text" id="editInfo"
-          placeholder="Info complémentaire (optionnel)"
-          style="width:90%;" />
+        <label for="editInfo" class="form-label">Description complémentaire :</label>
+        <input type="text" id="editInfo" placeholder="Info complémentaire (optionnel)" style="width:90%;" />
       </div>
-      <div
-        style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-        <label for="editUrl"
-          class="form-label"
-          style="white-space: nowrap;">
-          URL : (mettre ? pour 💡) *
-        </label>
-        <input type="text" id="editUrl"
-          placeholder="URL ou ?"
-          style="flex: 1;" />
-        <button
-          onclick="pasteFromClipboard('editUrl')"
-          title="Coller depuis le presse-papiers"
-          style="background: none; border: none; cursor: pointer; font-size: 1.3em; color: #555;">
-          <i
-            class="fa-solid fa-paste"></i>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <label for="editUrl" class="form-label" style="white-space: nowrap;"> URL : (mettre ? pour 💡) * </label>
+        <input type="text" id="editUrl" placeholder="URL ou ?" style="flex: 1;" />
+        <button onclick="pasteFromClipboard('editUrl')" title="Coller depuis le presse-papiers" style="background: none; border: none; cursor: pointer; font-size: 1.3em; color: #555;">
+          <i class="fa-solid fa-paste"></i>
         </button>
       </div>
       <div style="margin-bottom: 6px;">
-        <label for="editTags"
-          class="form-label">🏷️
-          Étiquettes :</label>
-        <input type="text"
-          id="editTagsInput"
-          placeholder="Ajouter des étiquettes..."
-          list="tagSuggestions"
-          style="width:90%;"
-          onkeydown="handleTagInput(event)" />
-        <datalist
-          id="tagSuggestions"></datalist>
-        <div id="editTagsContainer"
-          style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+        <label for="editTags" class="form-label">🏷️ Étiquettes :</label>
+        <input type="text" id="editTagsInput" placeholder="Ajouter des étiquettes..." list="tagSuggestions" style="width:90%;" onkeydown="handleTagInput(event)" />
+        <datalist id="tagSuggestions"></datalist>
+        <div id="editTagsContainer" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
         </div>
-        <input type="hidden"
-          id="editTags" />
+        <input type="hidden" id="editTags" />
       </div>
       <div style="margin-bottom: 6px;">
-        <label for="editTooltip"
-          class="form-label">💡 Info du
-          raccourci:</label>
-        <div id="editTooltip"
-          style="height: 150px; background: white;">
+        <label for="editTooltip" class="form-label">💡 Info du raccourci:</label>
+        <div id="editTooltip" style="height: 150px; background: white;">
         </div>
       </div>
       <div style="text-align: right;">
-        <button id="confirmBtn"
-          type="button" style="
+        <button id="confirmBtn" type="button" style="
     padding: 4px 10px;
     font-size: 13px;
     background: rgba(0, 128, 0, 0.05);
@@ -329,9 +177,7 @@
     backdrop-filter: blur(2px);
     transition: background 0.2s ease;
   ">✅ Ajouter</button>
-        <button type="button"
-          onclick="closeEditModal()"
-          style="
+        <button type="button" onclick="closeEditModal()" style="
     padding: 4px 10px;
     font-size: 13px;
     background: rgba(128, 0, 0, 0.05);
@@ -345,8 +191,7 @@
       </div>
     </div>
   </div>
-  <div id="tooltipModal"
-    onclick="closeTooltipModal()" style="
+  <div id="tooltipModal" onclick="closeTooltipModal()" style="
     display:none;
     position:fixed;
     top:0;
@@ -358,9 +203,7 @@
     align-items:center;
     justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;
 ">
-    <div
-      onclick="event.stopPropagation()"
-      style="
+    <div onclick="event.stopPropagation()" style="
         background:white;
         padding:20px;
         border-radius:8px;
@@ -378,9 +221,7 @@
             margin-bottom: 10px;
         "></div>
       <div style="text-align:right;">
-        <button
-          onclick="closeTooltipModal()"
-          style="
+        <button onclick="closeTooltipModal()" style="
     padding: 4px 10px;
     font-size: 14px;
     background: rgba(0,0,0,0.05);
@@ -394,157 +235,86 @@
       </div>
     </div>
   </div>
-  <div id="infoModal"
-    onclick="closeInfoModal()"
-    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
-    <div
-      onclick="event.stopPropagation()"
-      class="info-modal-content">
-      <button class="close-btn"
-        onclick="closeInfoModal()"
-        title="Fermer">
+  <div id="infoModal" onclick="closeInfoModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
+    <div onclick="event.stopPropagation()" class="info-modal-content">
+      <button class="close-btn" onclick="closeInfoModal()" title="Fermer">
         <i class="fas fa-times"></i>
       </button>
-      <h2>🎹 Raccourcis clavier et
-        souris</h2>
+      <h2>🎹 Raccourcis clavier et souris</h2>
       <div class="info-modal-grid">
         <div>
           <h3>⌨️ Clavier</h3>
           <ul>
-            <li><strong>I</strong> :
-              Cette fenêtre</li>
-            <li><strong>F2</strong> :
-              Afficher / cacher la barre
-              de recherche</li>
-            <li><strong>F3</strong> :
-              Ouvrir tout les raccourcis
-              visibles</li>
-            <li><strong>F4</strong> :
-              Afficher / cacher les
-              options</li>
-            <li><strong>F8</strong> :
-              Afficher / cacher les
-              filtres</li>
-            <li><strong>F9</strong> :
-              Afficher / cacher mode
-              compact</li>
-            <li><strong>T</strong> : Tri
-              alphabétique / manuel</li>
-            <li><strong>E</strong> :
-              Activer / désactiver
-              édition</li>
-            <li><strong>A</strong> :
-              Ajouter une fiche</li>
-            <li><strong>L</strong> :
-              Charger une liste</li>
-            <li><strong>S</strong> :
-              Exporter la liste</li>
-            <li><strong>V</strong> :
-              Exporter raccourcis
-              visibles</li>
-            <li><strong>N</strong> :
-              Nouvelle liste</li>
-            <li><strong>M</strong> :
-              Filtre ET / OU</li>
+            <li><strong>I</strong> : Cette fenêtre</li>
+            <li><strong>F2</strong> : Afficher / cacher la barre de recherche</li>
+            <li><strong>F3</strong> : Ouvrir tout les raccourcis visibles</li>
+            <li><strong>F4</strong> : Afficher / cacher les options</li>
+            <li><strong>F8</strong> : Afficher / cacher les filtres</li>
+            <li><strong>F9</strong> : Afficher / cacher mode compact</li>
+            <li><strong>T</strong> : Tri alphabétique / manuel</li>
+            <li><strong>E</strong> : Activer / désactiver édition</li>
+            <li><strong>A</strong> : Ajouter une fiche</li>
+            <li><strong>L</strong> : Charger une liste</li>
+            <li><strong>S</strong> : Exporter la liste</li>
+            <li><strong>V</strong> : Exporter raccourcis visibles</li>
+            <li><strong>N</strong> : Nouvelle liste</li>
+            <li><strong>M</strong> : Filtre ET / OU</li>
             <li>
-              <strong>CTRL+SHIFT+R</strong>
-              : réinitialiser la page
+              <strong>CTRL+SHIFT+R</strong> : réinitialiser la page
             </li>
           </ul>
         </div>
         <div>
           <h3>🖱️ sur Raccourci</h3>
           <ul>
-            <li><strong>Clic 👈</strong>
-              : Ouvrir URL</li>
-            <li><strong>Clic 👈 garder 1
-                sec.</strong> : Copier
-              URL</li>
-            <li><strong>Clic 👉</strong>
-              : 💡 Info</li>
+            <li><strong>Clic 👈</strong> : Ouvrir URL</li>
+            <li><strong>Clic 👈 garder 1 sec.</strong> : Copier URL</li>
+            <li><strong>Clic 👉</strong> : 💡 Info</li>
           </ul>
           <h3>🖱️ sur Filtre</h3>
           <ul>
-            <li><strong>Clic 👈</strong>
-              : Filtrer/désélectionner
-            </li>
-            <li><strong>Clic 👉</strong>
-              : Filtre unique</li>
+            <li><strong>Clic 👈</strong> : Filtrer/désélectionner </li>
+            <li><strong>Clic 👉</strong> : Filtre unique</li>
           </ul>
           <h3>🎨 Couleurs</h3>
           <ul>
-            <li><strong>Maj+F1</strong>
-              : Choisir couleur du titre
-            </li>
-            <li><strong>Alt+F1</strong>
-              : Réinitialiser la couleur
-              du titre</li>
-            <li><strong>Maj+F2</strong>
-              : Choisir couleur du fond
-            </li>
-            <li><strong>Alt+F2</strong>
-              : Réinitialiser la couleur
-              du fond</li>
+            <li><strong>Maj+F1</strong> : Choisir couleur du titre </li>
+            <li><strong>Alt+F1</strong> : Réinitialiser la couleur du titre</li>
+            <li><strong>Maj+F2</strong> : Choisir couleur du fond </li>
+            <li><strong>Alt+F2</strong> : Réinitialiser la couleur du fond</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <button id="backToTopBtn"
-    title="Haut de page">
+  <button id="backToTopBtn" title="Haut de page">
     <i class="fas fa-arrow-up"></i>
   </button>
   <!-- Export Format Modal -->
-  <div id="exportFormatModal"
-    class="modal-overlay"
-    style="backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
-    <div
-      class="modal-content export-modal">
-      <h3>📤 Exportation de raccourcis
-        visibles</h3>
-      <p> Choisissez le format de
-        fichier à exporter :<br>
-        <span id="exportCount"
-          style="font-weight: bold; color: #007bff;"></span>
+  <div id="exportFormatModal" class="modal-overlay" style="backdrop-filter: blur(5px); transition: backdrop-filter 0.3s ease;">
+    <div class="modal-content export-modal">
+      <h3>📤 Exportation de raccourcis visibles</h3>
+      <p> Choisissez le format de fichier à exporter :<br>
+        <span id="exportCount" style="font-weight: bold; color: #007bff;"></span>
       </p>
       <div class="export-buttons">
-        <button class="export-btn txt"
-          onclick="exportVisibleShortcuts('txt')">
-          <i
-            class="fas fa-file-lines"></i>
-          Texte (.txt) </button>
-        <button class="export-btn lst"
-          onclick="exportVisibleShortcuts('lst')">
-          <i
-            class="fas fa-file-code"></i>
-          JSON (.lst) </button>
-        <button class="export-btn both"
-          onclick="exportVisibleShortcuts('both')">
-          <i class="fas fa-copy"></i>
-          Les deux </button>
+        <button class="export-btn txt" onclick="exportVisibleShortcuts('txt')">
+          <i class="fas fa-file-lines"></i> Texte (.txt) </button>
+        <button class="export-btn lst" onclick="exportVisibleShortcuts('lst')">
+          <i class="fas fa-file-code"></i> JSON (.lst) </button>
+        <button class="export-btn both" onclick="exportVisibleShortcuts('both')">
+          <i class="fas fa-copy"></i> Les deux </button>
       </div>
       <div class="modal-footer">
-        <button class="cancel-btn"
-          onclick="closeExportFormatModal()">✖
-          Annuler</button>
+        <button class="cancel-btn" onclick="closeExportFormatModal()">✖ Annuler</button>
       </div>
     </div>
   </div>
-  <input type="color"
-    id="appTitleColorPicker"
-    style="position: fixed; top: 200px; left: 20px; visibility: hidden;" />
-  <input type="color"
-    id="backgroundColorPicker"
-    style="position: fixed; top: 100px; left: 100px; visibility: hidden;" />
+  <input type="color" id="appTitleColorPicker" style="position: fixed; top: 200px; left: 20px; visibility: hidden;" />
+  <input type="color" id="backgroundColorPicker" style="position: fixed; top: 100px; left: 100px; visibility: hidden;" />
   <!-- Manual fallback inputs for iOS -->
-  <input type="text"
-    id="appTitleColorHex"
-    placeholder="#000000" maxlength="7"
-    style="position: fixed; top: 200px; left: 20px; visibility: hidden; z-index: 2000;" />
-  <input type="text"
-    id="backgroundColorHex"
-    placeholder="#ffffff" maxlength="7"
-    style="position: fixed; top: 100px; left: 100px; visibility: hidden; z-index: 2000;" />
+  <input type="text" id="appTitleColorHex" placeholder="#000000" maxlength="7" style="position: fixed; top: 200px; left: 20px; visibility: hidden; z-index: 2000;" />
+  <input type="text" id="backgroundColorHex" placeholder="#ffffff" maxlength="7" style="position: fixed; top: 100px; left: 100px; visibility: hidden; z-index: 2000;" />
   <!-- Color Input Modal (hex or color name) -->
   <div id="hexColorModal" style="
   display: none;
@@ -569,13 +339,8 @@
   text-align: center;
   font-family: sans-serif;
 ">
-      <h3 id="hexColorModalTitle"
-        style="margin-top: 0;">🎨
-        Couleur</h3>
-      <input id="hexColorInput"
-        type="text"
-        placeholder="#ff8800 ou red"
-        style="
+      <h3 id="hexColorModalTitle" style="margin-top: 0;">🎨 Couleur</h3>
+      <input id="hexColorInput" type="text" placeholder="#ff8800 ou red" style="
     width: 90%;
     padding: 8px;
     font-size: 1rem;
@@ -590,11 +355,8 @@
     gap: 6px;
     margin-bottom: 12px;
   "></div>
-      <div
-        style="display: flex; gap: 8px;">
-        <button
-          onclick="applyHexColor()"
-          style="
+      <div style="display: flex; gap: 8px;">
+        <button onclick="applyHexColor()" style="
     flex: 1;
     padding: 5px 6px;
     font-size: 0.85rem;
@@ -604,9 +366,7 @@
     border-radius: 4px;
     cursor: pointer;
   ">✅ Appliquer</button>
-        <button
-          onclick="closeHexColorModal()"
-          style="
+        <button onclick="closeHexColorModal()" style="
     flex: 1;
     padding: 5px 6px;
     font-size: 0.85rem;
@@ -631,8 +391,7 @@
   </script>
   <script src="config.js"></script>
 </body>
-<div id="toastContainer"
-  style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
+<div id="toastContainer" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
 </div>
 
 </html>
